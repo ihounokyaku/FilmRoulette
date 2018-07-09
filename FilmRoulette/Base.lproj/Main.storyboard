@@ -1,15 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Rqf-bG-RhG">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Nav Container-->
+        <scene sceneID="aGs-ce-fuN">
+            <objects>
+                <viewController id="Rqf-bG-RhG" customClass="NavContainer" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Kaw-24-3Kn">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aar-NM-J1J">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="miY-ny-iMc">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3cW-zd-l1g">
+                                        <rect key="frame" x="0.0" y="0.0" width="125" height="50"/>
+                                        <color key="backgroundColor" red="0.33333333329999998" green="0.57647058819999997" blue="0.7725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Spin!">
+                                            <color key="titleColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="spinPressed:" destination="Rqf-bG-RhG" eventType="touchUpInside" id="eiO-fX-V9N"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OuQ-8D-Vts">
+                                        <rect key="frame" x="125" y="0.0" width="125" height="50"/>
+                                        <color key="backgroundColor" red="0.46666666670000001" green="0.69019607839999997" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="My List">
+                                            <color key="titleColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="myListPressed:" destination="Rqf-bG-RhG" eventType="touchUpInside" id="Qsm-4E-Bb4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-K9-aIB">
+                                        <rect key="frame" x="250" y="0.0" width="125" height="50"/>
+                                        <color key="backgroundColor" red="0.78039215689999997" green="0.36862745099999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Add">
+                                            <color key="titleColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addPressed:" destination="Rqf-bG-RhG" eventType="touchUpInside" id="QVa-mO-nve"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="HLc-aa-RVe"/>
+                                    <constraint firstAttribute="height" constant="50" id="K10-p5-epo"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="aar-NM-J1J" firstAttribute="bottom" secondItem="HAk-bF-bS0" secondAttribute="bottom" id="Cfu-cZ-Yx2"/>
+                            <constraint firstItem="HAk-bF-bS0" firstAttribute="trailing" secondItem="miY-ny-iMc" secondAttribute="trailing" id="Gap-Ah-3Cj"/>
+                            <constraint firstItem="aar-NM-J1J" firstAttribute="top" secondItem="Kaw-24-3Kn" secondAttribute="top" id="HlA-WK-jvw"/>
+                            <constraint firstItem="miY-ny-iMc" firstAttribute="leading" secondItem="HAk-bF-bS0" secondAttribute="leading" id="Mqr-l8-aPC"/>
+                            <constraint firstItem="aar-NM-J1J" firstAttribute="leading" secondItem="HAk-bF-bS0" secondAttribute="leading" id="PUz-qd-3pQ"/>
+                            <constraint firstItem="HAk-bF-bS0" firstAttribute="bottom" secondItem="miY-ny-iMc" secondAttribute="bottom" id="QOc-bZ-hJC"/>
+                            <constraint firstItem="aar-NM-J1J" firstAttribute="trailing" secondItem="HAk-bF-bS0" secondAttribute="trailing" id="moJ-aS-js2"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="HAk-bF-bS0"/>
+                    </view>
+                    <connections>
+                        <outlet property="addButton" destination="qH5-K9-aIB" id="asr-D9-6Ic"/>
+                        <outlet property="myListButton" destination="OuQ-8D-Vts" id="cTz-qC-1gJ"/>
+                        <outlet property="spinButton" destination="3cW-zd-l1g" id="ZyL-XM-aSR"/>
+                        <outlet property="subviewContainer" destination="aar-NM-J1J" id="qL8-Gt-QMR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fv0-kS-QHk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-743.20000000000005" y="213.64317841079463"/>
+        </scene>
+        <!--SpinVC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="SpinVC" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -19,6 +98,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="130.88455772113943"/>
         </scene>
     </scenes>
 </document>
