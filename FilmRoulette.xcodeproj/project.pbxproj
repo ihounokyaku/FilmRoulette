@@ -21,6 +21,7 @@
 		C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7C20F3B48700F30BAF /* Enums.swift */; };
 		C4971D8220F3B4AC00F30BAF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7D20F3B48700F30BAF /* Extensions.swift */; };
 		C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7E20F3B48700F30BAF /* Global Variables.swift */; };
+		C4DB46E920F4E9D0009EC359 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB46E820F4E9D0009EC359 /* Tag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,12 +36,14 @@
 		C407DF8B20F39C7800213A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4595A6C20F3AF0500446C4B /* NavContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavContainer.swift; sourceTree = "<group>"; };
 		C4595A6E20F3AF0A00446C4B /* NavSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSubview.swift; sourceTree = "<group>"; };
+		C47ADFDA20F62A97008F79C5 /* FilmRoulette.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FilmRoulette.entitlements; sourceTree = "<group>"; };
 		C4971D7720F3B41700F30BAF /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C4971D7820F3B41700F30BAF /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		C4971D7C20F3B48700F30BAF /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		C4971D7D20F3B48700F30BAF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C4971D7E20F3B48700F30BAF /* Global Variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Variables.swift"; sourceTree = "<group>"; };
 		C4971D7F20F3B48700F30BAF /* Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prefs.swift; sourceTree = "<group>"; };
+		C4DB46E820F4E9D0009EC359 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		E62BB917ACEE54FB74B7B1DC /* Pods-FilmRoulette.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FilmRoulette.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +97,7 @@
 		C407DF7E20F39C7600213A37 /* FilmRoulette */ = {
 			isa = PBXGroup;
 			children = (
+				C47ADFDA20F62A97008F79C5 /* FilmRoulette.entitlements */,
 				C407DF7F20F39C7700213A37 /* AppDelegate.swift */,
 				C4971D7B20F3B48700F30BAF /* Global Variables */,
 				C4971D7620F3B41700F30BAF /* Data Model */,
@@ -121,6 +125,7 @@
 			children = (
 				C4971D7720F3B41700F30BAF /* DataManager.swift */,
 				C4971D7820F3B41700F30BAF /* Movie.swift */,
+				C4DB46E820F4E9D0009EC359 /* Tag.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -171,6 +176,11 @@
 				TargetAttributes = {
 					C407DF7B20F39C7600213A37 = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -278,6 +288,7 @@
 				C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */,
 				C4595A6F20F3AF0A00446C4B /* NavSubview.swift in Sources */,
 				C407DF8020F39C7700213A37 /* AppDelegate.swift in Sources */,
+				C4DB46E920F4E9D0009EC359 /* Tag.swift in Sources */,
 				C4595A6D20F3AF0500446C4B /* NavContainer.swift in Sources */,
 				C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */,
 				C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */,
@@ -426,14 +437,15 @@
 			baseConfigurationReference = E62BB917ACEE54FB74B7B1DC /* Pods-FilmRoulette.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FilmRoulette/FilmRoulette.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5X8KQU9JXV;
+				DEVELOPMENT_TEAM = UQ3BB547F3;
 				INFOPLIST_FILE = FilmRoulette/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.FilmRoulette;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -445,14 +457,15 @@
 			baseConfigurationReference = 3C207FBE4984D99CD0864F18 /* Pods-FilmRoulette.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FilmRoulette/FilmRoulette.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5X8KQU9JXV;
+				DEVELOPMENT_TEAM = UQ3BB547F3;
 				INFOPLIST_FILE = FilmRoulette/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.FilmRoulette;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

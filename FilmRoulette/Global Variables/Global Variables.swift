@@ -7,12 +7,32 @@
 //
 
 import Foundation
+import RealmSwift
 
-var DocumentsDirectory: URL {
-    get {
-       return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//MARK: - =========DIRECTORIES==========
+
+//MARK: - ==DOCUMENTS==
+var DocumentsDirectory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.brokenkeyboard.filmapps")!
+
+var ImageDirectory:URL {
+    let directory = DocumentsDirectory.appendingPathComponent("Images")
+    if !FileManager.default.fileExists(atPath: directory.path) {
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        } catch {
+            print(error)
+        }
     }
+    return directory
 }
+
+
+//MARK: - ==REALM CONFIG==
+let GroupRealmFolder = DocumentsDirectory.appendingPathComponent("default.realm")
+let RealmConfig = Realm.Configuration(fileURL: GroupRealmFolder)
+
+
+
 
 //MARK: - =========GENRES=========
 let GenreIDs = ["Action":"28",

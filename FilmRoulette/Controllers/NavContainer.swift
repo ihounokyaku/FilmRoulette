@@ -35,13 +35,13 @@ class NavContainer: UIViewController {
         super.viewDidLoad()
         
         //MARK: Load first VC
-        self.transition(toVCWithIdentifier: "Swiper", animated:false)
+        self.transition(toVCWithIdentifier: "Spinner", animated:false)
     }
     
     //MARK: - =========BUTTON ACTIONS===========
     //MARK: - ==NavigationButtons==
     @IBAction func spinPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "Swiper")
+        self.transition(toVCWithIdentifier: "Spinner")
     }
     
     @IBAction func myListPressed(_ sender: Any) {

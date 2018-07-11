@@ -92,13 +92,13 @@ extension UIViewController {
 //MARK: - ==Image From String==
 extension String {
     func image () -> UIImage {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
-        let getImagePath = paths.appendingPathComponent(self)
+        
+        let getImagePath = ImageDirectory.appendingPathComponent(self)
         var image:UIImage = UIImage()
         if self != "" {
-            if FileManager().fileExists(atPath: getImagePath) {
+            if FileManager().fileExists(atPath: getImagePath.path) {
                 
-                image = UIImage(contentsOfFile: getImagePath)!
+                image = UIImage(contentsOfFile: getImagePath.path)!
             }else {
                 image = UIImage(named: "noImage.png")!
             }

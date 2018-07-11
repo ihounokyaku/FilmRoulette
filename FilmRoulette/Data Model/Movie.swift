@@ -24,16 +24,23 @@ class Movie : Object {
     @objc dynamic var releaseDate =  "unknown"
     @objc dynamic var imdbID = ""
     
+    let tags = List<Tag>()
     var genres = List<String>()
     //MARK: - allow access to the thumbnail image from the database
-    var thumbnail : UIImage {
+    var poster : UIImage {
         get {
             return self.thumbnailName.image()
         }
-        set {
-            guard let resized = newValue.resized(toWidth: 100) else {return}
-            self.thumbnailName = self.title + "\(Date().timeIntervalSince1970).png"
-            resized.saveAsPng(named: self.thumbnailName)
+    }
+    
+    func setPoster(withData data:Data?) {
+        guard let realData = data else {return}
+        guard UIImage(data:realData) != nil else {return}
+        self.thumbnailName = self.title + self.releaseDate
+        let url = ImageDirectory.appendingPathComponent(self.thumbnailName)
+        if !FileManager.default.fileExists(atPath: url.path){
+            try? realData.write(to: url)
         }
     }
+    
 }
