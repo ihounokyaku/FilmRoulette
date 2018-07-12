@@ -26,10 +26,30 @@ var ImageDirectory:URL {
     return directory
 }
 
+var FilmSwipeFolder:URL {
+    get {
+        let directory = DocumentsDirectory.appendingPathComponent("filmswipe")
+        if !FileManager.default.fileExists(atPath: directory.path) {
+            do {
+                print("createing directory")
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            } catch {
+                print(error)
+            }
+        }
+        return directory
+    }
+}
+
+
+
+
+
 
 //MARK: - ==REALM CONFIG==
-let GroupRealmFolder = DocumentsDirectory.appendingPathComponent("default.realm")
-let RealmConfig = Realm.Configuration(fileURL: GroupRealmFolder)
+
+let RealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmroulette.realm"))
+let FilmswipeRealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmswipe.realm"))
 
 
 

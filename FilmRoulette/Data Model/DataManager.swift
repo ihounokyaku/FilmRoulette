@@ -11,21 +11,24 @@ import RealmSwift
 
 class DataManager:NSObject {
 //MARK - =================== Arrays =================
-    var likedMoviesToDisplay:Results<Movie>!
+    var moviesToDisplay = List<Movie>()
     
 //MARK - =================== Other vars =================
-    let realm = try! Realm()
-    
+    let realm = try! Realm(configuration: RealmConfig)
+    let fsRealm = try! Realm(configuration: FilmswipeRealmConfig)
+   
     override init () {
         super.init()
-        self.likedMoviesToDisplay = self.realm.objects(Movie.self)
+        self.moviesToDisplay.append(objectsIn: self.realm.objects(Movie.self))
+        self.moviesToDisplay.append(objectsIn: self.fsRealm.objects(Movie.self).filter("watched == %@", false))
+        print("the number of results are \(self.fsRealm.objects(Movie.self).count)\(self.moviesToDisplay.map({return $0.title}))")
     }
     
     //MARK: - ========== CREATE ==========
     
     //MARK: - ==Save==
-    func saveToFavorites(movie:Movie, thumbnail:UIImage, love:Bool, watched:Bool) {
-        movie.thumbnail = thumbnail
+    func saveToFavorites(movie:Movie, imageData:Data?, love:Bool, watched:Bool) {
+        movie.setPoster(withData:imageData)
         movie.love = love
         movie.watched = watched
         do {

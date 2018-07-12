@@ -19,7 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
         // Override point for customization after application launch.
         do {
-            _ = try Realm()
+            _ = try Realm(configuration: RealmConfig)
+            _ = try Realm(configuration: FilmswipeRealmConfig)
             
         } catch {
             print("eroror with relam \(error)")
