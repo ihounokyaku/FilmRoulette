@@ -10,19 +10,38 @@ import Foundation
 import RealmSwift
 
 class DataManager:NSObject {
-//MARK - =================== Arrays =================
-    var moviesToDisplay = List<Movie>()
     
-//MARK - =================== Other vars =================
+    
+//MARK - =================== RealmDBs =================
     let realm = try! Realm(configuration: RealmConfig)
     let fsRealm = try! Realm(configuration: FilmswipeRealmConfig)
-   
-    override init () {
-        super.init()
-        self.moviesToDisplay.append(objectsIn: self.realm.objects(Movie.self))
-        self.moviesToDisplay.append(objectsIn: self.fsRealm.objects(Movie.self).filter("watched == %@", false))
-        print("the number of results are \(self.fsRealm.objects(Movie.self).count)\(self.moviesToDisplay.map({return $0.title}))")
+    
+//MARK - =================== Arrays =================
+    
+    var allMovies:List<Movie> {
+        get {
+            let movies = List<Movie>()
+            movies.append(objectsIn: self.realm.objects(Movie.self))
+            movies.append(objectsIn: self.fsMovies)
+            return movies
+        }
     }
+    
+    var fsMovies:Results<Movie> {
+        get {
+            return self.fsRealm.objects(Movie.self).filter("watched == %@", false)
+        }
+    }
+    
+    var tags:Results<Tag> {
+        get {
+            return self.realm.objects(Tag.self)
+        }
+    }
+    
+
+//*********************************************************************************************
+    
     
     //MARK: - ========== CREATE ==========
     
@@ -49,9 +68,7 @@ class DataManager:NSObject {
         return self.movie(withId: id) != nil
     }
     
-    func allMovies()->Results<Movie> {
-        return self.realm.objects(Movie.self)
-    }
+    
     
     //MARK: - ========== UPDATE ==========
     func updateMovie(movie:Movie, updatedValues:[String:Any]) {
