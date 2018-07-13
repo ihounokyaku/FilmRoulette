@@ -21,6 +21,7 @@
 		C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7C20F3B48700F30BAF /* Enums.swift */; };
 		C4971D8220F3B4AC00F30BAF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7D20F3B48700F30BAF /* Extensions.swift */; };
 		C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7E20F3B48700F30BAF /* Global Variables.swift */; };
+		C4AC67F520F7AE6500F91621 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AC67F420F7AE6400F91621 /* Genre.swift */; };
 		C4DB46E920F4E9D0009EC359 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB46E820F4E9D0009EC359 /* Tag.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		C4971D7D20F3B48700F30BAF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C4971D7E20F3B48700F30BAF /* Global Variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Variables.swift"; sourceTree = "<group>"; };
 		C4971D7F20F3B48700F30BAF /* Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prefs.swift; sourceTree = "<group>"; };
+		C4AC67F420F7AE6400F91621 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		C4DB46E820F4E9D0009EC359 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		E62BB917ACEE54FB74B7B1DC /* Pods-FilmRoulette.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FilmRoulette.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +128,7 @@
 				C4971D7720F3B41700F30BAF /* DataManager.swift */,
 				C4971D7820F3B41700F30BAF /* Movie.swift */,
 				C4DB46E820F4E9D0009EC359 /* Tag.swift */,
+				C4AC67F420F7AE6400F91621 /* Genre.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 			files = (
 				C4971D8020F3B4A800F30BAF /* Prefs.swift in Sources */,
 				C4971D8220F3B4AC00F30BAF /* Extensions.swift in Sources */,
+				C4AC67F520F7AE6500F91621 /* Genre.swift in Sources */,
 				C407DF8220F39C7700213A37 /* SpinVC.swift in Sources */,
 				C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */,
 				C4595A6F20F3AF0A00446C4B /* NavSubview.swift in Sources */,

@@ -18,24 +18,37 @@ class DataManager:NSObject {
     
 //MARK - =================== Arrays =================
     
+    var moviesDisplayed = List<Movie>()
+    
     var allMovies:List<Movie> {
         get {
             let movies = List<Movie>()
             movies.append(objectsIn: self.realm.objects(Movie.self))
-            movies.append(objectsIn: self.fsMovies)
             return movies
         }
     }
     
-    var fsMovies:Results<Movie> {
+    var fsMovies:List<Movie> {
         get {
-            return self.fsRealm.objects(Movie.self).filter("watched == %@", false)
+            let movies = List<Movie>()
+            movies.append(objectsIn: self.fsRealm.objects(Movie.self).filter("watched == %@", false))
+            return movies
         }
     }
     
-    var tags:Results<Tag> {
+    var tags:List<Tag> {
         get {
-            return self.realm.objects(Tag.self)
+            let tags = List<Tag>()
+            tags.append(objectsIn: self.realm.objects(Tag.self).sorted(byKeyPath: "name", ascending: true) )
+            return tags
+        }
+    }
+    
+    var genres:List<Genre> {
+        get {
+            let genres = List<Genre>()
+            genres.append(objectsIn: self.realm.objects(Genre.self).sorted(byKeyPath: "name", ascending: true) )
+            return genres
         }
     }
     
@@ -66,6 +79,21 @@ class DataManager:NSObject {
     
     func databaseContains(movieWithId id:Int)->Bool {
         return self.movie(withId: id) != nil
+    }
+    
+    func databaseContains(movieWithGenre genre:Genre)->Bool {
+        return self.realm.objects(Movie.self).filter("%@ IN genreList", genre).first != nil
+    }
+    
+    //MARK: - ==GET MOVIES WITH TAG==
+    func movies(withTag tag:Tag)-> List<Movie> {
+        let movies = List<Movie>()
+        
+        for movie in Array(tag.movies) {
+            movies.append(movie)
+        }
+
+        return movies
     }
     
     

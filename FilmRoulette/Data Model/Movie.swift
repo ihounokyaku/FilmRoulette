@@ -26,6 +26,8 @@ class Movie : Object {
     
     let tags = List<Tag>()
     var genres = List<String>()
+    let genreList = List<Genre>()
+    
     //MARK: - allow access to the thumbnail image from the database
     var poster : UIImage {
         get {
