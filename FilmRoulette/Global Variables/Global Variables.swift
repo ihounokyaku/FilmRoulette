@@ -114,3 +114,11 @@ let SortTypeKeys = [
     "Average User Rating"
 ]
 
+//MARK: - =========CONVENIENCE FUNCTIONS=========
+func RandomInt(between min: Int, and max:Int)->Int {
+    if min < max {
+        return Int(arc4random_uniform(UInt32(max + 1 - min))) + min
+    }
+    return 0
+}
+

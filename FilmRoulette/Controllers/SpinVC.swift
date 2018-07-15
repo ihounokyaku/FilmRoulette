@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import WheelPicker
 import RealmSwift
-
+import Gemini
 class SpinVC: NavSubview {
 
 //MARK: - ===========IBOUTLETS============
@@ -17,9 +16,12 @@ class SpinVC: NavSubview {
     
     //MARK: - ==PICKERS N TABLES==
     @IBOutlet weak var singlePicker: UIPickerView!
-    @IBOutlet weak var rouletteView: WheelPicker!
+    @IBOutlet weak var rouletteView:GeminiCollectionView!
     
-
+    
+    //MARK: - ==Buttons==
+    @IBOutlet weak var spinButton: UIButton!
+    
 //MARK: - ===========VARIABLES============
     
     //MARK: - ==State Vars==
@@ -37,6 +39,7 @@ class SpinVC: NavSubview {
     
     
     
+    
 //MARK: - ========== SETUP ==========
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,10 +50,8 @@ class SpinVC: NavSubview {
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
         
-        //MARK: - ==UPDATE UI==
-        //self.rouletteView.scrollDirection = .horizontal
-        //self.rouletteView.style = .style3D
-        //self.rouletteView.isMaskDisabled = false
+        //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
+        self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp)
         self.loadRoulette()
         
     }
@@ -72,23 +73,23 @@ class SpinVC: NavSubview {
         } else {
             self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withTag: self.container.dataManager.tags[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)])
         }
-        self.rouletteView.select(0, animated: false)
-        self.fillDisplayArray()
+        
         self.rouletteView.reloadData()
-        if self.displayCount > 2 {
-            self.rouletteView.select((self.displayCount / 2) - 1, animated: true)
+        if !self.noMovies {
+            self.rouletteView.deselectItem(at: IndexPath(row: 10000, section: 0) , animated: false)
         }
     }
     
-    //MARK: - ==MAKE INFINITE==
+  
     
-    func fillDisplayArray() {
-        while self.displayCount > 0 && (self.displayCount < 12 || (self.rouletteView.rowOfCenteredItem ?? self.rouletteView.selectedItem) + 5 > self.displayCount) {
-            let numberOfObjects:Int = displayCount
-            self.container.dataManager.moviesDisplayed.append(objectsIn: self.container.dataManager.moviesDisplayed)
-            self.rouletteView.insertCells(numberOfCells: numberOfObjects, beginningAt: numberOfObjects - 1)
+    
+    @IBAction func spinPressed(_ sender: Any) {
+        if self.displayCount > 0 {
+            self.spin()
         }
     }
+    
+    
 }
 
 //MARK: - ==========PICKERVIEW DATASOURCE===============
@@ -133,42 +134,62 @@ extension SpinVC : UIPickerViewDelegate {
 }
 
 //MARK: - ==========WHEELPICKER DATASOURCE===============
-extension SpinVC : WheelPickerDataSource {
+extension SpinVC : UICollectionViewDataSource {
     
-    
-    func numberOfItems(_ wheelPicker: WheelPicker) -> Int {
+    //MARK: - ==NO of CELLS==
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.noMovies {
             return 1
         }
-        return self.container.dataManager.moviesDisplayed.count
+        return 100000000
     }
     
-    func imageFor(_ wheelPicker: WheelPicker, at index: Int) -> UIImage {
-        return self.noMovies ? #imageLiteral(resourceName: "blank") : self.container.dataManager.moviesDisplayed[index].poster
+    //MARK: - ==VIEW FOR CELL==
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
+        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : self.container.dataManager.moviesDisplayed[indexPath.row % self.container.dataManager.moviesDisplayed.count].poster
+
+        self.rouletteView.animateCell(cell)
+        return cell
+        
     }
 }
 
 //MARK: - ==========WHEELPICKER DELEGATE===============
 
-extension SpinVC : WheelPickerDelegate {
-    func wheelPicker(_ wheelPicker: WheelPicker, didSelectItemAt index: Int) {
-        //self.fillDisplayArray()
+extension SpinVC : UICollectionViewDelegate {
+    
+    //MARK: - ==ANIMATE WHEN SCROLLING==
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.rouletteView.animateVisibleCells()
     }
     
-    func wheelPickerDidScroll(_ wheelPicker: WheelPicker, direction: UICollectionViewScrollDirection) {
-        self.fillDisplayArray()
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let cell = cell as? GeminiCell {
+            self.rouletteView.animateCell(cell)
+        }
     }
     
 }
 
+
+//MARK: - ==========SPIN FUNCTIONS==========
 extension SpinVC {
     
-    func animateScroll() {
-        
+    
+    
+    
+    func spin() {
+        let position = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
+        let start = self.displayCount > 150 ? position + (displayCount * 3) : position + 500
+        let rando = RandomInt(between: start, and: start + displayCount)
+        //self.fillDisplayArray(toAtLeast: rando + 12)
+        self.rouletteView.scrollToItem(at: IndexPath(row: rando, section: 0), at: .centeredHorizontally, animated: true)
     }
     
 //    func randomNumber()-> Int {
-//        
+//
 //    }
     
 }

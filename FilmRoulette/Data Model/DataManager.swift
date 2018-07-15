@@ -19,6 +19,7 @@ class DataManager:NSObject {
 //MARK - =================== Arrays =================
     
     var moviesDisplayed = List<Movie>()
+    var uniqueMoviesDisplayed = List<Movie>()
     
     var allMovies:List<Movie> {
         get {
