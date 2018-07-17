@@ -18,22 +18,22 @@ class DataManager:NSObject {
     
 //MARK - =================== Arrays =================
     
-    var moviesDisplayed = List<Movie>()
+    var moviesDisplayed:Results<Movie>!
     var uniqueMoviesDisplayed = List<Movie>()
+    var movieList:Results<Movie>!
     
-    var allMovies:List<Movie> {
+    
+    
+    
+    var allMovies:Results<Movie> {
         get {
-            let movies = List<Movie>()
-            movies.append(objectsIn: self.realm.objects(Movie.self))
-            return movies
+           return self.realm.objects(Movie.self)
         }
     }
     
-    var fsMovies:List<Movie> {
+    var fsMovies:Results<Movie> {
         get {
-            let movies = List<Movie>()
-            movies.append(objectsIn: self.fsRealm.objects(Movie.self).filter("watched == %@", false))
-            return movies
+            return fsRealm.objects(Movie.self).filter("watched == %@", false)
         }
     }
     
@@ -60,10 +60,13 @@ class DataManager:NSObject {
     //MARK: - ========== CREATE ==========
     
     //MARK: - ==Save==
-    func saveToFavorites(movie:Movie, imageData:Data?, love:Bool, watched:Bool) {
+    func save(movie:Movie, imageData:Data?, love:Bool, watched:Bool) {
         movie.setPoster(withData:imageData)
         movie.love = love
         movie.watched = watched
+        for genre in movie.genres {
+            movie.genreList.append(self.genre(named: genre) ?? self.newGenre(named: genre))
+        }
         do {
             try self.realm.write {
                 realm.add(movie)
@@ -72,6 +75,21 @@ class DataManager:NSObject {
             print("Error saving object \(error)")
         }
     }
+    
+    func newGenre(named name:String)-> Genre {
+        let genre = Genre()
+        genre.name = name
+        do {
+            try self.realm.write {
+                realm.add(genre)
+            }
+        } catch {
+            print("Error saving object \(error)")
+        }
+        return genre
+    }
+    
+    
     
     //MARK: - ========== READ ==========
     func movie(withId id:Int)-> Movie? {
@@ -86,15 +104,13 @@ class DataManager:NSObject {
         return self.realm.objects(Movie.self).filter("%@ IN genreList", genre).first != nil
     }
     
+    func genre(named name:String)-> Genre? {
+        return self.realm.objects(Genre.self).filter("name == %@", name).first
+    }
+    
     //MARK: - ==GET MOVIES WITH TAG==
-    func movies(withTag tag:Tag)-> List<Movie> {
-        let movies = List<Movie>()
-        
-        for movie in Array(tag.movies) {
-            movies.append(movie)
-        }
-
-        return movies
+    func movies(withTag tag:Tag)-> Results<Movie> {
+        return self.realm.objects(Movie.self).filter("tags CONTAINS %@", tag)
     }
     
     
@@ -123,5 +139,9 @@ class DataManager:NSObject {
             print("error deleting \(object) \n \(error)")
         }
     }
+    
+    //MARK: - ========== CONVENIENCE ==========
+    
+    
     
 }

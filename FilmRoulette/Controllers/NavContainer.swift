@@ -45,7 +45,7 @@ class NavContainer: UIViewController {
     }
     
     @IBAction func myListPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "Favorites")
+        self.transition(toVCWithIdentifier: "Library")
     }
     
     @IBAction func addPressed(_ sender: Any) {

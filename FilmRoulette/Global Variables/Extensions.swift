@@ -10,6 +10,17 @@ import Foundation
 import RealmSwift
 import SwiftyJSON
 
+
+//MARK: - ========REALM  EXTENSIONS ===========
+
+extension Results where Element == Movie {
+    func asList()->List<Movie> {
+        let list = List<Movie>()
+        list.append(objectsIn: self)
+        return list
+    }
+}
+
 //MARK: - ========ARRAY  EXTENSIONS ===========
 //MARK: - ==String Array==
 extension Array where Element == String {

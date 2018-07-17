@@ -196,7 +196,6 @@ extension SpinVC {
         self.finalDestination = RandomInt(upTo:self.displayCount - 1) + (self.fullSpins * self.displayCount)
         while self.finalDestination < self.startRow + 300 {
             self.finalDestination += self.displayCount
-            
         }
         
         self.stillScrolling = true

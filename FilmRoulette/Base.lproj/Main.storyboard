@@ -178,20 +178,67 @@
             </objects>
             <point key="canvasLocation" x="76" y="213.64317841079463"/>
         </scene>
-        <!--View Controller-->
+        <!--Movie ListVC-->
         <scene sceneID="kgs-3b-W5n">
             <objects>
-                <viewController storyboardIdentifier="MyMovies" id="7xE-sE-Apm" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Library" id="7xE-sE-Apm" customClass="MovieListVC" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XOK-xj-JZZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nu5-JP-VXF">
+                                <rect key="frame" x="16" y="40" width="343" height="29"/>
+                                <segments>
+                                    <segment title="My Library"/>
+                                    <segment title="FilmSwipe"/>
+                                </segments>
+                                <connections>
+                                    <action selector="displayControlPressed:" destination="7xE-sE-Apm" eventType="valueChanged" id="obl-gc-caf"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="p8g-CO-Lpi">
+                                <rect key="frame" x="16" y="134" width="343" height="483"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="7Nq-iD-E6E">
+                                        <rect key="frame" x="0.0" y="28" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Nq-iD-E6E" id="5NA-Ba-OdI">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="OsW-rB-VcS">
+                                <rect key="frame" x="16" y="78" width="343" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="OsW-rB-VcS" firstAttribute="top" secondItem="nu5-JP-VXF" secondAttribute="bottom" constant="10" id="Mg9-6v-T4e"/>
+                            <constraint firstItem="geB-Pn-t5o" firstAttribute="trailing" secondItem="nu5-JP-VXF" secondAttribute="trailing" constant="16" id="NsD-lo-0Rq"/>
+                            <constraint firstItem="nu5-JP-VXF" firstAttribute="top" secondItem="geB-Pn-t5o" secondAttribute="top" constant="20" id="XEa-Mh-DsH"/>
+                            <constraint firstItem="geB-Pn-t5o" firstAttribute="trailing" secondItem="OsW-rB-VcS" secondAttribute="trailing" constant="16" id="aDt-8p-yMT"/>
+                            <constraint firstItem="OsW-rB-VcS" firstAttribute="leading" secondItem="geB-Pn-t5o" secondAttribute="leading" constant="16" id="ahi-yZ-j3j"/>
+                            <constraint firstItem="p8g-CO-Lpi" firstAttribute="leading" secondItem="geB-Pn-t5o" secondAttribute="leading" constant="16" id="cRt-OQ-6sX"/>
+                            <constraint firstItem="nu5-JP-VXF" firstAttribute="leading" secondItem="geB-Pn-t5o" secondAttribute="leading" constant="16" id="elk-8H-54H"/>
+                            <constraint firstItem="p8g-CO-Lpi" firstAttribute="top" secondItem="OsW-rB-VcS" secondAttribute="bottom" id="ozH-kZ-6Ma"/>
+                            <constraint firstItem="geB-Pn-t5o" firstAttribute="bottom" secondItem="p8g-CO-Lpi" secondAttribute="bottom" constant="50" id="uCY-z3-AsP"/>
+                            <constraint firstItem="geB-Pn-t5o" firstAttribute="trailing" secondItem="p8g-CO-Lpi" secondAttribute="trailing" constant="16" id="yO1-IX-S44"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="geB-Pn-t5o"/>
                     </view>
+                    <connections>
+                        <outlet property="displayControl" destination="nu5-JP-VXF" id="kmf-MU-DnT"/>
+                        <outlet property="movieTable" destination="p8g-CO-Lpi" id="0Gx-Gh-cYt"/>
+                        <outlet property="searchBar" destination="OsW-rB-VcS" id="Fa8-zw-XiK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dH0-S0-Q69" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="825" y="214"/>
+            <point key="canvasLocation" x="824.79999999999995" y="213.64317841079463"/>
         </scene>
     </scenes>
 </document>
