@@ -115,10 +115,7 @@ let SortTypeKeys = [
 ]
 
 //MARK: - =========CONVENIENCE FUNCTIONS=========
-func RandomInt(between min: Int, and max:Int)->Int {
-    if min < max {
-        return Int(arc4random_uniform(UInt32(max + 1 - min))) + min
-    }
-    return 0
+func RandomInt(upTo max:Int)->Int {
+    return Int(arc4random_uniform(UInt32(max + 1)))
 }
 

@@ -37,7 +37,16 @@ class SpinVC: NavSubview {
         }
     }
     
-    
+    //MARK: SCROLLING
+    var stillScrolling = false
+    var finalDestination = 0
+    var fullSpins = 0
+    var scrollInterval = 0
+    var currentDestination = 0
+    var sleep:TimeInterval = 0
+    var startRow = 0
+    var decelerating = false
+    var decelerateCount = 1
     
     
 //MARK: - ========== SETUP ==========
@@ -47,11 +56,12 @@ class SpinVC: NavSubview {
         //MARK: - ==DELEGATES AND DATASOURCES==
         self.singlePicker.delegate = self
         self.singlePicker.dataSource = self
+        self.rouletteView.decelerationRate = UIScrollViewDecelerationRateFast
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
         
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
-        self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp)
+        self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
         self.loadRoulette()
         
     }
@@ -181,16 +191,89 @@ extension SpinVC {
     
     
     func spin() {
-        let position = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
-        let start = self.displayCount > 150 ? position + (displayCount * 3) : position + 500
-        let rando = RandomInt(between: start, and: start + displayCount)
-        //self.fillDisplayArray(toAtLeast: rando + 12)
-        self.rouletteView.scrollToItem(at: IndexPath(row: rando, section: 0), at: .centeredHorizontally, animated: true)
+        self.startRow = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
+        self.fullSpins = self.displayCount > 20 ? RandomInt(upTo: 5) + 5 : RandomInt(upTo: 5) + 10
+        self.finalDestination = RandomInt(upTo:self.displayCount - 1) + (self.fullSpins * self.displayCount)
+        while self.finalDestination < self.startRow + 300 {
+            self.finalDestination += self.displayCount
+            
+        }
+        
+        self.stillScrolling = true
+        self.currentDestination = self.startRow + self.displayCount
+        self.scroll()
+
+        
     }
     
-//    func randomNumber()-> Int {
-//
-//    }
+    @objc func scroll() {
+        
+        
+        self.rouletteView.selectItem(at: IndexPath(row: self.currentDestination, section: 0), animated: true, scrollPosition: .centeredHorizontally)
+
+        if self.currentDestination >= self.finalDestination {
+            self.stillScrolling = false
+            return
+        }
+        
+        if self.fullSpins > 0 {
+            print("spinning again \(self.fullSpins)")
+            self.fullSpins -= 1
+            self.currentDestination += self.displayCount
+            return
+        }
+        
+        if !decelerating {
+            while self.currentDestination >= self.finalDestination - 20 {
+                self.finalDestination += self.displayCount
+            }
+            self.currentDestination = self.finalDestination - 20 + RandomInt(upTo: 5)
+            self.scrollInterval = 1
+            self.decelerating = true
+            return
+        }
+        
+        
+        self.currentDestination += self.scrollInterval
+        if self.scrollInterval > 1 {
+            self.scrollInterval -= 1
+        }
+        
+    }
+    
+    func resetScrollVariables() {
+        self.stillScrolling = false
+        self.finalDestination = 0
+        self.fullSpins = 0
+        self.scrollInterval = 0
+        self.currentDestination = 0
+        self.sleep = 0
+        self.startRow = 0
+        self.decelerating = false
+    }
+    
+   
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("ended!")
+    }
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if self.stillScrolling {
+            if self.decelerating {
+                self.sleep += 0.001 * Double(self.decelerateCount)
+                self.decelerateCount += 1
+                
+                self.perform(#selector(scroll), with: nil, afterDelay: sleep)
+            } else {
+               self.scroll()
+            }
+            
+        } else {
+            print("done")
+            self.resetScrollVariables()
+        }
+
+    }
     
 }
 
