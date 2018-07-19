@@ -66,6 +66,12 @@ class SpinVC: NavSubview {
         
     }
     
+    //MARK: - =========DISPLAYSETTINGS ===============
+    //MARK: - ==Settings==
+    @IBAction func settingsPressed(_ sender: Any) {
+    }
+    
+    
 //MARK: - ========= UI UPDATE ==========
     //MARK: - ==LOAD ROULETTE==
     func loadRoulette() {
@@ -79,11 +85,11 @@ class SpinVC: NavSubview {
             self.container.dataManager.moviesDisplayed = self.container.dataManager.fsMovies
             
         } else if singlePicker.selectedRow(inComponent: 0) < genres.count + 2 {
-            
+            self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withGenre: genres[self.singlePicker.selectedRow(inComponent: 0) - 2])
         } else {
             self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withTag: self.container.dataManager.tags[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)])
         }
-        
+        print("reloading")
         self.rouletteView.reloadData()
         if !self.noMovies {
             self.rouletteView.deselectItem(at: IndexPath(row: 10000, section: 0) , animated: false)
@@ -99,6 +105,10 @@ class SpinVC: NavSubview {
         }
     }
     
+    
+//MARK: - ========= Navigation ==========
+    
+   
     
 }
 

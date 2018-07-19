@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Toast_Swift
 
 class MovieListVC: NavSubview {
 
@@ -95,20 +96,39 @@ class MovieListVC: NavSubview {
 //MARK: - ==DElEGATE==
 extension MovieListVC : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = self.container.dataManager.movieList[indexPath.row]
+        //let movie = self.container.dataManager.movieList[indexPath.row]
         //self.presentView(withIdentifier: "SingleMovie", movie: movie)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
+        var button:UITableViewRowAction!
+        
+        if self.displayControl.selectedSegmentIndex == 0 {
+        button = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
             //TODO: show warning
             self.delete(movie: self.container.dataManager.movieList[indexPath.row])
-            
+            }
+            button.backgroundColor = UIColor(hexString: "#A5484A").withAlphaComponent(0.8)
+        } else {
+            button = UITableViewRowAction(style: .normal, title: "Add") { (action, indexPath) in
+                //TODO: show warning
+                let movie = self.container.dataManager.movieList[indexPath.row]
+                if !self.container.dataManager.databaseContains(movieWithId: movie.id) {
+                   let error = self.container.dataManager.importMovie(movie: movie)
+                    self.view.makeToast(error ?? "Saved to library", duration:3.0, position: .center)
+                } else {
+                    self.view.makeToast("Already in library.", duration:3.0, position: .center)
+                }
+            }
+            button.backgroundColor = UIColor(hexString: "#34A853").withAlphaComponent(0.8)
         }
-        delete.backgroundColor = UIColor(hexString: "#A5484A").withAlphaComponent(0.8)
+        
+        
         tableView.reloadData()
-        return [delete]
+        return [button]
     }
+    
+    
 }
 
 //MARK: - ==DATASOURCE==

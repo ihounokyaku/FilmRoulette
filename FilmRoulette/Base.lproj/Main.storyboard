@@ -153,6 +153,15 @@
                                     <action selector="spinPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lfg-LK-o8s"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F24-z7-89f">
+                                <rect key="frame" x="302" y="44" width="57" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Settings"/>
+                                <connections>
+                                    <action selector="settingsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gWa-Em-mvf"/>
+                                    <segue destination="glF-DO-r9c" kind="show" id="s6H-51-hib"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -239,6 +248,64 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dH0-S0-Q69" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="824.79999999999995" y="213.64317841079463"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Wtg-eW-anR">
+            <objects>
+                <viewController id="glF-DO-r9c" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kDp-t3-kEe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DDH-r3-oFM">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tRJ-Ve-4Tj">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GyW-V7-acN" customClass="TagListView" customModule="TagListView">
+                                                <rect key="frame" x="18" y="62" width="349" height="234"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="tagBackgroundColor">
+                                                        <color key="value" red="0.82373052840000005" green="0.44909489149999998" blue="0.39107400180000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1000" id="6Q5-eM-eTi"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="tRJ-Ve-4Tj" firstAttribute="leading" secondItem="DDH-r3-oFM" secondAttribute="leading" id="3QY-0P-bta"/>
+                                    <constraint firstItem="tRJ-Ve-4Tj" firstAttribute="centerX" secondItem="DDH-r3-oFM" secondAttribute="centerX" id="Hbj-v6-iyS"/>
+                                    <constraint firstAttribute="trailing" secondItem="tRJ-Ve-4Tj" secondAttribute="trailing" id="M69-pr-Nsp"/>
+                                    <constraint firstItem="tRJ-Ve-4Tj" firstAttribute="top" secondItem="DDH-r3-oFM" secondAttribute="top" id="TAx-v6-5UZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="tRJ-Ve-4Tj" secondAttribute="bottom" id="b0U-7L-fs7"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DDH-r3-oFM" firstAttribute="leading" secondItem="DnS-Lx-PjC" secondAttribute="leading" id="JO3-sH-iim"/>
+                            <constraint firstItem="DDH-r3-oFM" firstAttribute="top" secondItem="kDp-t3-kEe" secondAttribute="top" id="Oel-tB-awM"/>
+                            <constraint firstItem="DDH-r3-oFM" firstAttribute="trailing" secondItem="DnS-Lx-PjC" secondAttribute="trailing" id="dMr-Ba-xkM"/>
+                            <constraint firstItem="DDH-r3-oFM" firstAttribute="bottom" secondItem="DnS-Lx-PjC" secondAttribute="bottom" id="o28-Vt-vnH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="DnS-Lx-PjC"/>
+                    </view>
+                    <size key="freeformSize" width="375" height="1000"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8qK-ME-cqF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1522.4000000000001" y="213.19340329835083"/>
         </scene>
     </scenes>
 </document>

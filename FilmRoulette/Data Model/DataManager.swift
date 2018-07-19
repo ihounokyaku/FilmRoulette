@@ -9,6 +9,11 @@
 import Foundation
 import RealmSwift
 
+
+//MARK: - =========Datamodel Value Keys=========
+
+let Moviekeys = ["id", "title", "thumbnailName", "imageUrl", "desc", "rtScore", "imdbScore", "metacriticScore", "trailerUrl", "love", "watched", "releaseDate", "imdbID", "genres"]
+
 class DataManager:NSObject {
     
     
@@ -60,6 +65,26 @@ class DataManager:NSObject {
     //MARK: - ========== CREATE ==========
     
     //MARK: - ==Save==
+    
+    func importMovie(movie:Movie)->String? {
+        let newMovie = Movie()
+        for key in Moviekeys {
+            newMovie.setValue(movie.value(forKey: key), forKey: key)
+        }
+        for genre in newMovie.genres {
+            newMovie.genreList.append(self.genre(named: genre) ?? self.newGenre(named: genre))
+        }
+        do {
+            try self.realm.write {
+                realm.add(newMovie)
+            }
+            return nil
+        } catch {
+            return error.localizedDescription
+        }
+    }
+    
+    
     func save(movie:Movie, imageData:Data?, love:Bool, watched:Bool) {
         movie.setPoster(withData:imageData)
         movie.love = love
@@ -110,7 +135,11 @@ class DataManager:NSObject {
     
     //MARK: - ==GET MOVIES WITH TAG==
     func movies(withTag tag:Tag)-> Results<Movie> {
-        return self.realm.objects(Movie.self).filter("tags CONTAINS %@", tag)
+        return self.realm.objects(Movie.self).filter("%@ IN tags", tag)
+    }
+    
+    func movies(withGenre genre:Genre)-> Results<Movie> {
+        return self.realm.objects(Movie.self).filter("%@ IN genreList", genre)
     }
     
     
