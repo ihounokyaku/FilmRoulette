@@ -145,6 +145,10 @@ class DataManager:NSObject {
         return self.realm.objects(Genre.self).filter("name == %@", name).first
     }
     
+    func tag(named name:String)-> Tag? {
+        return self.realm.objects(Tag.self).filter("name == %@", name).first
+    }
+    
     //MARK: - ==GET MOVIES WITH TAG==
     func movies(withTag tag:Tag)-> Results<Movie> {
         return self.realm.objects(Movie.self).filter("%@ IN tags", tag)

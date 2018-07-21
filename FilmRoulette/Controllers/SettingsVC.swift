@@ -56,6 +56,7 @@ class SettingsVC: UIViewController {
     @IBAction func donePressed(_ sender: Any) {
         self.dismiss(animated: true) {
             //TODO: reload delegate stuff
+            self.delegate.loadFromSettings()
         }
     }
     

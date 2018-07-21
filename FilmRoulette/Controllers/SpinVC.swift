@@ -21,6 +21,8 @@ class SpinVC: NavSubview {
     
     //MARK: - ==Buttons==
     @IBOutlet weak var spinButton: UIButton!
+    @IBOutlet weak var displayTypeController: UISegmentedControl!
+    @IBOutlet weak var settingsButton: UIButton!
     
 //MARK: - ===========VARIABLES============
     
@@ -62,6 +64,8 @@ class SpinVC: NavSubview {
         
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
         self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
+        
+        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
         self.loadRoulette()
         
     }
@@ -73,8 +77,36 @@ class SpinVC: NavSubview {
     
     
 //MARK: - ========= UI UPDATE ==========
-    //MARK: - ==LOAD ROULETTE==
+    
+    //MARK: - ==SWITCH DISPLAY==
+    @IBAction func switchDisplay(_ sender: UISegmentedControl) {
+        Prefs.selectorPosition = sender.selectedSegmentIndex
+        if sender.selectedSegmentIndex == 1 {
+            if Prefs.canBeIncluded.count == 0 && Prefs.mustBeIncluded.count == 0 && Prefs.excluded.count == 0  {
+                self.presentView(withIdentifier: "SettingsVC")
+                return
+            }
+        }
+        
+        self.loadRoulette()
+    }
+    
     func loadRoulette() {
+        if self.displayTypeController.selectedSegmentIndex == 0 {
+            self.loadFromFolder()
+            
+        } else {
+            self.loadFromSettings()
+        }
+        
+        self.singlePicker.isHidden = self.displayTypeController.selectedSegmentIndex == 1
+        self.settingsButton.isHidden = self.displayTypeController.selectedSegmentIndex == 0
+    }
+    
+    
+    
+    //MARK: - ==LOAD FROM FOLDER==
+    func loadFromFolder() {
         
         let genres = self.container.dataManager.genres
         
@@ -89,16 +121,57 @@ class SpinVC: NavSubview {
         } else {
             self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withTag: self.container.dataManager.tags[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)])
         }
-        print("reloading")
+        self.reloadRoulette()
+    }
+    
+    
+    //MARK: - ==CUSTOM ARRAY==
+    func loadFromSettings() {
+        self.container.dataManager.moviesDisplayed = self.container.dataManager.allMovies
+        
+        if Prefs.mustBeIncluded.count > 0 {
+            self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
+        }
+        if Prefs.canBeIncluded.count > 0 {
+            self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
+        }
+        for tag in Prefs.excluded  {
+            if let genre = self.container.dataManager.genre(named: tag) {
+                self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
+            } else if let tag = self.container.dataManager.tag(named: tag) {
+                self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
+            }
+        }
+        self.reloadRoulette()
+    }
+    
+    func compoundTagPredicate(and:Bool, tags:[String])-> NSCompoundPredicate {
+        var predicates = [NSPredicate]()
+        
+        for tag in tags {
+            if let genre = self.container.dataManager.genre(named: tag) {
+                predicates.append(NSPredicate(format: "%@ IN genreList", genre))
+            } else if let tag = self.container.dataManager.tag(named: tag) {
+                predicates.append(NSPredicate(format: "%@ IN tags", tag))
+            }
+        }
+        if and {
+            return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        }
+        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+    }
+    
+    //MARK: - ==RELOAD==
+    func reloadRoulette() {
+       
         self.rouletteView.reloadData()
         if !self.noMovies {
             self.rouletteView.deselectItem(at: IndexPath(row: 10000, section: 0) , animated: false)
         }
     }
-    
   
     
-    
+    //MARK: - ==========SPIN==========
     @IBAction func spinPressed(_ sender: Any) {
         if self.displayCount > 0 {
             self.spin()
@@ -149,19 +222,15 @@ extension SpinVC : UIPickerViewDataSource {
         } else if row < genres.count + 2 {
             return genres[row - 2].name
         }
-        
         return self.container.dataManager.tags[row - (2 + genres.count)].name
     }
-    
-    
-    
 }
 
 //MARK: - ==========PICKERVIEW DELEGATE===============
 extension SpinVC : UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.loadRoulette()
+        self.loadFromFolder()
     }
     
 }
@@ -187,6 +256,8 @@ extension SpinVC : UICollectionViewDataSource {
         return cell
         
     }
+    
+    
 }
 
 //MARK: - ==========WHEELPICKER DELEGATE===============
@@ -209,10 +280,7 @@ extension SpinVC : UICollectionViewDelegate {
 
 //MARK: - ==========SPIN FUNCTIONS==========
 extension SpinVC {
-    
-    
-    
-    
+
     func spin() {
         self.startRow = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
         self.fullSpins = self.displayCount > 20 ? RandomInt(upTo: 5) + 5 : RandomInt(upTo: 5) + 10
