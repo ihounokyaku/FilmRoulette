@@ -42,6 +42,18 @@ class DataManager:NSObject {
         }
     }
     
+    var allGenres:Results<Genre> {
+        get {
+            return self.realm.objects(Genre.self)
+        }
+    }
+    
+    var allTags:Results<Tag> {
+        get {
+            return self.realm.objects(Tag.self)
+        }
+    }
+    
     var tags:List<Tag> {
         get {
             let tags = List<Tag>()

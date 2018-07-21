@@ -108,7 +108,20 @@ class SpinVC: NavSubview {
     
 //MARK: - ========= Navigation ==========
     
-   
+    @IBAction func settingPressed(_ sender: Any) {
+        self.presentView(withIdentifier: "SettingsVC")
+    }
+    
+    
+    func presentView(withIdentifier identifier:String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier) as? SettingsVC else {return}
+    
+        //MARK: Configure and Present VC
+        controller.delegate = self
+        controller.modalPresentationStyle = .popover
+        self.present(controller, animated:true, completion:nil)
+    }
     
 }
 

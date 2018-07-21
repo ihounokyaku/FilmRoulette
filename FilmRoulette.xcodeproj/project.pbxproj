@@ -22,6 +22,7 @@
 		C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7C20F3B48700F30BAF /* Enums.swift */; };
 		C4971D8220F3B4AC00F30BAF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7D20F3B48700F30BAF /* Extensions.swift */; };
 		C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7E20F3B48700F30BAF /* Global Variables.swift */; };
+		C49D56AB2102257A00CAADF2 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49D56AA2102257A00CAADF2 /* SettingsVC.swift */; };
 		C4AC67F520F7AE6500F91621 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AC67F420F7AE6400F91621 /* Genre.swift */; };
 		C4DB46E920F4E9D0009EC359 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB46E820F4E9D0009EC359 /* Tag.swift */; };
 		C4E438C220FB6482007C5D68 /* PosterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E438C120FB6482007C5D68 /* PosterCell.swift */; };
@@ -47,6 +48,7 @@
 		C4971D7D20F3B48700F30BAF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C4971D7E20F3B48700F30BAF /* Global Variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Variables.swift"; sourceTree = "<group>"; };
 		C4971D7F20F3B48700F30BAF /* Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prefs.swift; sourceTree = "<group>"; };
+		C49D56AA2102257A00CAADF2 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		C4AC67F420F7AE6400F91621 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		C4DB46E820F4E9D0009EC359 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		C4E438C120FB6482007C5D68 /* PosterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterCell.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				C4595A6E20F3AF0A00446C4B /* NavSubview.swift */,
 				C407DF8120F39C7700213A37 /* SpinVC.swift */,
 				C482938920FE256E00E7BECF /* MovieListVC.swift */,
+				C49D56AA2102257A00CAADF2 /* SettingsVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */,
 				C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */,
 				C4971D7920F3B42600F30BAF /* Movie.swift in Sources */,
+				C49D56AB2102257A00CAADF2 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,7 +461,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UQ3BB547F3;
 				INFOPLIST_FILE = FilmRoulette/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -474,7 +481,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UQ3BB547F3;
 				INFOPLIST_FILE = FilmRoulette/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

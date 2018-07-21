@@ -11,6 +11,43 @@ import UIKit
 class Prefs: NSObject {
     
     
+    //MARK: - ==========ROULETTE DISPLAY PARAMS===========
+    static var mustBeIncluded:[String] {
+        get {
+            return UserDefaults.standard.value(forKey: "mustBeIncluded") as? [String] ?? []
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "mustBeIncluded")
+        }
+    }
+    
+    static var canBeIncluded:[String] {
+        get {
+            return UserDefaults.standard.value(forKey: "mayBeIncluded") as? [String] ?? []
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "mayBeIncluded")
+        }
+    }
+    
+    static var excluded:[String] {
+        get {
+            return UserDefaults.standard.value(forKey: "excluded") as? [String] ?? []
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "excluded")
+        }
+    }
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
     //MARK: - =========QUERY PARAMS==========
     
     

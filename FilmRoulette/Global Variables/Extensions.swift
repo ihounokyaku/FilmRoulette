@@ -45,6 +45,23 @@ extension Array where Element == String {
         }
         return string
     }
+    
+    func removing(_ string:String)-> [String] {
+        var array = self
+        if array.contains(string) {
+            array.remove(at: array.index(of: string)!)
+        }
+        return array
+    }
+    
+    func appending(_ string:String)-> [String] {
+        var array = self
+        if !array.contains(string) {
+            array.append(string)
+        }
+        return array
+    }
+        
 }
 
 extension Array where Element == Movie {
