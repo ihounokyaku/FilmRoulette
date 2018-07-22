@@ -24,11 +24,8 @@ class DataManager:NSObject {
 //MARK - =================== Arrays =================
     
     var moviesDisplayed:Results<Movie>!
-    var uniqueMoviesDisplayed = List<Movie>()
+    //var uniqueMoviesDisplayed = List<Movie>()
     var movieList:Results<Movie>!
-    
-    
-    
     
     var allMovies:Results<Movie> {
         get {
@@ -51,6 +48,12 @@ class DataManager:NSObject {
     var allTags:Results<Tag> {
         get {
             return self.realm.objects(Tag.self)
+        }
+    }
+    
+    var allGroups:Results<Group> {
+        get {
+            return self.realm.objects(Group.self).sorted(byKeyPath: "name")
         }
     }
     
@@ -77,6 +80,17 @@ class DataManager:NSObject {
     //MARK: - ========== CREATE ==========
     
     //MARK: - ==Save==
+    
+    func save(object:Object)->String? {
+        do {
+            try self.realm.write {
+                realm.add(object)
+            }
+            return nil
+        } catch {
+            return error.localizedDescription
+        }
+    }
     
     func importMovie(movie:Movie)->String? {
         let newMovie = Movie()
@@ -131,6 +145,10 @@ class DataManager:NSObject {
     //MARK: - ========== READ ==========
     func movie(withId id:Int)-> Movie? {
         return self.realm.objects(Movie.self).filter("id == %i", id).first
+    }
+    
+    func folder(withName name:String)-> Group? {
+        return self.realm.objects(Group.self).filter("name == %@", name).first
     }
     
     func databaseContains(movieWithId id:Int)->Bool {

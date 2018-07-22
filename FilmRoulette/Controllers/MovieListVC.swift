@@ -57,6 +57,7 @@ class MovieListVC: NavSubview {
     
     
     
+    
     //MARK: - ===========PRESENTVIEW===========
     func presentView(withIdentifier identifier:String, movie:Movie) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -122,8 +123,6 @@ extension MovieListVC : UITableViewDelegate {
             }
             button.backgroundColor = UIColor(hexString: "#34A853").withAlphaComponent(0.8)
         }
-        
-        
         tableView.reloadData()
         return [button]
     }
@@ -142,9 +141,9 @@ extension MovieListVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         
-        let movie = self.container.dataManager.movieList[indexPath.row]
-        cell.imageView!.image = movie.poster
-        cell.textLabel!.text = movie.title
+            let movie = self.container.dataManager.movieList[indexPath.row]
+            cell.imageView!.image = movie.poster
+            cell.textLabel!.text = movie.title
         
         return cell
     }

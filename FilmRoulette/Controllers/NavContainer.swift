@@ -52,6 +52,10 @@ class NavContainer: UIViewController {
         self.transition(toVCWithIdentifier: "Search")
     }
     
+    @IBAction func myGroupsPressed(_ sender: Any) {
+        self.transition(toVCWithIdentifier: "GroupVC")
+    }
+    
     
     //MARK: - =========PRESENT VC===========
 
