@@ -35,7 +35,7 @@ class GroupVC: NavSubview {
     //MARK: - =========PRESENT TABLE===========
     
     //MARK: - ==ANIMATE TRANSITION==
-    func transition(toVCWithIdentifier identifier: String, animated:Bool = true) {
+    func transition(toVCWithIdentifier identifier: String, group:Group? = nil, animated:Bool = true) {
         
         //MARK: Get destination VC and assign container
         let destinationVC = self.getSubview(identifier) as! TableVC
@@ -43,7 +43,8 @@ class GroupVC: NavSubview {
         
         //MARK: Set alpha and position
         destinationVC.view.alpha = animated ? 0 : 1
-        destinationVC.container = self.container
+        destinationVC.delegate = self
+        destinationVC.group = group
         self.addAndPosition(viewController:destinationVC, toParent:self, inContainer: self.tableContainer)
         self.tableView = destinationVC
         
@@ -57,7 +58,7 @@ class GroupVC: NavSubview {
             destinationVC.view.alpha = 1
             self.tableContainer.subviews[0].alpha = 0
         }, completion: {(finished: Bool) in
-            
+           
         })
     }
     
@@ -79,7 +80,7 @@ class GroupVC: NavSubview {
     //MARK: - ========== NEW ============
     
     @IBAction func addPressed(_ sender: Any) {
-        if self.tableView.folderList {
+        if self.tableView.group == nil {
             self.newFolder()
         }
     }
