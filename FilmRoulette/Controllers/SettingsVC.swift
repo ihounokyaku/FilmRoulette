@@ -44,8 +44,8 @@ class SettingsVC: UIViewController {
        
         
         //MARK: ==Fill Arrays==
-        self.possibleTags = self.delegate.container.dataManager.allGenres.map({return $0.name})
-        self.possibleTags += self.delegate.container.dataManager.allTags.map({return $0.name})
+        self.possibleTags = GlobalDataManager.allGenres.map({return $0.name})
+        self.possibleTags += GlobalDataManager.allTags.map({return $0.name})
         
         //MARK: ==UPDATE UI==
         self.refreshTagView()

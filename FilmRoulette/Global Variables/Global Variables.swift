@@ -32,7 +32,16 @@ var ImageDirectory:URL {
 let RealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmroulette.realm"))
 let FilmswipeRealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmswipe.realm"))
 
+//MARK: - ==GLOBALCLASSES ==
 
+var GlobalDataManager:DataManager{
+    get  {
+        if SessionVars.DataManager == nil {
+            SessionVars.DataManager = DataManager()
+        }
+        return SessionVars.DataManager!
+    }
+}
 
 
 //MARK: - =========GENRES=========
@@ -118,8 +127,14 @@ let SortTypeKeys = [
 
 
 
+
 //MARK: - =========CONVENIENCE FUNCTIONS=========
 func RandomInt(upTo max:Int)->Int {
     return Int(arc4random_uniform(UInt32(max + 1)))
+}
+
+//MARK: =========SESSION VARS=============
+class SessionVars:NSObject {
+    static var DataManager:DataManager?
 }
 

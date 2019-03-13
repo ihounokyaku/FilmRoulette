@@ -20,12 +20,13 @@ class MovieListVC: NavSubview {
     //MARK: - =========BUTTONS============
     
     @IBOutlet weak var displayControl: UISegmentedControl!
+    @IBOutlet weak var addButton: UIButton!
     
     
     
     //MARK: - =========Variables==========
     var moviesOnDisplay:Results<Movie> {
-        return self.displayControl.selectedSegmentIndex == 0 ? self.container.dataManager.realm.objects(Movie.self) : self.container.dataManager.fsRealm.objects(Movie.self)
+        return self.displayControl.selectedSegmentIndex == 0 ? GlobalDataManager.realm.objects(Movie.self) : GlobalDataManager.fsRealm.objects(Movie.self)
     }
     
     
@@ -47,10 +48,12 @@ class MovieListVC: NavSubview {
     
     @IBAction func displayControlPressed(_ sender: Any) {
         self.toggleDisplay()
+        
     }
     
     func toggleDisplay() {
-        self.container.dataManager.movieList = self.moviesOnDisplay
+        GlobalDataManager.movieList = self.moviesOnDisplay
+        self.addButton.isHidden = self.displayControl.selectedSegmentIndex == 0
         self.movieTable.reloadData()
     }
     
@@ -78,7 +81,7 @@ class MovieListVC: NavSubview {
         let action = UIAlertAction(title: "DO IT!!!", style: .default) { (action) in
             //TODO: DELETE
            
-            self.container.dataManager.deleteObject(object: movie)
+            GlobalDataManager.deleteObject(object: movie)
             
             self.movieTable.reloadData()
         }
@@ -91,13 +94,26 @@ class MovieListVC: NavSubview {
         present(alert, animated: true, completion: nil)
         
     }
+    //MARK: - ======OTHER ACTIONS==========
+    
+    @IBAction func addAllPressed(_ sender: Any) {
+        for movie in GlobalDataManager.movieList{
+            if !GlobalDataManager.databaseContains(movieWithId: movie.id) {
+                if  let error = GlobalDataManager.importMovie(movie: movie) {
+                    self.view.makeToast(error, duration:3.0, position: .center)
+                }
+            }
+        }
+    }
+    
+    
 }
 
 //MARK: - ==========TABLE VIEW==========
 //MARK: - ==DElEGATE==
 extension MovieListVC : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //let movie = self.container.dataManager.movieList[indexPath.row]
+        //let movie = GlobalDataManager.movieList[indexPath.row]
         //self.presentView(withIdentifier: "SingleMovie", movie: movie)
     }
     
@@ -107,15 +123,15 @@ extension MovieListVC : UITableViewDelegate {
         if self.displayControl.selectedSegmentIndex == 0 {
         button = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
             //TODO: show warning
-            self.delete(movie: self.container.dataManager.movieList[indexPath.row])
+            self.delete(movie: GlobalDataManager.movieList[indexPath.row])
             }
             button.backgroundColor = UIColor(hexString: "#A5484A").withAlphaComponent(0.8)
         } else {
             button = UITableViewRowAction(style: .normal, title: "Add") { (action, indexPath) in
                 //TODO: show warning
-                let movie = self.container.dataManager.movieList[indexPath.row]
-                if !self.container.dataManager.databaseContains(movieWithId: movie.id) {
-                   let error = self.container.dataManager.importMovie(movie: movie)
+                let movie = GlobalDataManager.movieList[indexPath.row]
+                if !GlobalDataManager.databaseContains(movieWithId: movie.id) {
+                   let error = GlobalDataManager.importMovie(movie: movie)
                     self.view.makeToast(error ?? "Saved to library", duration:3.0, position: .center)
                 } else {
                     self.view.makeToast("Already in library.", duration:3.0, position: .center)
@@ -133,7 +149,7 @@ extension MovieListVC : UITableViewDelegate {
 //MARK: - ==DATASOURCE==
 extension MovieListVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.container.dataManager.movieList.count
+        return GlobalDataManager.movieList.count
     }
     
 
@@ -141,7 +157,7 @@ extension MovieListVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
         
-            let movie = self.container.dataManager.movieList[indexPath.row]
+            let movie = GlobalDataManager.movieList[indexPath.row]
             cell.imageView!.image = movie.poster
             cell.textLabel!.text = movie.title
         
@@ -177,7 +193,7 @@ extension MovieListVC : UISearchBarDelegate {
         predicates.append(NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!))
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
-        self.container.dataManager.movieList = self.moviesOnDisplay.filter(compoundPredicate)
+        GlobalDataManager.movieList = self.moviesOnDisplay.filter(compoundPredicate)
         self.movieTable.reloadData()
         
     }

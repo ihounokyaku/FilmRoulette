@@ -29,7 +29,7 @@ class DataManager:NSObject {
     
     var allMovies:Results<Movie> {
         get {
-           return self.realm.objects(Movie.self)
+           return self.realm.objects(Movie.self).sorted(byKeyPath: "title", ascending: true)
         }
     }
     
@@ -189,6 +189,17 @@ class DataManager:NSObject {
         } catch {
             print("Error saving object \(error)")
         }
+    }
+    
+    func add(_ movie:Movie, toGroup group:Group)-> String? {
+        do {
+           try self.realm.write {
+                group.movies.append(movie)
+            }
+        } catch {
+            return error.localizedDescription
+        }
+        return nil
     }
     
     

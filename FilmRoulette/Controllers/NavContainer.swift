@@ -26,9 +26,6 @@ class NavContainer: UIViewController {
     
     var currentSubview:NavSubview!
     
-    //MARK: - ==MANAGERS==
-
-    var dataManager = DataManager()
     
      //MARK: - =========== SETUP ============
     override func viewDidLoad() {

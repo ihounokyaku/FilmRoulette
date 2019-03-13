@@ -35,20 +35,12 @@ class SpinVC: NavSubview {
     
     var displayCount:Int {
         get {
-            return self.container.dataManager.moviesDisplayed.count
+            return GlobalDataManager.moviesDisplayed.count
         }
     }
     
     //MARK: SCROLLING
-    var stillScrolling = false
-    var finalDestination = 0
-    var fullSpins = 0
-    var scrollInterval = 0
-    var currentDestination = 0
-    var sleep:TimeInterval = 0
-    var startRow = 0
-    var decelerating = false
-    var decelerateCount = 1
+    var spinner:Spinner!
     
     
 //MARK: - ========== SETUP ==========
@@ -62,6 +54,7 @@ class SpinVC: NavSubview {
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
         
+        self.spinner = Spinner(collectionView: self.rouletteView)
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
         self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
         
@@ -108,18 +101,18 @@ class SpinVC: NavSubview {
     //MARK: - ==LOAD FROM FOLDER==
     func loadFromFolder() {
         
-        let genres = self.container.dataManager.genres
+        let genres = GlobalDataManager.genres
         
         if singlePicker.selectedRow(inComponent: 0) == 0 {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.allMovies
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
             
         } else if singlePicker.selectedRow(inComponent: 0) == 1 {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.fsMovies
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
             
         } else if singlePicker.selectedRow(inComponent: 0) < genres.count + 2 {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withGenre: genres[self.singlePicker.selectedRow(inComponent: 0) - 2])
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genres[self.singlePicker.selectedRow(inComponent: 0) - 2])
         } else {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.movies(withTag: self.container.dataManager.tags[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)])
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.allGroups[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)].movies.filter("TRUEPREDICATE")
         }
         self.reloadRoulette()
     }
@@ -127,19 +120,19 @@ class SpinVC: NavSubview {
     
     //MARK: - ==CUSTOM ARRAY==
     func loadFromSettings() {
-        self.container.dataManager.moviesDisplayed = self.container.dataManager.allMovies
+        GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
         
         if Prefs.mustBeIncluded.count > 0 {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
         }
         if Prefs.canBeIncluded.count > 0 {
-            self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
         }
         for tag in Prefs.excluded  {
-            if let genre = self.container.dataManager.genre(named: tag) {
-                self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
-            } else if let tag = self.container.dataManager.tag(named: tag) {
-                self.container.dataManager.moviesDisplayed = self.container.dataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
+            if let genre = GlobalDataManager.genre(named: tag) {
+                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
+            } else if let tag = GlobalDataManager.tag(named: tag) {
+                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
             }
         }
         self.reloadRoulette()
@@ -149,9 +142,9 @@ class SpinVC: NavSubview {
         var predicates = [NSPredicate]()
         
         for tag in tags {
-            if let genre = self.container.dataManager.genre(named: tag) {
+            if let genre = GlobalDataManager.genre(named: tag) {
                 predicates.append(NSPredicate(format: "%@ IN genreList", genre))
-            } else if let tag = self.container.dataManager.tag(named: tag) {
+            } else if let tag = GlobalDataManager.tag(named: tag) {
                 predicates.append(NSPredicate(format: "%@ IN tags", tag))
             }
         }
@@ -174,7 +167,7 @@ class SpinVC: NavSubview {
     //MARK: - ==========SPIN==========
     @IBAction func spinPressed(_ sender: Any) {
         if self.displayCount > 0 {
-            self.spin()
+            self.spinner.spin(toIndex: RandomInt(upTo:self.displayCount - 1), outOf: self.displayCount)
         }
     }
     
@@ -208,13 +201,13 @@ extension SpinVC : UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.container.dataManager.tags.count + self.container.dataManager.genres.count + 2
+        return GlobalDataManager.allGroups.count + GlobalDataManager.genres.count + 2
     }
     
     //MARK: - ==TITLE FOR ROW==
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
-        let genres = self.container.dataManager.genres
+        let genres = GlobalDataManager.genres
         if row == 0 {
             return "All Movies"
         } else if row == 1 {
@@ -222,7 +215,7 @@ extension SpinVC : UIPickerViewDataSource {
         } else if row < genres.count + 2 {
             return genres[row - 2].name
         }
-        return self.container.dataManager.tags[row - (2 + genres.count)].name
+        return GlobalDataManager.allGroups[row - (2 + genres.count)].name
     }
 }
 
@@ -250,7 +243,7 @@ extension SpinVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
-        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : self.container.dataManager.moviesDisplayed[indexPath.row % self.container.dataManager.moviesDisplayed.count].poster
+        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster
 
         self.rouletteView.animateCell(cell)
         return cell
@@ -278,94 +271,94 @@ extension SpinVC : UICollectionViewDelegate {
 }
 
 
-//MARK: - ==========SPIN FUNCTIONS==========
-extension SpinVC {
-
-    func spin() {
-        self.startRow = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
-        self.fullSpins = self.displayCount > 20 ? RandomInt(upTo: 5) + 5 : RandomInt(upTo: 5) + 10
-        self.finalDestination = RandomInt(upTo:self.displayCount - 1) + (self.fullSpins * self.displayCount)
-        while self.finalDestination < self.startRow + 300 {
-            self.finalDestination += self.displayCount
-        }
-        
-        self.stillScrolling = true
-        self.currentDestination = self.startRow + self.displayCount
-        self.scroll()
-
-        
-    }
-    
-    @objc func scroll() {
-        
-        
-        self.rouletteView.selectItem(at: IndexPath(row: self.currentDestination, section: 0), animated: true, scrollPosition: .centeredHorizontally)
-
-        if self.currentDestination >= self.finalDestination {
-            self.stillScrolling = false
-            return
-        }
-        
-        if self.fullSpins > 0 {
-            print("spinning again \(self.fullSpins)")
-            self.fullSpins -= 1
-            self.currentDestination += self.displayCount
-            return
-        }
-        
-        if !decelerating {
-            while self.currentDestination >= self.finalDestination - 20 {
-                self.finalDestination += self.displayCount
-            }
-            self.currentDestination = self.finalDestination - 20 + RandomInt(upTo: 5)
-            self.scrollInterval = 1
-            self.decelerating = true
-            return
-        }
-        
-        
-        self.currentDestination += self.scrollInterval
-        if self.scrollInterval > 1 {
-            self.scrollInterval -= 1
-        }
-        
-    }
-    
-    func resetScrollVariables() {
-        self.stillScrolling = false
-        self.finalDestination = 0
-        self.fullSpins = 0
-        self.scrollInterval = 0
-        self.currentDestination = 0
-        self.sleep = 0
-        self.startRow = 0
-        self.decelerating = false
-    }
-    
-   
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("ended!")
-    }
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        if self.stillScrolling {
-            if self.decelerating {
-                self.sleep += 0.001 * Double(self.decelerateCount)
-                self.decelerateCount += 1
-                
-                self.perform(#selector(scroll), with: nil, afterDelay: sleep)
-            } else {
-               self.scroll()
-            }
-            
-        } else {
-            print("done")
-            self.resetScrollVariables()
-        }
-
-    }
-    
-}
+////MARK: - ==========SPIN FUNCTIONS==========
+//extension SpinVC {
+//
+//    func spin() {
+//        self.startRow = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
+//        self.fullSpins = self.displayCount > 20 ? RandomInt(upTo: 5) + 5 : RandomInt(upTo: 5) + 10
+//        self.finalDestination = RandomInt(upTo:self.displayCount - 1) + (self.fullSpins * self.displayCount)
+//        while self.finalDestination < self.startRow + 300 {
+//            self.finalDestination += self.displayCount
+//        }
+//
+//        self.stillScrolling = true
+//        self.currentDestination = self.startRow + self.displayCount
+//        self.scroll()
+//
+//
+//    }
+//
+//    @objc func scroll() {
+//
+//
+//        self.rouletteView.selectItem(at: IndexPath(row: self.currentDestination, section: 0), animated: true, scrollPosition: .centeredHorizontally)
+//
+//        if self.currentDestination >= self.finalDestination {
+//            self.stillScrolling = false
+//            return
+//        }
+//
+//        if self.fullSpins > 0 {
+//            print("spinning again \(self.fullSpins)")
+//            self.fullSpins -= 1
+//            self.currentDestination += self.displayCount
+//            return
+//        }
+//
+//        if !decelerating {
+//            while self.currentDestination >= self.finalDestination - 20 {
+//                self.finalDestination += self.displayCount
+//            }
+//            self.currentDestination = self.finalDestination - 20 + RandomInt(upTo: 5)
+//            self.scrollInterval = 1
+//            self.decelerating = true
+//            return
+//        }
+//
+//
+//        self.currentDestination += self.scrollInterval
+//        if self.scrollInterval > 1 {
+//            self.scrollInterval -= 1
+//        }
+//
+//    }
+//
+//    func resetScrollVariables() {
+//        self.stillScrolling = false
+//        self.finalDestination = 0
+//        self.fullSpins = 0
+//        self.scrollInterval = 0
+//        self.currentDestination = 0
+//        self.sleep = 0
+//        self.startRow = 0
+//        self.decelerating = false
+//    }
+//
+//
+//
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("ended!")
+//    }
+//    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+//        if self.stillScrolling {
+//            if self.decelerating {
+//                self.sleep += 0.001 * Double(self.decelerateCount)
+//                self.decelerateCount += 1
+//
+//                self.perform(#selector(scroll), with: nil, afterDelay: sleep)
+//            } else {
+//               self.scroll()
+//            }
+//
+//        } else {
+//            print("done")
+//            self.resetScrollVariables()
+//        }
+//
+//    }
+//
+//}
 
 
 

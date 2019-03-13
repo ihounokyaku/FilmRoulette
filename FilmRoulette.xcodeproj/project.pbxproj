@@ -13,6 +13,7 @@
 		C407DF8520F39C7700213A37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8320F39C7700213A37 /* Main.storyboard */; };
 		C407DF8720F39C7800213A37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8620F39C7800213A37 /* Assets.xcassets */; };
 		C407DF8A20F39C7800213A37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8820F39C7800213A37 /* LaunchScreen.storyboard */; };
+		C44C34912223229000E654AC /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44C34902223229000E654AC /* Spinner.swift */; };
 		C450C9D3210473E900FDE9EB /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = C450C9D2210473E900FDE9EB /* Group.swift */; };
 		C450C9D521047E8400FDE9EB /* GroupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C450C9D421047E8400FDE9EB /* GroupVC.swift */; };
 		C450C9D921047F8600FDE9EB /* TableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C450C9D821047F8600FDE9EB /* TableVC.swift */; };
@@ -41,6 +42,7 @@
 		C407DF8620F39C7800213A37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C407DF8920F39C7800213A37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C407DF8B20F39C7800213A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C44C34902223229000E654AC /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		C450C9D2210473E900FDE9EB /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		C450C9D421047E8400FDE9EB /* GroupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVC.swift; sourceTree = "<group>"; };
 		C450C9D821047F8600FDE9EB /* TableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TableVC.swift; path = "/Users/aird/Dropbox/Xcode Projects/FilmRoulette/FilmRoulette/Controllers/TableVC.swift"; sourceTree = "<absolute>"; };
@@ -117,6 +119,7 @@
 				C4971D7620F3B41700F30BAF /* Data Model */,
 				C4595A6B20F3AEE100446C4B /* Controllers */,
 				C407DF8320F39C7700213A37 /* Main.storyboard */,
+				C44C34902223229000E654AC /* Spinner.swift */,
 				C4E438C120FB6482007C5D68 /* PosterCell.swift */,
 				C407DF8620F39C7800213A37 /* Assets.xcassets */,
 				C407DF8820F39C7800213A37 /* LaunchScreen.storyboard */,
@@ -174,7 +177,6 @@
 				C407DF7920F39C7600213A37 /* Frameworks */,
 				C407DF7A20F39C7600213A37 /* Resources */,
 				428664953BF1FE657C140267 /* [CP] Embed Pods Frameworks */,
-				3CBC5B7756792E5C883A820B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -255,33 +257,19 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3CBC5B7756792E5C883A820B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		428664953BF1FE657C140267 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Gemini/Gemini.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TagListView/TagListView.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 			);
@@ -292,12 +280,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TagListView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -314,6 +303,7 @@
 				C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */,
 				C4E438C220FB6482007C5D68 /* PosterCell.swift in Sources */,
 				C4595A6F20F3AF0A00446C4B /* NavSubview.swift in Sources */,
+				C44C34912223229000E654AC /* Spinner.swift in Sources */,
 				C450C9D3210473E900FDE9EB /* Group.swift in Sources */,
 				C450C9D521047E8400FDE9EB /* GroupVC.swift in Sources */,
 				C482938A20FE256E00E7BECF /* MovieListVC.swift in Sources */,
