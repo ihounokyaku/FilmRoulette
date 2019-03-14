@@ -8,6 +8,15 @@
 
 import UIKit
 
+enum VCIdentifier:String, CaseIterable {
+    case spinner = "Spinner"
+    case library = "Library"
+    case group = "GroupVC"
+    case search = "Search"
+}
+
+
+
 class NavContainer: UIViewController {
 //MARK: - ===========IBOUTLETS============
     //MARK: - ==VIEWS==
@@ -32,35 +41,25 @@ class NavContainer: UIViewController {
         super.viewDidLoad()
         
         //MARK: Load first VC
-        self.transition(toVCWithIdentifier: "Spinner", animated:false)
+        self.transition(toVCWithIdentifier: .spinner, animated:false)
     }
     
     //MARK: - =========BUTTON ACTIONS===========
     //MARK: - ==NavigationButtons==
-    @IBAction func spinPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "Spinner")
-    }
     
-    @IBAction func myListPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "Library")
-    }
-    
-    @IBAction func addPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "Search")
-    }
-    
-    @IBAction func myGroupsPressed(_ sender: Any) {
-        self.transition(toVCWithIdentifier: "GroupVC")
+    @IBAction func navButtonPressed(_ sender: UIButton){
+        print("tag \(sender.tag)")
+        self.transition(toVCWithIdentifier: VCIdentifier.allCases[sender.tag])
     }
     
     
     //MARK: - =========PRESENT VC===========
 
     //MARK: - ==ANIMATE TRANSITION==
-    func transition(toVCWithIdentifier identifier: String, animated:Bool = true) {
+    func transition(toVCWithIdentifier identifier: VCIdentifier, animated:Bool = true) {
         
         //MARK: Get destination VC and assign container
-        let destinationVC = self.getSubview(identifier) as! NavSubview
+        let destinationVC = self.getSubview(identifier.rawValue) as! NavSubview
         destinationVC.container = self
         
         //MARK: Set alpha and position

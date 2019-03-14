@@ -36,10 +36,10 @@ let FilmswipeRealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appen
 
 var GlobalDataManager:DataManager{
     get  {
-        if SessionVars.DataManager == nil {
-            SessionVars.DataManager = DataManager()
+        if SessionData.DataManager == nil {
+            SessionData.DataManager = DataManager()
         }
-        return SessionVars.DataManager!
+        return SessionData.DataManager!
     }
 }
 
@@ -133,8 +133,11 @@ func RandomInt(upTo max:Int)->Int {
     return Int(arc4random_uniform(UInt32(max + 1)))
 }
 
-//MARK: =========SESSION VARS=============
-class SessionVars:NSObject {
-    static var DataManager:DataManager?
+//MARK: - =========DEVICE SPECS=========
+var DeviceIsIpad:Bool {
+    return UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
 }
 
+var DeviceIsIphoneX:Bool {
+    return UIDevice.current.screenType == .iPhone_XR || UIDevice.current.screenType == .iPhone_XSMax || UIDevice.current.screenType == .iPhones_X_XS
+}

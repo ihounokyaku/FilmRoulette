@@ -192,26 +192,6 @@ extension String {
     }
 }
 
-//MARK: - =============UICOLOR=====================
-extension UIColor {
-    convenience init(hexString: String) {
-        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt32()
-        Scanner(string: hex).scanHexInt32(&int)
-        let a, r, g, b: UInt32
-        switch hex.characters.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
-    }
-}
 
 //MARK: - ========JSON  EXTENSIONS ===========
 extension JSON {
@@ -249,6 +229,70 @@ extension JSON {
     }
 }
 
+//MARK - ======DEVICE TYPE=======
+extension UIDevice {
+    var iPhoneX: Bool {
+        return UIScreen.main.nativeBounds.height == 2436
+    }
+    var iPhone: Bool {
+        return UIDevice.current.userInterfaceIdiom == .phone
+    }
+    enum ScreenType: String {
+        case iPhones_4_4S = "iPhone 4 or iPhone 4S"
+        case iPhones_5_5s_5c_SE = "iPhone 5, iPhone 5s, iPhone 5c or iPhone SE"
+        case iPhones_6_6s_7_8 = "iPhone 6, iPhone 6S, iPhone 7 or iPhone 8"
+        case iPhones_6Plus_6sPlus_7Plus_8Plus = "iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus or iPhone 8 Plus"
+        case iPhones_X_XS = "iPhone X or iPhone XS"
+        case iPhone_XR = "iPhone XR"
+        case iPhone_XSMax = "iPhone XS Max"
+        case ipad = "ipad"
+        
+        case unknown
+    }
+    var screenType: ScreenType {
+        switch UIScreen.main.nativeBounds.height {
+        case 960:
+            return .iPhones_4_4S
+        case 1136:
+            return .iPhones_5_5s_5c_SE
+        case 1334:
+            return .iPhones_6_6s_7_8
+        case 1792:
+            return .iPhone_XR
+        case 1920, 2208:
+            return .iPhones_6Plus_6sPlus_7Plus_8Plus
+        case 2436:
+            return .iPhones_X_XS
+        case 2688:
+            return .iPhone_XSMax
+        default:
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+                return .ipad
+            }
+            return .unknown
+        }
+    }
+    
+    public class var isiPad: Bool {
+        return UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
+    }
+    
+    public class var isiPadPro129: Bool {
+        return isiPad && UIScreen.main.nativeBounds.size.height == 2732
+    }
+    
+    public class var isiPadPro97: Bool {
+        return isiPad && UIScreen.main.nativeBounds.size.height == 2048
+    }
+    
+    public class var isiPadPro: Bool {
+        return isiPad && (isiPadPro97 || isiPadPro129)
+    }
+    
+    
+    
+    
+}
 
 
 

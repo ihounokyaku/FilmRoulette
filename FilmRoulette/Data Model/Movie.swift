@@ -39,9 +39,21 @@ class Movie : Object {
         guard let realData = data else {return}
         guard UIImage(data:realData) != nil else {return}
         self.thumbnailName = self.title + self.releaseDate
-        let url = ImageDirectory.appendingPathComponent(self.thumbnailName)
-        if !FileManager.default.fileExists(atPath: url.path){
-            try? realData.write(to: url)
+        
+        if !self.imageExists{
+            try? realData.write(to: self.fullImageURL)
+        }
+    }
+    
+    var fullImageURL:URL {
+        get {
+            return ImageDirectory.appendingPathComponent(self.thumbnailName)
+        }
+    }
+    
+    var imageExists:Bool {
+        get {
+            return FileManager.default.fileExists(atPath: self.fullImageURL.path)
         }
     }
     

@@ -69,7 +69,6 @@ class Spinner: NSObject {
                 multiplier = offsetAmount * multiplier >= minSpeed ? multiplier : 1
             }
             self.nextRound(count: count + 1, offsetAmount: offsetAmount * multiplier)
-            
         }
     }
     

@@ -202,6 +202,16 @@ class DataManager:NSObject {
         return nil
     }
     
+    func updatePoster(forMovie movie:Movie, posterData:Data?) {
+        do {
+            try self.realm.write {
+                movie.setPoster(withData: posterData)
+            }
+        } catch let error {
+            print(error)
+        }
+    }
+    
     
     //MARK: - ========== DESTROY ==========
     func deleteObject(object:Object) {

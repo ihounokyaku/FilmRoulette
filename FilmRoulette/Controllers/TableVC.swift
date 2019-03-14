@@ -47,7 +47,6 @@ class TableVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Swi
         if self.tableType != .library {
             self.searchBar.isHidden = true
             self.tableViewTopConstraint.constant -= self.searchBar.frame.height
-            
         }
         self.setTableData()
         
@@ -206,7 +205,6 @@ extension TableVC: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
                 self.movieResults = GlobalDataManager.allMovies
                 self.updateDataSource()
-    
             }
         }
         
