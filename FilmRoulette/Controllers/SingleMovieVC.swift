@@ -11,12 +11,7 @@ import AVKit
 import WebKit
 import Alamofire
 
-enum MovieSelector:Int {
-    case toWatch = 0
-    case watched = 1
-    case loved = 2
-    case notInterested = 3
-}
+
 
 protocol SingleMovieDelegate {
     func backFromSingleMovie(changed:Bool)
@@ -31,7 +26,6 @@ class SingleMovieVC: UIViewController {
     //MARK: - ==========IBOUTLETS===========
     //MARK: - ==VIEWS==
     @IBOutlet weak var posterView: LoadableImageView!
-    @IBOutlet weak var selectButtonView: UIView!
     @IBOutlet weak var selectorView: UIView!
     @IBOutlet weak var topView: UIView!
     
@@ -52,28 +46,24 @@ class SingleMovieVC: UIViewController {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var watchedButton: UIButton!
     @IBOutlet weak var loveButton: UIButton!
-    @IBOutlet weak var notInterestedButton: UIButton!
     
     
     //MARK: - ==========VARIABLES===========
     var movie:Movie!
     var posterData:Data?
     
-    //MARK: - ==MANAGERS==
-    let dataManager = DataManager()
-
      //MARK: - ==DELEGATES ETC==
     var delegate:SingleMovieDelegate?
     
     var changed:Bool = false
+    
     
     var trailerBkgView:TrailerView?
     
     //MARK: - ==========SETUP===========
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        
+
         self.posterView.movie = self.movie
         
         //MARK: - UPDATE UI
@@ -116,20 +106,22 @@ class SingleMovieVC: UIViewController {
        
     }
     
+    
+
     func updateSelectorStates() {
         //MARK: Reset images
         
-        var liked = false
+        var inLibrary = false
         var watched = false
         var loved = false
-        var notInterested = false
-        for button in [self.watchedButton, self.likeButton, self.notInterestedButton, self.loveButton] {
+        
+        for button in [self.watchedButton, self.likeButton, self.loveButton] {
             button!.isEnabled = true
         }
 
         //MARK: Set Images
-        if let savedMovie = self.dataManager.movie(withId: self.movie.id) {
-            
+        if let savedMovie = GlobalDataManager.movie(withId: self.movie.id) {
+            inLibrary = true
             //Mark liked or watched
             if savedMovie.watched {
                 watched = true
@@ -137,20 +129,14 @@ class SingleMovieVC: UIViewController {
             } else if savedMovie.love {
                 loved = true
                 self.loveButton.isEnabled = false
-            } else {
-                liked = true
-                self.likeButton.isEnabled = false
             }
-            
-        } else if Prefs.swipedMovies.contains(self.movie.id) {
-            notInterested = true
-            self.notInterestedButton.isEnabled = false
         }
+        self.watchedButton.setImage(SelectorIcon().image(for: .watched, deselected: !watched), for: .normal)
+        self.loveButton.setImage(SelectorIcon().image(for: .loved, deselected: !loved), for: .normal)
         
-//        self.likeButton.setImage(SelectorIcon().image(for: .toWatch, deselected: !liked), for: .normal)
-//        self.watchedButton.setImage(SelectorIcon().image(for: .watched, deselected: !watched), for: .normal)
-//        self.loveButton.setImage(SelectorIcon().image(for: .loved, deselected: !loved), for: .normal)
-//        self.notInterestedButton.setImage(SelectorIcon().image(for: .notInterested, deselected: !notInterested), for: .normal)
+        let likeButtonImage = inLibrary ? Images.RemoveFromLibrary : Images.AddToLibrary
+        self.likeButton.setImage(likeButtonImage, for: .normal)
+        
     }
 
     //MARK: - ==GET DATA OR SAVED IMAGE==
@@ -161,60 +147,45 @@ class SingleMovieVC: UIViewController {
                 self.posterView.loadImageIfNecessary()
             return self.movie.poster
             }
-        
     }
     
     //MARK: - ========== SELECTOR  FUNCTIONS ==========
     
-    @IBAction func selectorPressed(_ sender: UIButton) {
-        self.addOrUpdateMovie(MovieSelector(rawValue: sender.tag)!)
+    
+    @IBAction func likeButtonPressed(_ sender: Any) {
+        print("liked pressed")
+        if let savedMovie = GlobalDataManager.movie(withId: movie.id) {
+            let movie = Movie(value:self.movie)
+            self.movie = movie
+            GlobalDataManager.deleteObject(object: savedMovie)
+        } else {
+            GlobalDataManager.save(movie: self.movie, imageData: self.posterData, love: self.movie.love, watched: self.movie.watched)
+        }
+        self.selectorChanged()
+    }
+    
+    @IBAction func watchedButtonPressed(_ sender: Any) {
+        let watched = !self.movie.watched
+        let loved = watched == true ? false : self.movie.love
+        GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
+        self.selectorChanged()
+    }
+    
+    
+    @IBAction func loveButtonPressed(_ sender: Any) {
+        let loved = !self.movie.love
+        let watched = loved == true ? false : self.movie.watched
+        
+        GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
+        self.selectorChanged()
+    }
+   
+    
+    func selectorChanged(){
+        self.updateSelectorStates()
         self.changed = true
     }
     
-    func addOrUpdateMovie(_ selector:MovieSelector) {
-        
-        if Prefs.swipedMovies.contains(movie.id) {
-            print("contained in swiped")
-        } else {
-            print("not contained in swiped")
-        }
-            //CHECK if movie is already liked
-            if let savedMovie = dataManager.movie(withId: movie.id) {
-                
-                if selector == .notInterested {
-                    //Duplicate and delete
-                    let movie = Movie(value:self.movie)
-                    self.movie = movie
-                    self.dataManager.deleteObject(object: savedMovie)
-                    
-                } else {
-                    //UPDATE
-                    var loved = movie.love
-                    var watched = movie.watched
-                    
-                    if selector == .loved {
-                        loved = !loved
-                        if loved == true {watched = false}
-                    } else if (selector == .toWatch) == (watched == true) {
-                        watched = !watched
-                        loved = false
-                    } else {
-                        loved = false
-                    }
-                    
-                    dataManager.updateMovie(movie: savedMovie, updatedValues: ["watched":watched, "love":loved])
-                    self.movie = savedMovie
-                }
-            } else {
-                Prefs.swipedMovies.append(self.movie.id)
-                print("appended \(movie.title)")
-                if selector != .notInterested {
-                    //MARK: Save New
-//                    dataManager.saveToFavorites(movie: self.movie, imageData: self.posterData, love: selector == .loved, watched:selector == .watched)
-                }
-        }
-        self.updateSelectorStates()
-    }
     
  
     @IBAction func playTrailerPressed(_ sender: Any) {

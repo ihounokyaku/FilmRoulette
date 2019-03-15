@@ -27,10 +27,11 @@ struct Conveniences {
     }
     
     func imageFromData(data:Data?)-> UIImage {
-        let noImage = UIImage(named:"noImage")!
-        guard let realData = data else {return noImage}
-        return UIImage(data:realData) ?? noImage
+        
+        guard let realData = data else {return Images.NoImage}
+        return UIImage(data:realData) ?? Images.NoImage
     }
+    
     
     
     //MARK: - ========= CALLING VCs =======
