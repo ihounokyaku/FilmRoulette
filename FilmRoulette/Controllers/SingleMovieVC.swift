@@ -262,11 +262,6 @@ class SingleMovieVC: UIViewController {
         
         self.dismiss(animated: true) {
             self.delegate?.backFromSingleMovie(changed: self.changed)
-//            if self.delegate != nil {
-////                self.delegate!.container.newQueryManager.queryPosters(forMovies: self.delegate!.container.newQueryManager.searchResults)
-//            } else if self.likedDelegate != nil {
-//                self.likedDelegate!.movieTable.reloadData()
-//            }
         }
     }
 }

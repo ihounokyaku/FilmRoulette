@@ -10,6 +10,11 @@ import UIKit
 import RealmSwift
 import Toast_Swift
 
+enum LibraryDisplayType:String, CaseIterable {
+    case all = "My Library"
+    case filmSwipe = "FilmSwipe"
+}
+
 class MovieListVC: NavSubview {
 
     //MARK: - =========IBOUTLETS==========
