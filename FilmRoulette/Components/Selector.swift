@@ -11,6 +11,7 @@ import UIKit
 @objc protocol SelectorDelegate {
     @objc optional func selectorPressed(sender:Selector)
     @objc optional func selectionWillChange(inSelector:Selector)
+    @objc optional func selectionDidChange(sender:Selector)
 }
 
 class Selector: UIView {
@@ -136,7 +137,7 @@ class Selector: UIView {
             
         }) { _ in
             //On completion
-            
+            self.delegate.selectionDidChange?(sender: self)
         }
     }
     

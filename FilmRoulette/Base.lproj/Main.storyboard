@@ -542,6 +542,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vXV-Ja-956" userLabel="TopView">
+                                <rect key="frame" x="0.0" y="20" width="375" height="54"/>
+                                <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="vXV-Ja-956" secondAttribute="height" multiplier="1080:155" id="srQ-kb-xS5"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGR-dD-9hQ">
                                 <rect key="frame" x="0.0" y="128" width="375" height="439"/>
                                 <subviews>
@@ -601,49 +608,27 @@
                                     <action selector="spinPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lfg-LK-o8s"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F24-z7-89f">
-                                <rect key="frame" x="159" y="84" width="57" height="30"/>
-                                <state key="normal" title="Settings"/>
-                                <connections>
-                                    <action selector="settingPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a6m-rf-jaY"/>
-                                    <action selector="settingsPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gWa-Em-mvf"/>
-                                </connections>
-                            </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="U3H-9s-TOA">
-                                <rect key="frame" x="16" y="40" width="343" height="29"/>
-                                <segments>
-                                    <segment title="Group"/>
-                                    <segment title="Custom Settings"/>
-                                </segments>
-                                <connections>
-                                    <action selector="switchDisplay:" destination="BYZ-38-t0r" eventType="valueChanged" id="woQ-SM-gUE"/>
-                                </connections>
-                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="U3H-9s-TOA" secondAttribute="trailing" constant="16" id="3Pg-Iu-BLn"/>
                             <constraint firstItem="bGR-dD-9hQ" firstAttribute="top" secondItem="qbS-gs-GdD" secondAttribute="bottom" id="9r3-ic-3Cz"/>
-                            <constraint firstItem="F24-z7-89f" firstAttribute="centerX" secondItem="qbS-gs-GdD" secondAttribute="centerX" id="D1H-7L-IK9"/>
-                            <constraint firstItem="F24-z7-89f" firstAttribute="centerY" secondItem="qbS-gs-GdD" secondAttribute="centerY" id="Isz-Ql-LHt"/>
+                            <constraint firstItem="vXV-Ja-956" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Fub-ov-spI"/>
                             <constraint firstItem="qbS-gs-GdD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="JkS-Vi-vI4"/>
                             <constraint firstItem="bGR-dD-9hQ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="K9D-bo-da7"/>
-                            <constraint firstItem="U3H-9s-TOA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="L1k-OW-NCb"/>
+                            <constraint firstItem="vXV-Ja-956" firstAttribute="width" secondItem="vXV-Ja-956" secondAttribute="height" multiplier="1080:155" id="Mol-YW-DPF"/>
                             <constraint firstItem="qbS-gs-GdD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="NqF-kA-QUr"/>
+                            <constraint firstItem="vXV-Ja-956" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Pl0-lK-8wA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jeI-yK-ews" secondAttribute="bottom" constant="70" id="Tnc-V3-Tj2"/>
                             <constraint firstItem="jeI-yK-ews" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Ytp-10-cvt"/>
-                            <constraint firstItem="qbS-gs-GdD" firstAttribute="top" secondItem="U3H-9s-TOA" secondAttribute="bottom" constant="2" id="ZZY-ba-vob"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qbS-gs-GdD" secondAttribute="trailing" constant="16" id="hbr-w8-gmG"/>
-                            <constraint firstItem="U3H-9s-TOA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="ju4-eN-2Ra"/>
                             <constraint firstItem="bGR-dD-9hQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="l1L-4M-R4a"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="vXV-Ja-956" secondAttribute="trailing" id="tuT-Qt-wbo"/>
                             <constraint firstItem="jeI-yK-ews" firstAttribute="top" secondItem="bGR-dD-9hQ" secondAttribute="bottom" id="wyn-wO-K8t"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="displayTypeController" destination="U3H-9s-TOA" id="kZh-hp-NZg"/>
                         <outlet property="rouletteView" destination="4lA-Sd-EGc" id="vzB-2Y-T3s"/>
-                        <outlet property="settingsButton" destination="F24-z7-89f" id="hgG-qk-nmz"/>
                         <outlet property="singlePicker" destination="qbS-gs-GdD" id="QOz-0d-alU"/>
                         <outlet property="spinButton" destination="jeI-yK-ews" id="KZa-c3-380"/>
                     </connections>
@@ -727,7 +712,7 @@
         <!--SettingsVC-->
         <scene sceneID="Wtg-eW-anR">
             <objects>
-                <viewController storyboardIdentifier="SettingsVC" id="glF-DO-r9c" customClass="SettingsVC" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RouletteFilter" id="glF-DO-r9c" customClass="SettingsVC" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kDp-t3-kEe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -159,7 +159,7 @@ class SingleMovieVC: UIViewController {
             self.movie = movie
             GlobalDataManager.deleteObject(object: savedMovie)
         } else {
-            GlobalDataManager.save(movie: self.movie, imageData: self.posterData, love: self.movie.love, watched: self.movie.watched)
+            self.addMovie()
         }
         self.selectorChanged()
     }
@@ -167,17 +167,29 @@ class SingleMovieVC: UIViewController {
     @IBAction func watchedButtonPressed(_ sender: Any) {
         let watched = !self.movie.watched
         let loved = watched == true ? false : self.movie.love
-        GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
-        self.selectorChanged()
+        self.updateLoveWatched(loved: loved, watched: watched)
     }
     
     
     @IBAction func loveButtonPressed(_ sender: Any) {
         let loved = !self.movie.love
         let watched = loved == true ? false : self.movie.watched
-        
-        GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
+        self.updateLoveWatched(loved: loved, watched: watched)
+    }
+    
+    func updateLoveWatched(loved:Bool, watched:Bool){
+        if GlobalDataManager.movie(withId: self.movie.id) != nil {
+            GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
+        } else {
+            self.movie.watched = watched
+            self.movie.love = loved
+            self.addMovie()
+        }
         self.selectorChanged()
+    }
+    
+    func addMovie(){
+        GlobalDataManager.save(movie: self.movie, imageData: self.posterData, love: self.movie.love, watched: self.movie.watched)
     }
    
     

@@ -176,6 +176,22 @@ class DataManager:NSObject {
         return self.realm.objects(Movie.self).filter("%@ IN genreList", genre)
     }
     
+    func movies(_ results:Results<Movie>, filteredBy option:MovieOption?)-> Results<Movie>{
+        guard let realOption = option else {return results}
+        
+        var filter = "watched == NO"
+        switch realOption {
+        case .watched:
+            filter = "watched == YES"
+        case .loved:
+            filter = "love == YES"
+        default:
+            break
+        }
+        return results.filter(filter)
+    }
+    
+    
     
     
     //MARK: - ========== UPDATE ==========

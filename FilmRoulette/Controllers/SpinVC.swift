@@ -21,8 +21,6 @@ class SpinVC: NavSubview {
     
     //MARK: - ==Buttons==
     @IBOutlet weak var spinButton: UIButton!
-    @IBOutlet weak var displayTypeController: UISegmentedControl!
-    @IBOutlet weak var settingsButton: UIButton!
     
 //MARK: - ===========VARIABLES============
     
@@ -36,6 +34,13 @@ class SpinVC: NavSubview {
     var displayCount:Int {
         get {
             return GlobalDataManager.moviesDisplayed.count
+        }
+    }
+    
+    var displayOption:MovieOption? {
+        get {
+            let options:[Int:MovieOption] = [1:.unwatched, 2:.loved]
+            return options[self.container.selector.indexOfSelectedItem]
         }
     }
     
@@ -54,46 +59,48 @@ class SpinVC: NavSubview {
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
         
+        //MARK: - == Appearance ==
         self.spinner = Spinner(collectionView: self.rouletteView)
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
         self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
         
-        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
+        //        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
         self.loadRoulette()
         
     }
     
-    //MARK: - =========DISPLAYSETTINGS ===============
-    //MARK: - ==Settings==
-    @IBAction func settingsPressed(_ sender: Any) {
+    override func viewDidAppear(_ animated: Bool) {
+        self.setSelector(buttonCount:3, color: nil, label1: "All", label2: "Unwatched", label3:"Starred")
     }
+    
+    
+    //MARK: - == Appearance ==
+    
     
     
 //MARK: - ========= UI UPDATE ==========
     
     //MARK: - ==SWITCH DISPLAY==
-    @IBAction func switchDisplay(_ sender: UISegmentedControl) {
-        Prefs.selectorPosition = sender.selectedSegmentIndex
-        if sender.selectedSegmentIndex == 1 {
+    override func selectionDidChange(sender: Selector) {
+        if sender.indexOfSelectedItem == 2 {
             if Prefs.canBeIncluded.count == 0 && Prefs.mustBeIncluded.count == 0 && Prefs.excluded.count == 0  {
-                self.presentView(withIdentifier: "SettingsVC")
+                self.presentView(withIdentifier: .rouletteFilter)
                 return
             }
         }
-        
         self.loadRoulette()
     }
     
+    
     func loadRoulette() {
-        if self.displayTypeController.selectedSegmentIndex == 0 {
-            self.loadFromFolder()
-            
-        } else {
+        if self.container.selector.indexOfSelectedItem == 2 {
             self.loadFromSettings()
+        } else {
+            self.loadFromFolder()
         }
         
-        self.singlePicker.isHidden = self.displayTypeController.selectedSegmentIndex == 1
-        self.settingsButton.isHidden = self.displayTypeController.selectedSegmentIndex == 0
+        self.singlePicker.isHidden = self.container.selector.indexOfSelectedItem == 2
+//        self.settingsButton.isHidden = self.displayTypeController.selectedSegmentIndex == 0
     }
     
     
@@ -114,6 +121,9 @@ class SpinVC: NavSubview {
         } else {
             GlobalDataManager.moviesDisplayed = GlobalDataManager.allGroups[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)].movies.filter("TRUEPREDICATE")
         }
+        
+        GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.displayOption)
+        
         self.reloadRoulette()
     }
     
@@ -135,6 +145,7 @@ class SpinVC: NavSubview {
                 GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
             }
         }
+        print("going to reload func")
         self.reloadRoulette()
     }
     
@@ -156,11 +167,15 @@ class SpinVC: NavSubview {
     
     //MARK: - ==RELOAD==
     func reloadRoulette() {
-       
-        self.rouletteView.reloadData()
-        if !self.noMovies {
-            self.rouletteView.deselectItem(at: IndexPath(row: 10000, section: 0) , animated: false)
+       print("going to reload")
+        DispatchQueue.main.async {
+            self.rouletteView.reloadData()
+            if !self.noMovies {
+                self.rouletteView.deselectItem(at: IndexPath(row: 10000, section: 0) , animated: false)
+            }
         }
+        
+        
     }
   
     
@@ -175,13 +190,13 @@ class SpinVC: NavSubview {
 //MARK: - ========= Navigation ==========
     
     @IBAction func settingPressed(_ sender: Any) {
-        self.presentView(withIdentifier: "SettingsVC")
+        self.presentView(withIdentifier: .rouletteFilter)
     }
     
     
-    func presentView(withIdentifier identifier:String) {
+    func presentView(withIdentifier identifier:VCIdentifier) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier) as? SettingsVC else {return}
+        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? SettingsVC else {return}
     
         //MARK: Configure and Present VC
         controller.delegate = self
@@ -233,19 +248,22 @@ extension SpinVC : UICollectionViewDataSource {
     
     //MARK: - ==NO of CELLS==
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+       
         if self.noMovies {
             return 1
         }
-        return 100000000
+        return 1000000
     }
     
     //MARK: - ==VIEW FOR CELL==
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
+        
         cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster
-
+        
         self.rouletteView.animateCell(cell)
+        
         return cell
         
     }
@@ -264,101 +282,13 @@ extension SpinVC : UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? GeminiCell {
+            
             self.rouletteView.animateCell(cell)
+            
         }
     }
     
 }
-
-
-////MARK: - ==========SPIN FUNCTIONS==========
-//extension SpinVC {
-//
-//    func spin() {
-//        self.startRow = self.rouletteView.indexPathsForVisibleItems.first?.row ?? 0
-//        self.fullSpins = self.displayCount > 20 ? RandomInt(upTo: 5) + 5 : RandomInt(upTo: 5) + 10
-//        self.finalDestination = RandomInt(upTo:self.displayCount - 1) + (self.fullSpins * self.displayCount)
-//        while self.finalDestination < self.startRow + 300 {
-//            self.finalDestination += self.displayCount
-//        }
-//
-//        self.stillScrolling = true
-//        self.currentDestination = self.startRow + self.displayCount
-//        self.scroll()
-//
-//
-//    }
-//
-//    @objc func scroll() {
-//
-//
-//        self.rouletteView.selectItem(at: IndexPath(row: self.currentDestination, section: 0), animated: true, scrollPosition: .centeredHorizontally)
-//
-//        if self.currentDestination >= self.finalDestination {
-//            self.stillScrolling = false
-//            return
-//        }
-//
-//        if self.fullSpins > 0 {
-//            print("spinning again \(self.fullSpins)")
-//            self.fullSpins -= 1
-//            self.currentDestination += self.displayCount
-//            return
-//        }
-//
-//        if !decelerating {
-//            while self.currentDestination >= self.finalDestination - 20 {
-//                self.finalDestination += self.displayCount
-//            }
-//            self.currentDestination = self.finalDestination - 20 + RandomInt(upTo: 5)
-//            self.scrollInterval = 1
-//            self.decelerating = true
-//            return
-//        }
-//
-//
-//        self.currentDestination += self.scrollInterval
-//        if self.scrollInterval > 1 {
-//            self.scrollInterval -= 1
-//        }
-//
-//    }
-//
-//    func resetScrollVariables() {
-//        self.stillScrolling = false
-//        self.finalDestination = 0
-//        self.fullSpins = 0
-//        self.scrollInterval = 0
-//        self.currentDestination = 0
-//        self.sleep = 0
-//        self.startRow = 0
-//        self.decelerating = false
-//    }
-//
-//
-//
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        print("ended!")
-//    }
-//    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-//        if self.stillScrolling {
-//            if self.decelerating {
-//                self.sleep += 0.001 * Double(self.decelerateCount)
-//                self.decelerateCount += 1
-//
-//                self.perform(#selector(scroll), with: nil, afterDelay: sleep)
-//            } else {
-//               self.scroll()
-//            }
-//
-//        } else {
-//            print("done")
-//            self.resetScrollVariables()
-//        }
-//
-//    }
-//
-//}
 
 
 

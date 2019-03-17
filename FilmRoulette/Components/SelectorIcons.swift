@@ -11,6 +11,7 @@ import UIKit
 enum MovieOption:String,CaseIterable {
     case watched = "check"
     case loved = "stars"
+    case unwatched = "star"
 }
 
 
