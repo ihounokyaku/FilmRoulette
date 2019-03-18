@@ -110,9 +110,9 @@ class MovieListVC: NavSubview {
             }
         }
     }
-    
-    
 }
+    
+    
 
 //MARK: - ==========TABLE VIEW==========
 //MARK: - ==DElEGATE==

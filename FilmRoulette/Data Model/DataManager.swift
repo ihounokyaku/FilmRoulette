@@ -64,6 +64,13 @@ class DataManager:NSObject {
             return tags
         }
     }
+    var groups:List<Group> {
+        get {
+            let groups = List<Group>()
+            groups.append(objectsIn: self.realm.objects(Group.self).sorted(byKeyPath: "name", ascending: true) )
+            return groups
+        }
+    }
     
     var genres:List<Genre> {
         get {
@@ -165,6 +172,9 @@ class DataManager:NSObject {
     
     func tag(named name:String)-> Tag? {
         return self.realm.objects(Tag.self).filter("name == %@", name).first
+    }
+    func group(named name:String)-> Group? {
+        return self.realm.objects(Group.self).filter("name == %@", name).first
     }
     
     //MARK: - ==GET MOVIES WITH TAG==

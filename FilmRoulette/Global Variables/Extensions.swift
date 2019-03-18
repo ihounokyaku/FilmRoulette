@@ -19,6 +19,17 @@ extension Results where Element == Movie {
         list.append(objectsIn: self)
         return list
     }
+    
+    func withReleaseDatesBetween(_ startYear:Int, and endYear:Int)-> Results<Movie> {
+        let movieList = List<Movie>()
+        for movie in self {
+            guard let year = Int(movie.releaseDate.year()) else {continue}
+            if year >= startYear && year <= endYear {
+                movieList.append(movie)
+            }
+        }
+        return movieList.filter("TRUEPREDICATE")
+    }
 }
 
 //MARK: - ========ARRAY  EXTENSIONS ===========
@@ -293,6 +304,9 @@ extension UIDevice {
     
     
 }
+
+
+
 
 
 

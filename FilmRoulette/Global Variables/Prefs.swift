@@ -130,14 +130,45 @@ class Prefs: NSObject {
         }
     }
     
-    static var lastPageWithResults:Int {
+    static var SpinPickerSelectorPosition:Int {
         get {
-            return UserDefaults.standard.value(forKey: "lastPageWithResults") as? Int ?? 1
+            return UserDefaults.standard.value(forKey: "spinPickerSelectorPosition") as? Int ?? 0
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "lastPageWithResults")
+            UserDefaults.standard.set(newValue, forKey: "spinPickerSelectorPosition")
         }
     }
+    
+    static var SpinSelectorPosition:Int {
+        get {
+            return UserDefaults.standard.value(forKey: "spinSelectorPosition") as? Int ?? 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "spinSelectorPosition")
+        }
+    }
+    
+    static var SpinFilterType:Int {
+        get {
+            return UserDefaults.standard.value(forKey: "spinFilterType") as? Int ?? 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "SpinFilterType")
+        }
+    }
+    
+    
+//    static var lastPageWithResults:Int {
+//        get {
+//            return UserDefaults.standard.value(forKey: "lastPageWithResults") as? Int ?? 1
+//        }
+//        set {
+//            UserDefaults.standard.set(newValue, forKey: "lastPageWithResults")
+//        }
+//    }
+    
+    
+    
 
 }
 

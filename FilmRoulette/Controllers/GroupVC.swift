@@ -142,6 +142,8 @@ class GroupVC: NavSubview {
                 } else {
                     self.tableView.tableView.reloadData()
                 }
+            } else {
+                self.view.makeToast("Please choose a unique group name")
             }
         }))
         

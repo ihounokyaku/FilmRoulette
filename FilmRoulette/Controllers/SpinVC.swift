@@ -9,18 +9,32 @@
 import UIKit
 import RealmSwift
 import Gemini
-class SpinVC: NavSubview {
+
+
+
+class SpinVC: NavSubview, SpinFiltersDelegate {
+    
+    
 
 //MARK: - ===========IBOUTLETS============
     
     
     //MARK: - ==PICKERS N TABLES==
-    @IBOutlet weak var singlePicker: UIPickerView!
+    
     @IBOutlet weak var rouletteView:GeminiCollectionView!
     
     
     //MARK: - ==Buttons==
     @IBOutlet weak var spinButton: UIButton!
+    @IBOutlet weak var spinSelector: Selector!
+    
+    //MARK: Selector Buttons
+    
+    @IBOutlet weak var allButton: UIButton!
+    @IBOutlet weak var unwatchedButton: UIButton!
+    @IBOutlet weak var starredButton: UIButton!
+    
+    
     
 //MARK: - ===========VARIABLES============
     
@@ -40,9 +54,17 @@ class SpinVC: NavSubview {
     var displayOption:MovieOption? {
         get {
             let options:[Int:MovieOption] = [1:.unwatched, 2:.loved]
-            return options[self.container.selector.indexOfSelectedItem]
+            return options[self.spinSelector.indexOfSelectedItem]
         }
     }
+    
+    var filterType:FilterType {
+        get {
+            return FilterType.allCases[Prefs.SpinFilterType]
+        }
+    }
+    
+    var filterObject:Object?
     
     //MARK: SCROLLING
     var spinner:Spinner!
@@ -52,9 +74,6 @@ class SpinVC: NavSubview {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //MARK: - ==DELEGATES AND DATASOURCES==
-        self.singlePicker.delegate = self
-        self.singlePicker.dataSource = self
         self.rouletteView.decelerationRate = UIScrollViewDecelerationRateFast
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
@@ -70,7 +89,10 @@ class SpinVC: NavSubview {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.setSelector(buttonCount:3, color: nil, label1: "All", label2: "Unwatched", label3:"Starred")
+        super.viewDidAppear(true)
+        self.setSelector(buttonCount:2, color: nil, label2: "My Library", label3:"FilmSwipe")
+
+        self.spinSelector.configure(buttons: [self.allButton, self.unwatchedButton, self.starredButton], highlightColor: UIColor().colorTextEmphasisLight(), delegate: self)
     }
     
     
@@ -82,50 +104,52 @@ class SpinVC: NavSubview {
     
     //MARK: - ==SWITCH DISPLAY==
     override func selectionDidChange(sender: Selector) {
-        if sender.indexOfSelectedItem == 2 {
-            if Prefs.canBeIncluded.count == 0 && Prefs.mustBeIncluded.count == 0 && Prefs.excluded.count == 0  {
-                self.presentView(withIdentifier: .rouletteFilter)
-                return
-            }
-        }
+        self.loadRoulette()
+    }
+
+    
+    
+    
+//MARK: - =============== SET ROULETTE ===============
+    
+    //MARK: - == GET FILTERS ==
+    func filterResults(withObject object: Object?) {
+        self.filterObject = object
+        //TODO: - simple or complex
+        Prefs.SpinFilterType = FilterType.allCases.firstIndex(of: .simple)!
         self.loadRoulette()
     }
     
     
+    //MARK: - == LOAD with FILTERS ==
     func loadRoulette() {
-        if self.container.selector.indexOfSelectedItem == 2 {
-            self.loadFromSettings()
-        } else {
-            self.loadFromFolder()
-        }
         
-        self.singlePicker.isHidden = self.container.selector.indexOfSelectedItem == 2
-//        self.settingsButton.isHidden = self.displayTypeController.selectedSegmentIndex == 0
-    }
-    
-    
-    
-    //MARK: - ==LOAD FROM FOLDER==
-    func loadFromFolder() {
-        
-        let genres = GlobalDataManager.genres
-        
-        if singlePicker.selectedRow(inComponent: 0) == 0 {
+        if self.container.selector.indexOfSelectedItem == 0 {
             GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
-            
-        } else if singlePicker.selectedRow(inComponent: 0) == 1 {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
-            
-        } else if singlePicker.selectedRow(inComponent: 0) < genres.count + 2 {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genres[self.singlePicker.selectedRow(inComponent: 0) - 2])
         } else {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.allGroups[self.singlePicker.selectedRow(inComponent: 0) - (2 + genres.count)].movies.filter("TRUEPREDICATE")
+            GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
         }
         
+        self.applyFilters()
+
         GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.displayOption)
         
         self.reloadRoulette()
     }
+    
+    func applyFilters() {
+        guard self.filterObject != nil else {return}
+        if self.filterType == .simple {
+            if let genre = self.filterObject as? Genre {
+                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genre)
+            } else if let group = self.filterObject as? Group {
+                GlobalDataManager.moviesDisplayed = group.movies.filter("TRUEPREDICATE")
+            } else if let tag = self.filterObject as? Tag {
+                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withTag: tag)
+            }
+        }
+    }
+
     
     
     //MARK: - ==CUSTOM ARRAY==
@@ -193,10 +217,14 @@ class SpinVC: NavSubview {
         self.presentView(withIdentifier: .rouletteFilter)
     }
     
+    @IBAction func clearFiltersPressed(_ sender: Any) {
+        self.filterObject = nil
+        self.loadRoulette()
+    }
     
     func presentView(withIdentifier identifier:VCIdentifier) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? SettingsVC else {return}
+        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? SpinFilterContainer else {return}
     
         //MARK: Configure and Present VC
         controller.delegate = self
@@ -206,42 +234,7 @@ class SpinVC: NavSubview {
     
 }
 
-//MARK: - ==========PICKERVIEW DATASOURCE===============
 
-extension SpinVC : UIPickerViewDataSource {
-    
-    //MARK: - ==NUMBERS OF SECTIONS AND ROWS==
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return GlobalDataManager.allGroups.count + GlobalDataManager.genres.count + 2
-    }
-    
-    //MARK: - ==TITLE FOR ROW==
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
-        let genres = GlobalDataManager.genres
-        if row == 0 {
-            return "All Movies"
-        } else if row == 1 {
-            return "FilmSwipe Movies"
-        } else if row < genres.count + 2 {
-            return genres[row - 2].name
-        }
-        return GlobalDataManager.allGroups[row - (2 + genres.count)].name
-    }
-}
-
-//MARK: - ==========PICKERVIEW DELEGATE===============
-extension SpinVC : UIPickerViewDelegate {
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.loadFromFolder()
-    }
-    
-}
 
 //MARK: - ==========WHEELPICKER DATASOURCE===============
 extension SpinVC : UICollectionViewDataSource {

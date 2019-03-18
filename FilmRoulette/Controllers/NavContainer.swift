@@ -13,6 +13,8 @@ enum VCIdentifier:String, CaseIterable {
     case library = "Library"
     case search = "Search"
     case rouletteFilter = "RouletteFilter"
+    case basicFilter = "BasicRouletteFilter"
+    case advancedFilter = "AdvancedRouletteFilter"
 }
 
 

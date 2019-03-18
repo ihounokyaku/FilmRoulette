@@ -1,29 +1,26 @@
 //
-//  SettingsVC.swift
+//  AdvancedSpinFilterVC.swift
 //  FilmRoulette
 //
-//  Created by Dylan Southard on 2018/07/20.
-//  Copyright © 2018 Dylan Southard. All rights reserved.
+//  Created by Dylan Southard on 2019/03/17.
+//  Copyright © 2019 Dylan Southard. All rights reserved.
 //
 
 import UIKit
 import TagListView
 
-enum InclusionParams:Int {
-    case and = 0
-    case or = 1
-    case not = 2
-    case none = 3
-}
 
-class SettingsVC: UIViewController {
-    
+
+class AdvancedFilterVC: UIViewController {
+
+
+    @IBOutlet weak var includeSetter: Selector!
     //MARK: - =========IBOUTLETS==========
-    @IBOutlet weak var includeSetter: UISegmentedControl!
     
     @IBOutlet weak var autofillTable: UITableView!
     @IBOutlet weak var includeTagsField: UITextField!
     @IBOutlet weak var tagView: TagListView!
+    
     
     
     //MARK: - ==========VARS============
@@ -31,12 +28,11 @@ class SettingsVC: UIViewController {
     var predictions = [String]()
     var possibleTags = [String]()
     
+    //MARK: - ==========SETUP============
     
-    //MARK: - ========== SETUP ==========
-    var delegate:SpinVC!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         //MARK ==DELEGATES/DATASOURCES==
         self.tagView.delegate = self
         self.autofillTable.delegate = self
@@ -50,17 +46,8 @@ class SettingsVC: UIViewController {
         //MARK: ==UPDATE UI==
         self.refreshTagView()
     }
+    
 
-    //MARK: - ========== NAVIGATION =======================
-    
-    @IBAction func donePressed(_ sender: Any) {
-        self.dismiss(animated: true) {
-            //TODO: reload delegate stuff
-            self.delegate.loadFromSettings()
-        }
-    }
-    
-    
     //MARK: - =========ADD TAG==========
     @IBAction func addPressed(_ sender: Any) {
         if self.includeTagsField.text != "" {
@@ -89,7 +76,7 @@ class SettingsVC: UIViewController {
     }
     
     //MARK: - ==ADD TAG TO VIEW==
-    func displayTag(named tagName:String, withParams ip:InclusionParams, ofColor tagColor:UIColor) {
+    func displayTag(named tagName:String, withParams ip:FilterCondition, ofColor tagColor:UIColor) {
         
         self.tagView.removeTag(tagName)
         self.tagView.addTag(tagName)
@@ -98,7 +85,7 @@ class SettingsVC: UIViewController {
     
     
     //MARK: - ==ADD/REMOVE FROM PREFS==
-    func addRemoveTagFromPrefs(tag:String, exclude ip:InclusionParams) {
+    func addRemoveTagFromPrefs(tag:String, exclude ip:FilterCondition) {
         Prefs.canBeIncluded = ip == .or ? Prefs.canBeIncluded.appending(tag) : Prefs.canBeIncluded.removing(tag)
         Prefs.mustBeIncluded = ip == .and ? Prefs.mustBeIncluded.appending(tag) : Prefs.mustBeIncluded.removing(tag)
         Prefs.excluded = ip == .not ? Prefs.excluded.appending(tag) : Prefs.excluded.removing(tag)
@@ -106,7 +93,7 @@ class SettingsVC: UIViewController {
 }
 
 //MARK: - ========== TAGLIST STUFF =======================
-extension SettingsVC : TagListViewDelegate {
+extension AdvancedFilterVC : TagListViewDelegate {
     func tagRemoveButtonPressed(_ title: String, tagView: TagView, sender: TagListView) {
         self.addRemoveTagFromPrefs(tag: title, exclude: .none)
         self.refreshTagView()
@@ -115,7 +102,7 @@ extension SettingsVC : TagListViewDelegate {
 
 //MARK: - ========== AUTOFILL STUFF =======================
 
-extension SettingsVC : UITableViewDelegate, UITableViewDataSource {
+extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.predictions.count
     }
@@ -128,13 +115,13 @@ extension SettingsVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let ip = InclusionParams(rawValue: self.includeSetter.selectedSegmentIndex)!
+        let ip = FilterCondition(rawValue: self.includeSetter.indexOfSelectedItem)!
         let tagName = self.predictions[indexPath.row]
         self.addRemoveTagFromPrefs(tag: tagName, exclude: ip)
         self.includeTagsField.text = ""
         self.refreshTagView()
         self.showHideAutofillTable()
-        }
+    }
     
     
     
@@ -166,3 +153,5 @@ extension SettingsVC : UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
+
