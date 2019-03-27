@@ -111,7 +111,7 @@ class SearchBar: UISearchBar {
     func searchIcon()->UIImageView {
         let searchIcon = UIImageView(image: UIImage(named: "searchIcon"))
         let imageHeight = (self.frame.height * self.barHeight) * 0.45
-        print("searchbar \(imageHeight) \(self.frame.height)")
+        
         searchIcon.frame = CGRect(x:0, y:0, width:imageHeight + 10, height:imageHeight)
         searchIcon.contentMode = .scaleAspectFit
         return searchIcon

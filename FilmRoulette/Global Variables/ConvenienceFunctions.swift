@@ -80,17 +80,7 @@ struct Conveniences {
     }
     
     
-    func presentSingleMovieView<sender>(movie:Movie, imageData:Data?, sender:sender) where sender:UIViewController, sender:SingleMovieDelegate {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let controller = storyboard.instantiateViewController(withIdentifier: "SingleMovie") as? SingleMovieVC else {return}
-        
-        //MARK: Configure and Present VC
-        if !movie.imageExists {controller.posterData = imageData}
-        controller.movie = movie
-        controller.delegate = sender
-//        controller.modalPresentationStyle = .popover
-        sender.present(controller, animated:true, completion:nil)
-    }
+    
     
     
     func swipeDisplay(view:UIView, from prevView:UIView, inContainer container:UIView, direction:UISwipeGestureRecognizer.Direction, completion:(()->())? = nil){

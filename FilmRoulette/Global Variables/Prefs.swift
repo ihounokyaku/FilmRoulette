@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class Prefs: NSObject {
     
@@ -153,9 +154,20 @@ class Prefs: NSObject {
             return UserDefaults.standard.value(forKey: "spinFilterType") as? Int ?? 0
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "SpinFilterType")
+            UserDefaults.standard.set(newValue, forKey: "spinFilterType")
         }
     }
+    
+    static var MostRecentFilterID:String {
+        get {
+            return UserDefaults.standard.value(forKey: "mostRecentFilterID") as? String ?? "\(NSDate().timeIntervalSince1970)"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "mostRecentFilterID")
+        }
+    }
+    
+
     
     
 //    static var lastPageWithResults:Int {

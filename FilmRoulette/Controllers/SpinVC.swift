@@ -10,7 +10,10 @@ import UIKit
 import RealmSwift
 import Gemini
 
-
+enum LibraryType:CaseIterable {
+    case library
+    case filmSwipe
+}
 
 class SpinVC: NavSubview, SpinFiltersDelegate {
     
@@ -60,11 +63,22 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     
     var filterType:FilterType {
         get {
-            return FilterType.allCases[Prefs.SpinFilterType]
+            guard let object = self.filterObject else {return .none}
+            return (object as? Filter != nil) ? .complex : .simple
         }
     }
     
-    var filterObject:Object?
+    var filterObject:Object? {
+        didSet {
+            SessionData.CurrentFilterObject = self.filterObject
+            self.loadRoulette()
+        }
+    }
+    
+    var libraryType:LibraryType {
+        return LibraryType.allCases[self.container.selector.indexOfSelectedItem]
+    }
+    
     
     //MARK: SCROLLING
     var spinner:Spinner!
@@ -84,6 +98,9 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
         self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
         
         //        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
+        //MARK: - == SET FILTER ==
+        self.filterObject = SessionData.CurrentFilterObject
+        
         self.loadRoulette()
         
     }
@@ -124,14 +141,15 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     //MARK: - == LOAD with FILTERS ==
     func loadRoulette() {
         
-        if self.container.selector.indexOfSelectedItem == 0 {
+        if self.libraryType == .library {
             GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
         } else {
             GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
         }
         
         self.applyFilters()
-
+        
+        
         GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.displayOption)
         
         self.reloadRoulette()
@@ -147,31 +165,33 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
             } else if let tag = self.filterObject as? Tag {
                 GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withTag: tag)
             }
+        } else if let filter = self.filterObject as? Filter, self.libraryType == .library {
+            GlobalDataManager.moviesDisplayed = filter.apply(to: GlobalDataManager.moviesDisplayed, delegate: GlobalDataManager)
         }
     }
 
     
     
     //MARK: - ==CUSTOM ARRAY==
-    func loadFromSettings() {
-        GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
-        
-        if Prefs.mustBeIncluded.count > 0 {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
-        }
-        if Prefs.canBeIncluded.count > 0 {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
-        }
-        for tag in Prefs.excluded  {
-            if let genre = GlobalDataManager.genre(named: tag) {
-                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
-            } else if let tag = GlobalDataManager.tag(named: tag) {
-                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
-            }
-        }
-        print("going to reload func")
-        self.reloadRoulette()
-    }
+//    func loadFromSettings() {
+//        GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
+//
+//        if Prefs.mustBeIncluded.count > 0 {
+//            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
+//        }
+//        if Prefs.canBeIncluded.count > 0 {
+//            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
+//        }
+//        for tag in Prefs.excluded  {
+//            if let genre = GlobalDataManager.genre(named: tag) {
+//                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
+//            } else if let tag = GlobalDataManager.tag(named: tag) {
+//                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
+//            }
+//        }
+//        print("going to reload func")
+//        self.reloadRoulette()
+//    }
     
     func compoundTagPredicate(and:Bool, tags:[String])-> NSCompoundPredicate {
         var predicates = [NSPredicate]()
@@ -220,16 +240,6 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     @IBAction func clearFiltersPressed(_ sender: Any) {
         self.filterObject = nil
         self.loadRoulette()
-    }
-    
-    func presentView(withIdentifier identifier:VCIdentifier) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? SpinFilterContainer else {return}
-    
-        //MARK: Configure and Present VC
-        controller.delegate = self
-        controller.modalPresentationStyle = .popover
-        self.present(controller, animated:true, completion:nil)
     }
     
 }

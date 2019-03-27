@@ -15,6 +15,7 @@
 		C407DF8A20F39C7800213A37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8820F39C7800213A37 /* LaunchScreen.storyboard */; };
 		C412B048223BFE4000E363E3 /* SelectorIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C412B047223BFE4000E363E3 /* SelectorIcons.swift */; };
 		C412B04A223C044400E363E3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = C412B049223C044400E363E3 /* Images.swift */; };
+		C41FF91722477CE300EE1A3C /* ModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41FF91622477CE300EE1A3C /* ModalVC.swift */; };
 		C44C34912223229000E654AC /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44C34902223229000E654AC /* Spinner.swift */; };
 		C450C9D3210473E900FDE9EB /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = C450C9D2210473E900FDE9EB /* Group.swift */; };
 		C450C9D521047E8400FDE9EB /* GroupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C450C9D421047E8400FDE9EB /* GroupVC.swift */; };
@@ -36,6 +37,9 @@
 		C4BC7F3A223E974D00971570 /* SpinFilterSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F39223E974D00971570 /* SpinFilterSubview.swift */; };
 		C4BC7F3D223E97E900971570 /* AdvancedSF.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F3C223E97E900971570 /* AdvancedSF.swift */; };
 		C4BC7F3F223FAF6B00971570 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F3E223FAF6B00971570 /* Filter.swift */; };
+		C4BC7F41224004E700971570 /* FilterCandidateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F40224004E700971570 /* FilterCandidateCell.swift */; };
+		C4C05EED22489A4800DAEA5E /* DropboxManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C05EEC22489A4800DAEA5E /* DropboxManager.swift */; };
+		C4C05EF02248C18D00DAEA5E /* JSONHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C05EEF2248C18D00DAEA5E /* JSONHandler.swift */; };
 		C4DB46E920F4E9D0009EC359 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB46E820F4E9D0009EC359 /* Tag.swift */; };
 		C4E438C220FB6482007C5D68 /* PosterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E438C120FB6482007C5D68 /* PosterCell.swift */; };
 		C4F1629C223948FC002C7D93 /* QueryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F1628C22394895002C7D93 /* QueryManager.swift */; };
@@ -76,6 +80,7 @@
 		C407DF8B20F39C7800213A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C412B047223BFE4000E363E3 /* SelectorIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorIcons.swift; sourceTree = "<group>"; };
 		C412B049223C044400E363E3 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		C41FF91622477CE300EE1A3C /* ModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalVC.swift; sourceTree = "<group>"; };
 		C44C34902223229000E654AC /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		C450C9D2210473E900FDE9EB /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		C450C9D421047E8400FDE9EB /* GroupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVC.swift; sourceTree = "<group>"; };
@@ -98,6 +103,9 @@
 		C4BC7F39223E974D00971570 /* SpinFilterSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinFilterSubview.swift; sourceTree = "<group>"; };
 		C4BC7F3C223E97E900971570 /* AdvancedSF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSF.swift; sourceTree = "<group>"; };
 		C4BC7F3E223FAF6B00971570 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
+		C4BC7F40224004E700971570 /* FilterCandidateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCandidateCell.swift; sourceTree = "<group>"; };
+		C4C05EEC22489A4800DAEA5E /* DropboxManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropboxManager.swift; sourceTree = "<group>"; };
+		C4C05EEF2248C18D00DAEA5E /* JSONHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONHandler.swift; sourceTree = "<group>"; };
 		C4DB46E820F4E9D0009EC359 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		C4E438C120FB6482007C5D68 /* PosterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterCell.swift; sourceTree = "<group>"; };
 		C4F1628C22394895002C7D93 /* QueryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryManager.swift; sourceTree = "<group>"; };
@@ -182,6 +190,7 @@
 			children = (
 				C47ADFDA20F62A97008F79C5 /* FilmRoulette.entitlements */,
 				C407DF7F20F39C7700213A37 /* AppDelegate.swift */,
+				C4C05EEE22489A4C00DAEA5E /* Managers */,
 				C4971D7B20F3B48700F30BAF /* Global Variables */,
 				C4971D7620F3B41700F30BAF /* Data Model */,
 				C4F1628922394895002C7D93 /* ApiQueries */,
@@ -204,6 +213,7 @@
 				C4595A6C20F3AF0500446C4B /* NavContainer.swift */,
 				C4595A6E20F3AF0A00446C4B /* NavSubview.swift */,
 				C407DF8120F39C7700213A37 /* SpinVC.swift */,
+				C41FF91622477CE300EE1A3C /* ModalVC.swift */,
 				C482938920FE256E00E7BECF /* MovieListVC.swift */,
 				C4BC7F3B223E975800971570 /* SpinFilter */,
 				C450C9D421047E8400FDE9EB /* GroupVC.swift */,
@@ -255,6 +265,15 @@
 			path = SpinFilter;
 			sourceTree = "<group>";
 		};
+		C4C05EEE22489A4C00DAEA5E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				C4C05EEC22489A4800DAEA5E /* DropboxManager.swift */,
+				C4C05EEF2248C18D00DAEA5E /* JSONHandler.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		C4F1628922394895002C7D93 /* ApiQueries */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +304,7 @@
 			children = (
 				C4F162CA2239809E002C7D93 /* MovieListCell.swift */,
 				C4F162C92239809E002C7D93 /* MovieListCell.xib */,
+				C4BC7F40224004E700971570 /* FilterCandidateCell.swift */,
 				C4F162D32239850A002C7D93 /* TrailerView.swift */,
 				C4F162CB2239809E002C7D93 /* MovieListCellNoButton.xib */,
 				C4F162C222397FB6002C7D93 /* CustomTableView.swift */,
@@ -412,6 +432,7 @@
 				"${BUILT_PRODUCTS_DIR}/Gemini/Gemini.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox/SwiftyDropbox.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TagListView/TagListView.framework",
@@ -423,6 +444,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gemini.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TagListView.framework",
@@ -448,6 +470,7 @@
 				C4F162CC2239809E002C7D93 /* MovieListCell.swift in Sources */,
 				C4F162A1223948FC002C7D93 /* PosterQueryManager.swift in Sources */,
 				C407DF8220F39C7700213A37 /* SpinVC.swift in Sources */,
+				C4C05EED22489A4800DAEA5E /* DropboxManager.swift in Sources */,
 				C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */,
 				C4F162D42239850A002C7D93 /* TrailerView.swift in Sources */,
 				C4E438C220FB6482007C5D68 /* PosterCell.swift in Sources */,
@@ -475,13 +498,16 @@
 				C4F162C422397FD2002C7D93 /* CustomTableView.swift in Sources */,
 				C4990AF022392CDD00950165 /* SingleMovieVC.swift in Sources */,
 				C4595A6D20F3AF0500446C4B /* NavContainer.swift in Sources */,
+				C4BC7F41224004E700971570 /* FilterCandidateCell.swift in Sources */,
 				C412B04A223C044400E363E3 /* Images.swift in Sources */,
 				C4F162C72239801D002C7D93 /* ConvenienceFunctions.swift in Sources */,
 				C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */,
 				C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */,
+				C4C05EF02248C18D00DAEA5E /* JSONHandler.swift in Sources */,
 				C450C9D921047F8600FDE9EB /* TableVC.swift in Sources */,
 				C4F162A522394AC9002C7D93 /* IndividualMovieQuery.swift in Sources */,
 				C4F162D222398483002C7D93 /* LoadableImageView.swift in Sources */,
+				C41FF91722477CE300EE1A3C /* ModalVC.swift in Sources */,
 				C4F162C522397FD4002C7D93 /* CustomTableViewCell.swift in Sources */,
 				C4971D7920F3B42600F30BAF /* Movie.swift in Sources */,
 				C49D56AB2102257A00CAADF2 /* BasicSF.swift in Sources */,
@@ -637,7 +663,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brokenkeyboard.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -657,7 +683,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ihounokyaku.com.MovieRoulette;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brokenkeyboard.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

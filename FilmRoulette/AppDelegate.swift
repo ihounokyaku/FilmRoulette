@@ -8,12 +8,13 @@
 
 import UIKit
 import RealmSwift
+import SwiftyDropbox
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var dropboxDelegate:DropboxDelegate?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     
@@ -25,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
             print("eroror with relam \(error)")
         }
+        
+        DropboxClientsManager.setupWithAppKey("xp31qhwlj6q3q78")
         return true
     }
 
@@ -50,6 +53,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        if let authResult = DropboxClientsManager.handleRedirectURL(url) {
+            switch authResult {
+            case .success:
+                print("Success! User is logged into Dropbox.")
+                self.dropboxDelegate?.completedAuthorization(success: true, error: nil)
+            case .cancel:
+                print("Authorization flow was manually canceled by user!")
+                self.dropboxDelegate?.completedAuthorization(success: false, error: "Authorization flow was manually canceled by user!")
+            case .error(_, let description):
+                print("Error: \(description)")
+                self.dropboxDelegate?.completedAuthorization(success: false, error: description)
+            }
+        }
+        return true
+    }
 
 }
 

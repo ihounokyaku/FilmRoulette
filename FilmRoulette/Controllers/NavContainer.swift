@@ -61,6 +61,7 @@ class NavContainer: UIViewController {
         self.setColors()
         self.setFonts()
         
+//        self.hideKeyboardWhenTappedAround()
         //MARK: Load first VC
         self.transition(toVCWithIdentifier: .spinner, animated:false)
     }

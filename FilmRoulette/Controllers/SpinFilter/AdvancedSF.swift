@@ -8,25 +8,62 @@
 
 import UIKit
 import TagListView
+import RealmSwift
 
 
 
-class AdvancedFilterVC: UIViewController {
-
-
-    @IBOutlet weak var includeSetter: Selector!
-    //MARK: - =========IBOUTLETS==========
+class AdvancedFilterVC: SpinFilterSubview{
+//MARK: - =========IBOUTLETS==========
     
+    
+    //MARK: - == SELECTOR ==
+    @IBOutlet weak var includeSetter: Selector!
+    @IBOutlet weak var mustIncludeButton: UIButton!
+    @IBOutlet weak var mayIncludeButton: UIButton!
+    @IBOutlet weak var mustExcludeButton: UIButton!
+    
+    
+    
+    //MARK: - == OTHER VIEWS ==
     @IBOutlet weak var autofillTable: UITableView!
     @IBOutlet weak var includeTagsField: UITextField!
     @IBOutlet weak var tagView: TagListView!
+    
+    @IBOutlet weak var mainScrollView: UIScrollView!
     
     
     
     //MARK: - ==========VARS============
     //MARK: - ==ARRAYS==
-    var predictions = [String]()
-    var possibleTags = [String]()
+    var genrePredictions:Results<Genre>?
+    var tagPredictions:Results<Tag>?
+    
+    var predictions:[Object] {
+        get {
+            var array = [Object]()
+            if let gp = self.genrePredictions {
+                array += gp.toArray(type: Object.self)
+            }
+            if let tp = self.tagPredictions {
+                array += tp.toArray(type: Object.self)
+            }
+            
+            return array
+        }
+    }
+    
+    var tagColors:[FilterObjectType:[FilterCondition:UIColor]] = [
+        .genre:[
+            .and:UIColor().colorSecondaryLight(),
+            .or:UIColor.orange,
+            .not:UIColor().colorTextEmphasisLight()
+        ],
+        .tag: [
+            .and:UIColor().colorSecondaryDark(),
+            .or:UIColor.yellow,
+            .not:UIColor().colorEmphasisDark()
+        ]
+    ]
     
     //MARK: - ==========SETUP============
     
@@ -38,13 +75,22 @@ class AdvancedFilterVC: UIViewController {
         self.autofillTable.delegate = self
         self.autofillTable.dataSource = self
        
-        
         //MARK: ==Fill Arrays==
-        self.possibleTags = GlobalDataManager.allGenres.map({return $0.name})
-        self.possibleTags += GlobalDataManager.allTags.map({return $0.name})
+        self.getMostRecentFilter()
+        
+        
+        let scrollViewTap = UITapGestureRecognizer(target: self, action: #selector(scrollViewTapped))
+        scrollViewTap.cancelsTouchesInView = false
+        scrollViewTap.numberOfTapsRequired = 1
+        self.mainScrollView.addGestureRecognizer(scrollViewTap)
         
         //MARK: ==UPDATE UI==
+        self.selectorSetup()
         self.refreshTagView()
+    }
+    
+    func selectorSetup() {
+        self.includeSetter.configure(buttons: [self.mustIncludeButton, self.mayIncludeButton, self.mustExcludeButton], highlightColor: UIColor().colorTextEmphasisLight(), delegate: self)
     }
     
 
@@ -58,44 +104,79 @@ class AdvancedFilterVC: UIViewController {
         self.showHideAutofillTable()
     }
     
+    @objc func scrollViewTapped(){
+        
+        self.view.endEditing(true)
+    }
     
+    func getMostRecentFilter() {
+        
+        if let savedFilter = GlobalDataManager.filter(withID: Prefs.MostRecentFilterID) {
+            self.container.filterObject = savedFilter
+        } else {
+            let id = "\(NSDate().timeIntervalSince1970)"
+            self.container.filterObject = Filter()
+            self.container.filterObject?.setValue(id, forKey: "id")
+            self.container.filterObject?.setValue(id, forKey: "name")
+           if let error = GlobalDataManager.save(object: self.container.filterObject!)
+           {print(error)}
+            Prefs.MostRecentFilterID = id
+        }
+    }
     
     func refreshTagView() {
+        
+        guard let filter =  self.container.filterObject as? Filter else {return}
         self.tagView.removeAllTags()
-        for tag in Prefs.mustBeIncluded {
-            self.displayTag(named: tag, withParams: .and, ofColor: UIColor.green)
-        }
         
-        for tag in Prefs.canBeIncluded {
-            self.displayTag(named: tag, withParams: .or, ofColor: UIColor.yellow)
-        }
+        self.displayTagArray(names: Array(filter.genresMustInclude), params: .and, objectType:.genre)
         
-        for tag in Prefs.excluded {
-            self.displayTag(named: tag, withParams: .not, ofColor: UIColor.red)
+        self.displayTagArray(names: Array(filter.tagsMustInclude), params: .and, objectType:.tag)
+        
+        self.displayTagArray(names: Array(filter.genresMayInclude), params: .and, objectType: .genre)
+        
+        self.displayTagArray(names: Array(filter.tagsMayInclude) + Array(filter.genresMayInclude), params: .or, objectType: .tag)
+        
+        self.displayTagArray(names:Array(filter.genresMustExclude), params: .not, objectType: .genre)
+        
+         self.displayTagArray(names: Array(filter.tagsMustExclude), params: .not, objectType: .tag)
+    }
+    
+    func displayTagArray(names:[String], params:FilterCondition, objectType:FilterObjectType) {
+        for filter in names {
+            self.displayTag(named: filter, withParams: params, objectType: objectType)
         }
     }
     
     //MARK: - ==ADD TAG TO VIEW==
-    func displayTag(named tagName:String, withParams ip:FilterCondition, ofColor tagColor:UIColor) {
-        
+    func displayTag(named tagName:String, withParams ip:FilterCondition, objectType:FilterObjectType) {
         self.tagView.removeTag(tagName)
+        
+        for tag in self.tagView.tagViews {
+            if tag.titleLabel?.text == tagName && tag.objectType == objectType {
+                self.tagView.removeTagView(tag)
+            }
+        }
+        
         self.tagView.addTag(tagName)
-        self.tagView.tagViews.last!.backgroundColor = tagColor
+        self.tagView.tagViews.last!.objectType = objectType
+        self.tagView.tagViews.last!.backgroundColor = self.tagColors[objectType]![ip]!
     }
     
-    
-    //MARK: - ==ADD/REMOVE FROM PREFS==
-    func addRemoveTagFromPrefs(tag:String, exclude ip:FilterCondition) {
-        Prefs.canBeIncluded = ip == .or ? Prefs.canBeIncluded.appending(tag) : Prefs.canBeIncluded.removing(tag)
-        Prefs.mustBeIncluded = ip == .and ? Prefs.mustBeIncluded.appending(tag) : Prefs.mustBeIncluded.removing(tag)
-        Prefs.excluded = ip == .not ? Prefs.excluded.appending(tag) : Prefs.excluded.removing(tag)
+    //MARK: Hide Keyboard
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        self.container.view.endEditing(true)
+        self.autofillTable.isHidden = true
     }
+
 }
 
 //MARK: - ========== TAGLIST STUFF =======================
 extension AdvancedFilterVC : TagListViewDelegate {
     func tagRemoveButtonPressed(_ title: String, tagView: TagView, sender: TagListView) {
-        self.addRemoveTagFromPrefs(tag: title, exclude: .none)
+        guard let filter = self.container.filterObject as? Filter else {return}
+        filter.addFilter(title: title, type: tagView.objectType, condition: .none)
         self.refreshTagView()
     }
 }
@@ -108,16 +189,26 @@ extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CandidateCell")!
-        cell.textLabel?.text = self.predictions[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CandidateCell") as! FilterCandidateCell
+        let object = self.predictions[indexPath.row]
+        guard let name = object.value(forKey: "name") as? String else {return cell}
+        
+        cell.textLabel?.text = name
+        cell.backgroundColor? = ((object as? Genre) != nil) ? UIColor().colorSecondaryLight(): UIColor().offWhitePrimary()
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let ip = FilterCondition(rawValue: self.includeSetter.indexOfSelectedItem)!
-        let tagName = self.predictions[indexPath.row]
-        self.addRemoveTagFromPrefs(tag: tagName, exclude: ip)
+        print("row selected")
+        let condition = FilterCondition(rawValue: self.includeSetter.indexOfSelectedItem)!
+        let selectedObject = self.predictions[indexPath.row]
+        let tagName = selectedObject.value(forKey: "name") as! String
+        let type:FilterObjectType = ((selectedObject as? Genre) != nil) ? .genre : .tag
+        
+        guard let object = self.container.filterObject as? Filter else {print("not an object! \(self.container.filterObject)"); return}
+        object.addFilter(title: tagName, type: type, condition: condition)
+        
         self.includeTagsField.text = ""
         self.refreshTagView()
         self.showHideAutofillTable()
@@ -129,14 +220,16 @@ extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
         
         //-- Filter predictions
         
+        var predicates = [NSPredicate]()
         
-        self.predictions = self.possibleTags.filter({ (item) -> Bool in
-            return item.lowercased().contains(self.includeTagsField.text!.lowercased())
-        })
+        predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", self.includeTagsField.text!))
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
+        self.genrePredictions = GlobalDataManager.allGenres.filter(compoundPredicate)
+        self.tagPredictions = GlobalDataManager.allTags.filter(compoundPredicate)
+        self.autofillTable.reloadData()
         //-- If predictions exist display table
         if self.predictions.count > 0 {
-            self.autofillTable.reloadData()
             
             //-- resize table
             var frame = self.autofillTable.frame
@@ -154,4 +247,18 @@ extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension TagView {
+    private static var _objectType = [String:FilterObjectType]()
+    
+    var objectType:FilterObjectType {
+        get {
+            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
+            return TagView._objectType[tmpAddress] ?? .genre
+        }
+        set(newValue) {
+            let tmpAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
+            TagView._objectType[tmpAddress] = newValue
+        }
+    }
+}
 

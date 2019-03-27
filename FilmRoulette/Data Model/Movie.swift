@@ -38,7 +38,7 @@ class Movie : Object {
     func setPoster(withData data:Data?) {
         guard let realData = data else {return}
         guard UIImage(data:realData) != nil else {return}
-        self.thumbnailName = self.title + self.releaseDate
+        self.thumbnailName = self.title.alphanumeric + self.releaseDate
         
         if !self.imageExists{
             try? realData.write(to: self.fullImageURL)
@@ -54,6 +54,12 @@ class Movie : Object {
     var imageExists:Bool {
         get {
             return FileManager.default.fileExists(atPath: self.fullImageURL.path)
+        }
+    }
+    
+    var tagList:[String] {
+        get {
+            return self.tags.map{$0.name}
         }
     }
     

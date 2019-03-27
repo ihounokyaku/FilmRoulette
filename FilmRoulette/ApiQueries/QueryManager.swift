@@ -140,4 +140,7 @@ class QueryManager: NSObject, PosterQueryDelegate, MainQueryDelegate, Individual
     func cPrint(_ message:Any) {
         print(message)
     }
+    
+    
+    
 }

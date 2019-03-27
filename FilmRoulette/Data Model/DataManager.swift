@@ -14,7 +14,7 @@ import RealmSwift
 
 let Moviekeys = ["id", "title", "thumbnailName", "imageUrl", "desc", "rtScore", "imdbScore", "metacriticScore", "trailerUrl", "love", "watched", "releaseDate", "imdbID", "genres"]
 
-class DataManager:NSObject {
+class DataManager:NSObject, FilterDelegate {
     
     
 //MARK - =================== RealmDBs =================
@@ -80,6 +80,23 @@ class DataManager:NSObject {
         }
     }
     
+    var allGenresAndTags:Results<Object> {
+        get {
+            let list = List<Object>()
+            for genre in self.realm.objects(Genre.self).sorted(byKeyPath: "name", ascending: true) {
+                list.append(genre)
+            }
+            
+            for tag in self.realm.objects(Tag.self){
+                list.append(tag)
+            }
+            return list.sorted(byKeyPath: "name", ascending: true)
+            
+        }
+    }
+    
+
+    
 
 //*********************************************************************************************
     
@@ -100,31 +117,46 @@ class DataManager:NSObject {
     }
     
     func importMovie(movie:Movie)->String? {
-        let newMovie = Movie()
-        for key in Moviekeys {
-            newMovie.setValue(movie.value(forKey: key), forKey: key)
-        }
-        for genre in newMovie.genres {
-            newMovie.genreList.append(self.genre(named: genre) ?? self.newGenre(named: genre))
-        }
-        do {
-            try self.realm.write {
-                realm.add(newMovie)
+        
+        if !databaseContains(movieWithId: movie.id) {
+            let newMovie = Movie()
+            for key in Moviekeys {
+                newMovie.setValue(movie.value(forKey: key), forKey: key)
             }
-            return nil
-        } catch {
-            return error.localizedDescription
+            for genre in newMovie.genres {
+                newMovie.genreList.append(self.genre(named: genre) ?? self.newGenre(named: genre))
+            }
+            
+            do {
+                try self.realm.write {
+                    realm.add(newMovie)
+                }
+                return nil
+            } catch {
+                return error.localizedDescription
+            }
+        } else {
+            return "Movie already in library!"
         }
+        
     }
     
     
-    func save(movie:Movie, imageData:Data?, love:Bool, watched:Bool) {
+    
+    
+    
+    func save(movie:Movie, imageData:Data?, love:Bool, watched:Bool, tags:[String] = []) {
         movie.setPoster(withData:imageData)
         movie.love = love
         movie.watched = watched
         for genre in movie.genres {
             movie.genreList.append(self.genre(named: genre) ?? self.newGenre(named: genre))
         }
+        
+        for tag in tags {
+            movie.tags.append(self.tag(named: tag) ?? self.newTag(named: tag))
+        }
+        
         do {
             try self.realm.write {
                 realm.add(movie)
@@ -147,11 +179,29 @@ class DataManager:NSObject {
         return genre
     }
     
+    func newTag(named name:String)-> Tag {
+        let tag = Tag()
+        tag.name = name
+        do {
+            try self.realm.write {
+                realm.add(tag)
+            }
+        } catch {
+            print("Error saving object \(error)")
+        }
+        return tag
+    }
+
+    
     
     
     //MARK: - ========== READ ==========
     func movie(withId id:Int)-> Movie? {
         return self.realm.objects(Movie.self).filter("id == %i", id).first
+    }
+    
+    func fsMovie(withID id:Int)-> Movie? {
+        return self.fsRealm.objects(Movie.self).filter("id == %i", id).first
     }
     
     func folder(withName name:String)-> Group? {
@@ -175,6 +225,13 @@ class DataManager:NSObject {
     }
     func group(named name:String)-> Group? {
         return self.realm.objects(Group.self).filter("name == %@", name).first
+    }
+    
+    func filter(named name:String)-> Filter? {
+        return self.realm.objects(Filter.self).filter("name == %@", name).first
+    }
+    func filter(withID id:String)-> Filter? {
+        return self.realm.objects(Filter.self).filter("id == %@", id).first
     }
     
     //MARK: - ==GET MOVIES WITH TAG==
@@ -228,7 +285,62 @@ class DataManager:NSObject {
         return nil
     }
     
+    func updateTags(newTags:[String], forMovie movie:Movie){
+        var tags = [Tag]()
+        for tagName in newTags {
+            let tag = self.tag(named: tagName) ?? self.newTag(named: tagName)
+            tags.append(tag)
+            if let error = self.addTag(tag, toMovie: movie) {
+                print(error)
+            }
+        }
+        
+        for tag in movie.tags {
+            if !tags.contains(tag) {
+                if let error = self.removeTag(tag, fromMovie: movie) {
+                    print(error)
+                }
+            }
+        }
+        
+    }
+    
+    func addTag(_ tag:Tag, toMovie movie:Movie)->String? {
+        
+        if !movie.tags.contains(tag){
+            do {
+                try self.realm.write {
+                    if tag.name == "to watch" {
+                        movie.watched = false
+                    }
+                    movie.tags.append(tag)
+                }
+            } catch {
+               return error.localizedDescription
+            }
+        }
+        return nil
+    }
+    
+    func removeTag(_ tag:Tag, fromMovie movie:Movie)-> String? {
+        if movie.tags.contains(tag) {
+            
+            do {
+                try self.realm.write {
+                    if tag.name == "to watch" {
+                        movie.watched = true
+                    }
+                    movie.tags.remove(at: movie.tags.index(of: tag)!)
+                }
+            } catch {
+                return error.localizedDescription
+            }
+        }
+        return nil
+    }
+    
     func updatePoster(forMovie movie:Movie, posterData:Data?) {
+        print("going to set poster")
         do {
             try self.realm.write {
                 movie.setPoster(withData: posterData)

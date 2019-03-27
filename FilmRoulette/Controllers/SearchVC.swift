@@ -134,7 +134,7 @@ extension SearchVC : UITableViewDataSource {
 extension SearchVC : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = self.moviesToDisplay[indexPath.row]
-        Conveniences().presentSingleMovieView(movie: movie, imageData: SessionData.Posters[movie.id], sender: self)
+        self.presentSingleMovieView(movie: movie, imageData: SessionData.Posters[movie.id], filmSwipe:false, sender: self)
         
     }
 }

@@ -32,8 +32,40 @@ extension Results where Element == Movie {
     }
 }
 
+extension Results {
+    func toArray<T>(type: T.Type) -> [T] {
+        return compactMap { $0 as? T }
+    }
+}
+
+extension List where Element == String {
+    
+    func removing(_ string:String)-> List<String> {
+        let array = self
+        if array.contains(string) {
+            array.remove(at: array.index(of: string)!)
+        }
+        return array
+    }
+    
+    func appending(_ string:String)-> List<String> {
+        let array = self
+        if !array.contains(string) {
+            array.append(string)
+        }
+        return array
+    }
+    
+}
+
 //MARK: - ========ARRAY  EXTENSIONS ===========
 //MARK: - ==String Array==
+extension Array where Element: Comparable {
+    func containsSameElements(as other: [Element]) -> Bool {
+        return self.count == other.count && self.sorted() == other.sorted()
+    }
+}
+
 extension Array where Element == String {
     
     func asList()->List<String> {
@@ -74,6 +106,8 @@ extension Array where Element == String {
     }
         
 }
+
+
 
 extension Array where Element == Movie {
     
@@ -130,6 +164,13 @@ extension UIViewController {
 //MARK: - ========Image-Related Extensions ===========
 //MARK: - ==Image From String==
 extension String {
+    
+ 
+        var alphanumeric: String {
+            return self.components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
+        }
+    
+    
     func image () -> UIImage {
         
         let getImagePath = ImageDirectory.appendingPathComponent(self)

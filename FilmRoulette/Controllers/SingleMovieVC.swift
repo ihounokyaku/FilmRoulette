@@ -21,7 +21,7 @@ extension SingleMovieDelegate {
     func backFromSingleMovie(changed:Bool){}
 }
 
-class SingleMovieVC: UIViewController {
+class SingleMovieVC: ModalVC {
 
     //MARK: - ==========IBOUTLETS===========
     //MARK: - ==VIEWS==
@@ -53,10 +53,13 @@ class SingleMovieVC: UIViewController {
     var posterData:Data?
     
      //MARK: - ==DELEGATES ETC==
-    var delegate:SingleMovieDelegate?
+    var delegate:SingleMovieDelegate? {
+        return self.masterDelegate as? SingleMovieDelegate
+    }
     
     var changed:Bool = false
     
+    var filmSwipe = false
     
     var trailerBkgView:TrailerView?
     
@@ -70,10 +73,21 @@ class SingleMovieVC: UIViewController {
         self.trailerButton.isEnabled = URL(string:self.movie.trailerUrl) != nil
         self.selectorView.layer.borderColor = UIColor().blackBackgroundPrimary().cgColor
         self.selectorView.layer.borderWidth = 1
+    
+        if self.filmSwipe {
+            self.replaceFilmswipeMovie()
+        }
         
+        //UI
         self.setColors()
         self.setFonts()
         self.updateUI()
+    }
+    
+    func replaceFilmswipeMovie() {
+        guard let movie = GlobalDataManager.movie(withId: self.movie.id) else {return}
+        self.movie = movie
+        self.filmSwipe = false
     }
     
     //MARK: - ==========UI===========
@@ -94,6 +108,8 @@ class SingleMovieVC: UIViewController {
         self.descTextView.font = Fonts.SingleViewDesc
         
     }
+    
+    
     
     //MARK: - ==Set images and labels==
     func updateUI() {
@@ -117,8 +133,15 @@ class SingleMovieVC: UIViewController {
         
         for button in [self.watchedButton, self.likeButton, self.loveButton] {
             button!.isEnabled = true
+            button!.alpha = 1
         }
 
+        if self.filmSwipe {
+            for button in [self.watchedButton, self.loveButton] {
+                button!.isEnabled = false
+                button!.alpha = 0
+            }
+        }
         //MARK: Set Images
         if let savedMovie = GlobalDataManager.movie(withId: self.movie.id) {
             inLibrary = true
@@ -149,12 +172,18 @@ class SingleMovieVC: UIViewController {
             }
     }
     
+    
+    
     //MARK: - ========== SELECTOR  FUNCTIONS ==========
     
     
     @IBAction func likeButtonPressed(_ sender: Any) {
-        print("liked pressed")
-        if let savedMovie = GlobalDataManager.movie(withId: movie.id) {
+        if self.filmSwipe {
+            if GlobalDataManager.importMovie(movie: self.movie) == nil {
+                self.replaceFilmswipeMovie()
+            }
+            
+        } else if let savedMovie = GlobalDataManager.movie(withId: movie.id) {
             let movie = Movie(value:self.movie)
             self.movie = movie
             GlobalDataManager.deleteObject(object: savedMovie)
@@ -178,6 +207,7 @@ class SingleMovieVC: UIViewController {
     }
     
     func updateLoveWatched(loved:Bool, watched:Bool){
+        
         if GlobalDataManager.movie(withId: self.movie.id) != nil {
             GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
         } else {

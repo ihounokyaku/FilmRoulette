@@ -12,7 +12,7 @@ import RealmSwift
 //MARK: - =========DIRECTORIES==========
 
 //MARK: - ==DOCUMENTS==
-var DocumentsDirectory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.brokenkeyboard.filmapps")!
+var DocumentsDirectory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.brokenkeyboard.movieApps")!
 
 var ImageDirectory:URL {
     let directory = DocumentsDirectory.appendingPathComponent("Images")
@@ -26,6 +26,7 @@ var ImageDirectory:URL {
     return directory
 }
 
+let CatalogueFileName = "FilmLibrary.json"
 
 //MARK: - ==REALM CONFIG==
 
@@ -34,7 +35,7 @@ let FilmswipeRealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appen
 
 //MARK: - ==GLOBALCLASSES ==
 
-var GlobalDataManager:DataManager{
+var GlobalDataManager:DataManager {
     get  {
         if SessionData.DataManager == nil {
             SessionData.DataManager = DataManager()
@@ -42,6 +43,8 @@ var GlobalDataManager:DataManager{
         return SessionData.DataManager!
     }
 }
+
+
 
 
 //MARK: - =========GENRES=========

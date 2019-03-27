@@ -10,16 +10,16 @@ import UIKit
 import RealmSwift
 
 protocol SpinFiltersDelegate {
-    var filterType:FilterType {get}
-    func filterResults(withObject object:Object?)
+    var filterObject:Object? {get set}
 }
 
 enum FilterType:CaseIterable {
     case simple
     case complex
+    case none
 }
 
-class SpinFilterContainer: UIViewController,SelectorDelegate {
+class SpinFilterContainer: ModalVC,SelectorDelegate {
 
     //MARK: - =============== IBOUTLETS ===============
     
@@ -32,15 +32,24 @@ class SpinFilterContainer: UIViewController,SelectorDelegate {
     
     
     //MARK: - =============== VARS ===============
-    var delegate:SpinFiltersDelegate!
+    var delegate:SpinFiltersDelegate! {
+        get {
+            return (self.masterDelegate as! SpinFiltersDelegate)
+        }
+        set {
+            self.masterDelegate = (newValue as! UIViewController)
+        }
+    }
     
     var filterObject:Object?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+//        self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
     }
+    
+    //MARK: - =============== SETUP ===============
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -49,7 +58,19 @@ class SpinFilterContainer: UIViewController,SelectorDelegate {
         self.loadSubview(animated: false)
     }
     
+    
+    //MARK: - =============== NAVIGATION ===============
+    
+    func selectionDidChange(sender: Selector) {
+        Prefs.SpinFilterType = self.selector.indexOfSelectedItem
+        print(" \(self.selector.indexOfSelectedItem) \(Prefs.SpinFilterType)")
+        self.loadSubview(animated: true)
+        
+    }
+    
+    
     func loadSubview(animated:Bool) {
+        print("going to load \(Prefs.SpinFilterType)")
         self.transition(toVCWithIdentifier: Prefs.SpinFilterType == 0 ? .basicFilter : .advancedFilter, animated:animated)
     }
     
@@ -81,8 +102,12 @@ class SpinFilterContainer: UIViewController,SelectorDelegate {
     }
     
     @IBAction func donePressed(_ sender: Any) {
-        self.delegate.filterResults(withObject: self.filterObject)
+        self.delegate.filterObject = self.filterObject
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 
 }

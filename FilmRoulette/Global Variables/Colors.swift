@@ -60,6 +60,11 @@ extension UIColor {
     func colorTextEmphasisLight(alpha:CGFloat = 1)-> UIColor{
         return self.fromHexWithAlpha(hex:"#D07163", alpha:alpha)
     }
+   
+    
+    static var SelectorWhite:UIColor {
+        return UIColor().offWhitePrimary(alpha:0.4)
+    }
     
     
     
