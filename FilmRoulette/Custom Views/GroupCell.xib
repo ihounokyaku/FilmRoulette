@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="GroupCell" customModule="FilmRoulette" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="81.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="tTx-ur-0oX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="81.5"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V9e-Sg-sGf">
+                                <rect key="frame" x="0.0" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hdJ-A2-iT8">
+                                <rect key="frame" x="62.5" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TfG-df-Tbx">
+                                <rect key="frame" x="125" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lhH-7D-81W">
+                                <rect key="frame" x="187.5" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bpY-lc-Eqn">
+                                <rect key="frame" x="250" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="s3k-9M-JvM">
+                                <rect key="frame" x="312.5" y="0.0" width="62.5" height="81.5"/>
+                            </imageView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="tTx-ur-0oX" secondAttribute="trailing" id="GFU-6N-1hO"/>
+                    <constraint firstItem="tTx-ur-0oX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Lnl-bD-gWl"/>
+                    <constraint firstAttribute="bottom" secondItem="tTx-ur-0oX" secondAttribute="bottom" id="MAE-oi-A3m"/>
+                    <constraint firstItem="tTx-ur-0oX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="zOK-NS-bV4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="image1" destination="V9e-Sg-sGf" id="NiQ-aj-ecx"/>
+                <outlet property="image2" destination="hdJ-A2-iT8" id="CZA-5F-F6l"/>
+                <outlet property="image3" destination="TfG-df-Tbx" id="qrN-K5-X0E"/>
+                <outlet property="image4" destination="lhH-7D-81W" id="EKQ-Fh-YTH"/>
+                <outlet property="image5" destination="bpY-lc-Eqn" id="nvo-Vx-EYI"/>
+                <outlet property="image6" destination="s3k-9M-JvM" id="3p5-6l-kwR"/>
+            </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="120.53973013493254"/>
+        </tableViewCell>
+    </objects>
+</document>

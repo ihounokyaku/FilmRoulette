@@ -60,7 +60,7 @@ class NavContainer: UIViewController {
         //MARK: Set Appearance
         self.setColors()
         self.setFonts()
-        
+        self.hideKeyboardWhenTapped()
 //        self.hideKeyboardWhenTappedAround()
         //MARK: Load first VC
         self.transition(toVCWithIdentifier: .spinner, animated:false)

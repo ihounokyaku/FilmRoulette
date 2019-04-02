@@ -11,8 +11,9 @@ import RealmSwift
 import Toast_Swift
 
 enum LibraryDisplayType:String, CaseIterable {
-    case all = "My Library"
+    case library = "My Library"
     case filmSwipe = "FilmSwipe"
+    case groups = "Groups"
 }
 
 class MovieListVC: NavSubview, SingleMovieDelegate {
@@ -46,8 +47,8 @@ class MovieListVC: NavSubview, SingleMovieDelegate {
         }
     }
     
-    var libraryType:LibraryType {
-        return LibraryType.allCases[self.container.selector.indexOfSelectedItem]
+    var libraryType:LibraryDisplayType {
+        return LibraryDisplayType.allCases[self.container.selector.indexOfSelectedItem]
     }
     
     var queryList = [Movie]()
@@ -67,10 +68,10 @@ class MovieListVC: NavSubview, SingleMovieDelegate {
         self.movieTable.dataSource = self
         self.searchBar.delegate = self
         self.configureSelector()
-        
+        self.setTableView()
+        self.hideKeyboardWhenTapped()
         //MARK: Register tablecells and set selector
-        self.movieTable.register(UINib(nibName: "MovieListCell", bundle: nil), forCellReuseIdentifier: "MovieListCell")
-        self.movieTable.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+        
        
         
         //MARK: Update UI
@@ -84,8 +85,14 @@ class MovieListVC: NavSubview, SingleMovieDelegate {
         self.completeMissingPosters()
     }
     
+    func setTableView() {
+         self.movieTable.register(UINib(nibName: "GroupCell", bundle: nil), forCellReuseIdentifier: "GroupCell")
+        self.movieTable.register(UINib(nibName: "MovieListCell", bundle: nil), forCellReuseIdentifier: "MovieListCell")
+        self.movieTable.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+    }
+    
     func configureSelector() {
-         self.setSelector(buttonCount: 2, color: UIColor.SelectorWhite, label2: "My Library", label3:"FilmSwipe")
+         self.setSelector(buttonCount: 3, color: UIColor.SelectorWhite, label1: "My Library", label2:"FilmSwipe", label3: "Groups")
         self.filterSelector.configure(buttons: [self.allButtton, self.unwatchedButton, self.starredButton], highlightColor: UIColor().colorSecondaryLight(alpha: 0.4), delegate: self)
         
     }
@@ -107,9 +114,17 @@ class MovieListVC: NavSubview, SingleMovieDelegate {
     }
     
     func toggleDisplay() {
-        self.bottomButton.setTitle(self.libraryType == .library ? "Import" : "Add All", for: .normal)
-        GlobalDataManager.movieList = GlobalDataManager.movies(self.moviesOnDisplay, filteredBy: self.displayOption)
         
+        let buttonText:[LibraryDisplayType:String] = [.library:"Import", .filmSwipe:"Add All", .groups:"+"]
+        self.bottomButton.setTitle(buttonText[self.libraryType], for: .normal)
+        if self.libraryType == .groups {
+            print("it is groups")
+            GlobalDataManager.groupList = GlobalDataManager.allGroups
+        } else {
+            print("it is not groups")
+            GlobalDataManager.movieList = GlobalDataManager.movies(self.moviesOnDisplay, filteredBy: self.displayOption)
+        }
+
 //        self.addButton.isHidden = self.displayControl.selectedSegmentIndex == 0
         self.movieTable.reloadData()
     }
@@ -199,9 +214,12 @@ class MovieListVC: NavSubview, SingleMovieDelegate {
     
     
     @IBAction func bottomButtonPressed(_ sender: Any) {
-        if self.libraryType == .library {
+        switch self.libraryType{
+        case .library:
             self.syncFromDropbox()
-        } else {
+        case .groups:
+            break
+        case .filmSwipe:
             self.addAll()
         }
     }
@@ -254,7 +272,11 @@ extension MovieListVC : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.presentSingleMovieView(movie: GlobalDataManager.movieList[indexPath.row], imageData: nil, filmSwipe:self.libraryType == .filmSwipe, sender: self)
+        if self.libraryType == .groups {
+            //DO GROUP THING
+        } else {
+            self.presentSingleMovieView(movie: GlobalDataManager.movieList[indexPath.row], imageData: nil, filmSwipe:self.libraryType == .filmSwipe, sender: self)
+        }
     }
     
 }
@@ -262,18 +284,38 @@ extension MovieListVC : UITableViewDelegate {
 //MARK: - ==DATASOURCE==
 extension MovieListVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if self.libraryType == .groups {
+            return GlobalDataManager.groupList.count
+        }
         return GlobalDataManager.movieList.count
     }
     
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieListCell") as! MovieListCell
         
+        var cell:UITableViewCell!
+        
+        if self.libraryType == .groups {
+            
+            let groupCell = tableView.dequeueReusableCell(withIdentifier: "GroupCell") as! GroupCell
+            let group = GlobalDataManager.groupList[indexPath.row]
+            groupCell.setImages(fromMovies: Array(group.movies))
+            groupCell.textLabel?.text = group.name
+            groupCell.accessoryType = .disclosureIndicator
+            cell = groupCell
+
+        } else {
+            
+            let movieCell = tableView.dequeueReusableCell(withIdentifier: "MovieListCell") as! MovieListCell
             let movie = GlobalDataManager.movieList[indexPath.row]
-        cell.indexPath = indexPath
-       cell.config(title: movie.title, releaseYear: movie.releaseDate.year(), poster: movie.poster)
-        
+            
+            movieCell.indexPath = indexPath
+            movieCell.config(title: movie.title, releaseYear: movie.releaseDate.year(), poster: movie.poster)
+            cell = movieCell
+        }
+
         return cell
     }
     
@@ -313,10 +355,17 @@ extension MovieListVC : UISearchBarDelegate {
         
         var predicates = [NSPredicate]()
         
-        predicates.append(NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!))
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         
-        GlobalDataManager.movieList = self.moviesOnDisplay.filter(compoundPredicate)
+        if self.libraryType == .groups {
+           predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", searchBar.text!))
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            GlobalDataManager.groupList = GlobalDataManager.allGroups.filter(compoundPredicate)
+        } else {
+            predicates.append(NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!))
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            GlobalDataManager.movieList = self.moviesOnDisplay.filter(compoundPredicate)
+        }
+
         self.movieTable.reloadData()
         
     }

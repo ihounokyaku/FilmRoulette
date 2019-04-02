@@ -26,6 +26,7 @@ class DataManager:NSObject, FilterDelegate {
     var moviesDisplayed:Results<Movie>!
     //var uniqueMoviesDisplayed = List<Movie>()
     var movieList:Results<Movie>!
+    var groupList:Results<Group>!
     
     var allMovies:Results<Movie> {
         get {

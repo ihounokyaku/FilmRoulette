@@ -148,12 +148,20 @@ extension Sequence {
 }
 
 //Keyboard Dismiss
+extension UIView {
+    
+}
+
+
 extension UIViewController {
-    func hideKeyboardWhenTappedAround() {
+    
+    func hideKeyboardWhenTapped() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        tap.numberOfTapsRequired = 1
         view.addGestureRecognizer(tap)
-        
     }
+    
     
     @objc func dismissKeyboard() {
         view.endEditing(true)

@@ -79,10 +79,8 @@ class AdvancedFilterVC: SpinFilterSubview{
         self.getMostRecentFilter()
         
         
-        let scrollViewTap = UITapGestureRecognizer(target: self, action: #selector(scrollViewTapped))
-        scrollViewTap.cancelsTouchesInView = false
-        scrollViewTap.numberOfTapsRequired = 1
-        self.mainScrollView.addGestureRecognizer(scrollViewTap)
+        
+        self.hideKeyboardWhenTapped()
         
         //MARK: ==UPDATE UI==
         self.selectorSetup()
@@ -104,10 +102,6 @@ class AdvancedFilterVC: SpinFilterSubview{
         self.showHideAutofillTable()
     }
     
-    @objc func scrollViewTapped(){
-        
-        self.view.endEditing(true)
-    }
     
     func getMostRecentFilter() {
         
@@ -164,11 +158,7 @@ class AdvancedFilterVC: SpinFilterSubview{
     }
     
     //MARK: Hide Keyboard
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-        self.container.view.endEditing(true)
-        self.autofillTable.isHidden = true
-    }
+
 
 }
 

@@ -13,6 +13,8 @@
 		C407DF8520F39C7700213A37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8320F39C7700213A37 /* Main.storyboard */; };
 		C407DF8720F39C7800213A37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8620F39C7800213A37 /* Assets.xcassets */; };
 		C407DF8A20F39C7800213A37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C407DF8820F39C7800213A37 /* LaunchScreen.storyboard */; };
+		C409D621224CEB9E002138F0 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C409D61F224CEB9E002138F0 /* GroupCell.swift */; };
+		C409D622224CEB9E002138F0 /* GroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C409D620224CEB9E002138F0 /* GroupCell.xib */; };
 		C412B048223BFE4000E363E3 /* SelectorIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C412B047223BFE4000E363E3 /* SelectorIcons.swift */; };
 		C412B04A223C044400E363E3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = C412B049223C044400E363E3 /* Images.swift */; };
 		C41FF91722477CE300EE1A3C /* ModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41FF91622477CE300EE1A3C /* ModalVC.swift */; };
@@ -78,6 +80,8 @@
 		C407DF8620F39C7800213A37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C407DF8920F39C7800213A37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C407DF8B20F39C7800213A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C409D61F224CEB9E002138F0 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
+		C409D620224CEB9E002138F0 /* GroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupCell.xib; sourceTree = "<group>"; };
 		C412B047223BFE4000E363E3 /* SelectorIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorIcons.swift; sourceTree = "<group>"; };
 		C412B049223C044400E363E3 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		C41FF91622477CE300EE1A3C /* ModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalVC.swift; sourceTree = "<group>"; };
@@ -303,6 +307,8 @@
 			isa = PBXGroup;
 			children = (
 				C4F162CA2239809E002C7D93 /* MovieListCell.swift */,
+				C409D61F224CEB9E002138F0 /* GroupCell.swift */,
+				C409D620224CEB9E002138F0 /* GroupCell.xib */,
 				C4F162C92239809E002C7D93 /* MovieListCell.xib */,
 				C4BC7F40224004E700971570 /* FilterCandidateCell.swift */,
 				C4F162D32239850A002C7D93 /* TrailerView.swift */,
@@ -390,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4F17A01223A992800BBE53D /* Nunito-SemiBold.ttf in Resources */,
+				C409D622224CEB9E002138F0 /* GroupCell.xib in Resources */,
 				C4F17A00223A992800BBE53D /* Nunito-Regular.ttf in Resources */,
 				C407DF8A20F39C7800213A37 /* LaunchScreen.storyboard in Resources */,
 				C4F179FF223A992800BBE53D /* Nunito-Italic.ttf in Resources */,
@@ -497,6 +504,7 @@
 				C4F162CE22398203002C7D93 /* CustomAlert.swift in Sources */,
 				C4F162C422397FD2002C7D93 /* CustomTableView.swift in Sources */,
 				C4990AF022392CDD00950165 /* SingleMovieVC.swift in Sources */,
+				C409D621224CEB9E002138F0 /* GroupCell.swift in Sources */,
 				C4595A6D20F3AF0500446C4B /* NavContainer.swift in Sources */,
 				C4BC7F41224004E700971570 /* FilterCandidateCell.swift in Sources */,
 				C412B04A223C044400E363E3 /* Images.swift in Sources */,
