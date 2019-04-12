@@ -76,7 +76,8 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     }
     
     var libraryType:LibraryType {
-        return LibraryType.allCases[self.container.selector.indexOfSelectedItem]
+        guard LibraryType.allCases.count > self.navContainer.selector.indexOfSelectedItem else {return .library}
+        return LibraryType.allCases[self.navContainer.selector.indexOfSelectedItem]
     }
     
     
@@ -87,11 +88,11 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
 //MARK: - ========== SETUP ==========
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.subViewType = .spinner
         self.rouletteView.decelerationRate = UIScrollViewDecelerationRateFast
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
-        
+        self.rouletteView.showsHorizontalScrollIndicator = false
         //MARK: - == Appearance ==
         self.spinner = Spinner(collectionView: self.rouletteView)
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
@@ -99,16 +100,19 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
         
         //        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
         //MARK: - == SET FILTER ==
-        self.filterObject = SessionData.CurrentFilterObject
         
-        self.loadRoulette()
+        
+        self.filterObject = SessionData.CurrentFilterObject
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        self.loadRoulette()
+    }
+    
+    override func configureSelector() {
         self.setSelector(buttonCount:2, color: nil, label2: "My Library", label3:"FilmSwipe")
-
         self.spinSelector.configure(buttons: [self.allButton, self.unwatchedButton, self.starredButton], highlightColor: UIColor().colorTextEmphasisLight(), delegate: self)
     }
     
@@ -121,6 +125,7 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     
     //MARK: - ==SWITCH DISPLAY==
     override func selectionDidChange(sender: Selector) {
+        super.selectionDidChange(sender: sender)
         self.loadRoulette()
     }
 
@@ -147,7 +152,7 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
             GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
         }
         
-        self.applyFilters()
+        GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.filterObject, libraryType: self.libraryType)
         
         
         GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.displayOption)
@@ -155,20 +160,20 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
         self.reloadRoulette()
     }
     
-    func applyFilters() {
-        guard self.filterObject != nil else {return}
-        if self.filterType == .simple {
-            if let genre = self.filterObject as? Genre {
-                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genre)
-            } else if let group = self.filterObject as? Group {
-                GlobalDataManager.moviesDisplayed = group.movies.filter("TRUEPREDICATE")
-            } else if let tag = self.filterObject as? Tag {
-                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withTag: tag)
-            }
-        } else if let filter = self.filterObject as? Filter, self.libraryType == .library {
-            GlobalDataManager.moviesDisplayed = filter.apply(to: GlobalDataManager.moviesDisplayed, delegate: GlobalDataManager)
-        }
-    }
+//    func applyFilters() {
+//        guard self.filterObject != nil else {return}
+//        if self.filterType == .simple {
+//            if let genre = self.filterObject as? Genre {
+//                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genre)
+//            } else if let group = self.filterObject as? Group {
+//                GlobalDataManager.moviesDisplayed = group.movies.filter("TRUEPREDICATE")
+//            } else if let tag = self.filterObject as? Tag {
+//                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withTag: tag)
+//            }
+//        } else if let filter = self.filterObject as? Filter, self.libraryType == .library {
+//            GlobalDataManager.moviesDisplayed = filter.apply(to: GlobalDataManager.moviesDisplayed, delegate: GlobalDataManager)
+//        }
+//    }
 
     
     

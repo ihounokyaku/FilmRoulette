@@ -12,7 +12,7 @@ import RealmSwift
 
 
 
-class AdvancedFilterVC: SpinFilterSubview{
+class AdvancedFilterVC: SpinFilterSubview, YearRangePickerDelegate{
 //MARK: - =========IBOUTLETS==========
     
     
@@ -31,6 +31,10 @@ class AdvancedFilterVC: SpinFilterSubview{
     
     @IBOutlet weak var mainScrollView: UIScrollView!
     
+    //MARK: - === YEAR PICKER ===
+    @IBOutlet weak var yearRangePicker: YearRangePicker!
+    @IBOutlet weak var startYearPicker: UIPickerView!
+    @IBOutlet weak var endYearPicker: UIPickerView!
     
     
     //MARK: - ==========VARS============
@@ -74,21 +78,33 @@ class AdvancedFilterVC: SpinFilterSubview{
         self.tagView.delegate = self
         self.autofillTable.delegate = self
         self.autofillTable.dataSource = self
-       
+       self.yearRangePicker.delegate = self
+        
+        
         //MARK: ==Fill Arrays==
         self.getMostRecentFilter()
         
+        self.yearPickerSetup()
         
         
         self.hideKeyboardWhenTapped()
         
-        //MARK: ==UPDATE UI==
+       
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         self.selectorSetup()
         self.refreshTagView()
     }
     
     func selectorSetup() {
         self.includeSetter.configure(buttons: [self.mustIncludeButton, self.mayIncludeButton, self.mustExcludeButton], highlightColor: UIColor().colorTextEmphasisLight(), delegate: self)
+    }
+    
+    func yearPickerSetup() {
+        let filter = container.filterObject as? Filter
+        self.yearRangePicker.configure(startPicker: self.startYearPicker, endPicker: self.endYearPicker, startYear: filter?.startYear, endYear: filter?.endYear, delegate: self)
     }
     
 
@@ -157,8 +173,12 @@ class AdvancedFilterVC: SpinFilterSubview{
         self.tagView.tagViews.last!.backgroundColor = self.tagColors[objectType]![ip]!
     }
     
-    //MARK: Hide Keyboard
-
+   //MARK: - =============== Year Stuff ===============
+    
+    func yearPickerDidChange(yearPicker: YearRangePicker) {
+        guard let filter = self.container.filterObject as? Filter else {print("not an object! \(self.container.filterObject)"); return}
+        filter.setDates(start: yearPicker.startYear, end: yearPicker.endYear)
+    }
 
 }
 

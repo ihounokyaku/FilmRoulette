@@ -10,9 +10,14 @@ import Foundation
 import RealmSwift
 
 
+enum RealmObjectType {
+    case group
+    case movie
+}
+
 //MARK: - =========Datamodel Value Keys=========
 
-let Moviekeys = ["id", "title", "thumbnailName", "imageUrl", "desc", "rtScore", "imdbScore", "metacriticScore", "trailerUrl", "love", "watched", "releaseDate", "imdbID", "genres"]
+let Moviekeys = ["id", "title", "thumbnailName", "imageUrl", "desc", "rtScore", "imdbScore", "metacriticScore", "trailerUrl", "love", "watched", "releaseDate", "releaseYear", "imdbID", "genres"]
 
 class DataManager:NSObject, FilterDelegate {
     
@@ -20,6 +25,9 @@ class DataManager:NSObject, FilterDelegate {
 //MARK - =================== RealmDBs =================
     let realm = try! Realm(configuration: RealmConfig)
     let fsRealm = try! Realm(configuration: FilmswipeRealmConfig)
+    
+    
+    
     
 //MARK - =================== Arrays =================
     
@@ -235,12 +243,32 @@ class DataManager:NSObject, FilterDelegate {
         return self.realm.objects(Filter.self).filter("id == %@", id).first
     }
     
+    func moviesInGroup(_ group:Group, filteredBy filter:Results<Movie>)->Results<Movie> {
+        var predicates = [NSPredicate]()
+        
+        
+        for movie in group.movies {
+          predicates.append(NSPredicate(format: "id == %i", movie.id))
+        }
+        
+        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+        
+        
+        return filter.filter(compoundPredicate)
+    }
+    
     //MARK: - ==GET MOVIES WITH TAG==
-    func movies(withTag tag:Tag)-> Results<Movie> {
+    func movies(withTag tag:Tag, fromResults results:Results<Movie>? = nil)-> Results<Movie> {
+        if let r = results {
+            return r.filter("%@ IN tags", tag)
+        }
         return self.realm.objects(Movie.self).filter("%@ IN tags", tag)
     }
     
-    func movies(withGenre genre:Genre)-> Results<Movie> {
+    func movies(withGenre genre:Genre, fromResults results:Results<Movie>? = nil)-> Results<Movie> {
+        if let r = results {
+            return r.filter("%@ IN genreList", genre)
+        }
         return self.realm.objects(Movie.self).filter("%@ IN genreList", genre)
     }
     
@@ -258,6 +286,21 @@ class DataManager:NSObject, FilterDelegate {
         }
         return results.filter(filter)
     }
+    
+    func movies(_ movies:Results<Movie>, filteredBy filter:Object?, libraryType:LibraryType, allInCategory:Bool = true)-> Results<Movie> {
+        if let genre = filter as? Genre {
+            return self.movies(withGenre: genre, fromResults: allInCategory ? nil : movies)
+        } else if let group = filter as? Group {
+            return allInCategory ? group.movies.filter("TRUEPREDICATE") : self.moviesInGroup(group, filteredBy: movies)
+        } else if let tag = filter as? Tag {
+            return GlobalDataManager.movies(withTag: tag, fromResults: allInCategory ? nil : movies)
+        } else if let fil = filter as? Filter, libraryType == .library {
+            return fil.apply(to: movies, delegate: self)
+        }
+        return movies
+    }
+    
+    
     
     
     
@@ -364,7 +407,13 @@ class DataManager:NSObject, FilterDelegate {
     }
     
     //MARK: - ========== CONVENIENCE ==========
-    
-    
-    
+   //MARK: - === Predicate ===
+    func predicate(forType type:RealmObjectType, text:String)->NSPredicate {
+        switch type {
+        case .group:
+            return NSPredicate(format: "name CONTAINS[cd] %@", text)
+        default:
+            return NSPredicate(format: "title CONTAINS[cd] %@", text)
+        }
+    }
 }

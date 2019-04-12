@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 enum VCIdentifier:String, CaseIterable {
     case spinner = "Spinner"
     case library = "Library"
@@ -15,16 +17,21 @@ enum VCIdentifier:String, CaseIterable {
     case rouletteFilter = "RouletteFilter"
     case basicFilter = "BasicRouletteFilter"
     case advancedFilter = "AdvancedRouletteFilter"
+    case movieList = "MovieList"
+    case groups = "Groups"
+    case groupTable = "GroupTable"
+    case movieTable = "MovieTable"
 }
 
 
 
-class NavContainer: UIViewController {
+class NavContainer: UIViewController, VCContainerDelegate {
 //MARK: - ===========IBOUTLETS============
     //MARK: - ==VIEWS==
     
-    @IBOutlet weak var subviewContainer: UIView!
+    
     @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var containerView: VCContainer!
     
     
     //MARK: - ==BUTTONS==
@@ -48,7 +55,9 @@ class NavContainer: UIViewController {
     
     //MARK: - =========== VARIABLES============
     
-    var currentSubview:NavSubview!
+    var currentNavSubview:NavSubview {
+        return self.containerView.currentSubview as! NavSubview
+    }
     
     
      //MARK: - =========== SETUP ============
@@ -62,8 +71,23 @@ class NavContainer: UIViewController {
         self.setFonts()
         self.hideKeyboardWhenTapped()
 //        self.hideKeyboardWhenTappedAround()
-        //MARK: Load first VC
-        self.transition(toVCWithIdentifier: .spinner, animated:false)
+        //MARK: Load first
+        self.containerView.transition(toVCWithIdentifier: .spinner, animated:false, sender:self)
+        self.becomeFirstResponder()
+    }
+    
+    //MARK: - === Set gesture ===
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            self.currentNavSubview.shake()
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        get {
+            return true
+        }
     }
     
     //MARK: - == Appearance ==
@@ -87,50 +111,28 @@ class NavContainer: UIViewController {
     //MARK: - ==NavigationButtons==
     
     @IBAction func navButtonPressed(_ sender: UIButton){
-        self.transition(toVCWithIdentifier: VCIdentifier.allCases[sender.tag])
-    }
-    
-    
-    //MARK: - =========PRESENT VC===========
-
-    //MARK: - ==ANIMATE TRANSITION==
-    func transition(toVCWithIdentifier identifier: VCIdentifier, animated:Bool = true) {
-        let con = Conveniences()
         
-        //MARK: Get destination VC and assign container
-        let destinationVC = con.getSubview(identifier.rawValue) as! NavSubview
-        destinationVC.container = self
-        
-        //MARK: Set alpha and position
-        destinationVC.view.alpha = animated ? 0 : 1
-        
-        con.addAndPosition(viewController:destinationVC, toParent:self, inContainer: self.subviewContainer)
-        self.currentSubview = destinationVC
+        self.containerView.transition(toVCWithIdentifier: VCIdentifier.allCases[sender.tag], sender: self)
         self.toggleButtons()
-        
-        //MARK: If not animated, remove subviews and return
-        if !animated {
-            con.removeSubviews(from:self.subviewContainer)
-            return
-        }
-        
-        //MARK: Animate Transition
-        UIView.animate(withDuration:0.3, animations:{
-            destinationVC.view.alpha = 1
-            self.subviewContainer.subviews[0].alpha = 0
-        }, completion: {(finished: Bool) in
-            con.removeSubviews(from:self.subviewContainer)
-        })
     }
+    
     
     
 
     
     //MARK: - =========UI UPDATE===========
     func toggleButtons() {
-        self.spinButton.isEnabled = self.currentSubview as? SpinVC == nil
-        
-        //self.myListButton.isEnabled = self.currentSubview as? LikedMoviesVC == nil
+        self.spinButton.isEnabled = self.containerView.currentSubview as? SpinVC == nil
+        self.myListButton.isEnabled = self.containerView.currentSubview as? LibraryContainer == nil
+        self.addButton.isEnabled = self.containerView.currentSubview as? SearchVC == nil
+    }
+    
+    func getSelectorSelection(forSubviewOfType subview:VCIdentifier) {
+        self.selector.selectItem(atIndex: UserDefaults.standard.value(forKey: subview.rawValue + "selectorPosition") as? Int ?? 0, animated:false)
+    }
+    
+    func setSelectorSelection(forSubviewOfType subview:VCIdentifier) {
+        UserDefaults.standard.set(self.selector.indexOfSelectedItem, forKey: subview.rawValue + "selectorPosition")
     }
 
 

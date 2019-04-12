@@ -30,7 +30,7 @@ class SearchVC: NavSubview, SingleMovieDelegate{
     //MARK: - ==========SETUP===========
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.subViewType = .search
         //MARK: DELEGATES
         self.searchBar.delegate = self
         self.tableView.delegate = self
@@ -54,6 +54,10 @@ class SearchVC: NavSubview, SingleMovieDelegate{
         self.searchBar.backgroundColor = UIColor().blackBackgroundPrimary()
         self.searchBar.barTintColor = UIColor().blackBackgroundPrimary()
         
+    }
+    
+    override func configureSelector() {
+        self.setSelector(buttonCount: 0, color: nil)
     }
     
     
@@ -125,7 +129,7 @@ extension SearchVC : UITableViewDataSource {
         
         cell.showButton = false
         cell.indexPath = indexPath
-        cell.config(title: movie.title, releaseYear: movie.releaseDate.year(), poster: Conveniences().imageFromData(data: SessionData.Posters[movie.id]))
+        cell.config(title: movie.title, releaseYear: movie.releaseYear, poster: Conveniences().imageFromData(data: SessionData.Posters[movie.id]))
         
         return cell
     }
@@ -141,7 +145,7 @@ extension SearchVC : UITableViewDelegate {
 
 extension SearchVC : QueryDelegate {
     
-
+    
     
     func refreshDisplay() {
         if self.moviesToDisplay.count == 0 {
@@ -156,10 +160,5 @@ extension SearchVC : QueryDelegate {
         self.refreshDisplay()
     }
     
-    
-    var navContainer: NavContainer {
-        get {
-            return self.container
-        }
-    }
+
 }

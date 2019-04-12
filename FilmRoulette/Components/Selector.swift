@@ -104,10 +104,10 @@ class Selector: UIView {
         self.delegate.selectorPressed?(sender:self)
     }
     
-    public func selectItem(atIndex index:Int) {
+    public func selectItem(atIndex index:Int, animated:Bool = true) {
         guard self.buttons.count > index else {return}
         self.indexOfSelected = index
-        self.moveHighlightView()
+        self.moveHighlightView(animated:animated)
     }
     
     private func createHighlightView() {

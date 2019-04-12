@@ -50,6 +50,17 @@ class Filter:Object {
         }
         return false
     }
+
+    func setDates(start:Int, end:Int) {
+        do {
+            try GlobalDataManager.realm.write {
+                self.startYear = start
+                self.endYear = end
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     func apply(to results:Results<Movie>, delegate:FilterDelegate)->Results<Movie> {
         print("\(results.count) movies to filter")
@@ -76,10 +87,14 @@ class Filter:Object {
                 filteredResults = filteredResults.filter("NOT (%@ IN tags)", tag)
             }
         }
-         print("\(filteredResults.count) movies left after not filters")
+        
+        
         
         if self.endYear != 0 && self.startYear != 0 {
-            filteredResults = filteredResults.withReleaseDatesBetween(self.startYear, and: self.endYear)
+            
+            
+            filteredResults = filteredResults.filter("(releaseYear >= %i) AND (releaseYear <= %i)", self.startYear, self.endYear)
+
         }
         
         print("\(filteredResults.count) movies left after year filter")

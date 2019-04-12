@@ -23,6 +23,7 @@ class Movie : Object {
     @objc dynamic var watched = false
     @objc dynamic var releaseDate =  "unknown"
     @objc dynamic var imdbID = ""
+    @objc dynamic var releaseYear:Int = 0
     
     let tags = List<Tag>()
     var genres = List<String>()

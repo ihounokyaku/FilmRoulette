@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SwipeCellKit
 
-class GroupCell: UITableViewCell {
+class GroupCell: SwipeTableViewCell {
 
     @IBOutlet weak var image1: UIImageView!
     @IBOutlet weak var image2: UIImageView!
@@ -16,6 +17,8 @@ class GroupCell: UITableViewCell {
     @IBOutlet weak var image4: UIImageView!
     @IBOutlet weak var image5: UIImageView!
     @IBOutlet weak var image6: UIImageView!
+    
+    @IBOutlet weak var cellLabel: UILabel!
     
     
     var imageViews = [UIImageView]()
@@ -34,6 +37,7 @@ class GroupCell: UITableViewCell {
     }
     
     func setImages(fromMovies movies:[Movie]) {
+        self.clearImages()
         var index = 0
         for movie in movies {
             guard index < 6 else {break}
@@ -41,6 +45,12 @@ class GroupCell: UITableViewCell {
                 self.imageViews[index].image = movie.poster
                 index += 1
             }
+        }
+    }
+    
+    private func clearImages() {
+        for imageView in self.imageViews {
+            imageView.image = nil
         }
     }
     

@@ -30,8 +30,17 @@ let CatalogueFileName = "FilmLibrary.json"
 
 //MARK: - ==REALM CONFIG==
 
-let RealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmroulette.realm"))
-let FilmswipeRealmConfig = Realm.Configuration(fileURL: DocumentsDirectory.appendingPathComponent("filmswipe.realm"))
+
+
+var RealmConfig:Realm.Configuration {
+    return Conveniences().realmConfig(fileURL: DocumentsDirectory.appendingPathComponent("filmroulette.realm"))
+}
+    
+
+var FilmswipeRealmConfig:Realm.Configuration {
+    return Conveniences().realmConfig(fileURL: DocumentsDirectory.appendingPathComponent("filmswipe.realm"))
+}
+
 
 //MARK: - ==GLOBALCLASSES ==
 

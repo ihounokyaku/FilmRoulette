@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
+import RealmSwift
 
 enum ViewControllerPresentationDirection {
     case left
@@ -16,6 +17,23 @@ enum ViewControllerPresentationDirection {
 }
 
 struct Conveniences {
+    
+    func realmConfig(fileURL:URL)-> Realm.Configuration{
+        return Realm.Configuration(
+            fileURL:fileURL,
+            schemaVersion: 1,
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 1 {
+                    // Apply any necessary migration logic here.
+                    migration.enumerateObjects(ofType: Movie.className()) { (_, newMovie) in
+                        guard let releaseDate = newMovie?["releaseDate"] as? String else {return}
+                        newMovie?["releaseYear"] = Int(releaseDate.year()) ?? 1981
+                    }
+                }
+        })
+    }
+    
+    
     func valueFromRatio(ratioWidth:Float, ratioHeight:Float, width:Float? = nil, height:Float? = nil)->Float {
         guard height != nil || width != nil else {return 0}
         if let h = height {

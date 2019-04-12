@@ -7,8 +7,8 @@
 //
 
 import UIKit
-protocol LoveButtonDelegate {
-    func loveTapped(at index:IndexPath)
+protocol MovieCellDelegate {
+    func buttonTapped(at index:IndexPath)
 }
 
 
@@ -27,7 +27,7 @@ class MovieListCell: UITableViewCell {
 
     var showButton = true
     var indexPath:IndexPath!
-    var delegate:LoveButtonDelegate?
+    var delegate:MovieCellDelegate?
     
     var rightButtonEnabled:Bool = false
     
@@ -85,7 +85,7 @@ class MovieListCell: UITableViewCell {
     }
     @IBAction func loveTapped(_ sender: Any) {
         
-        self.delegate?.loveTapped(at: self.indexPath)
+        self.delegate?.buttonTapped(at: self.indexPath)
 
     }
 }

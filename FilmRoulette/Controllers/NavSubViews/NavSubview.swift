@@ -8,20 +8,51 @@
 
 import UIKit
 
-class NavSubview: UIViewController, SelectorDelegate {
-
-    //MARK: - =======Variables=======
-    var container:NavContainer!
+class NavSubview: UIViewController, ContainerSubview, SelectorDelegate {
+    
+     //MARK: - =======Variables=======
+    var container: VCContainerDelegate!
+    var subViewType:VCIdentifier!
+    
+    
+    var navContainer:NavContainer {
+        return self.container as! NavContainer
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
+        self.becomeFirstResponder()
     }
     
-    func setSelector(buttonCount:Int, color:UIColor?, label1:String = "", label2:String = "", label3:String =  "") {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        self.configureSelector()
         
-        let allButtons:[UIButton] = [self.container.topButton3, self.container.topButton2, self.container.topButton1]
+    }
+    
+    //MARK: - === Configure ===
+    func shake(){print("shaky shaky")}
+    //MARK: - === Set gesture ===
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            self.shake()
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        get {
+            return true
+        }
+    }
+    
+    func configureSelector(){}
+    
+    func setSelector(buttonCount:Int, color:UIColor?, label1:String = "", label2:String = "", label3:String =  "") {
+        self.navContainer.selector.isHidden = self.subViewType == .search
+        let allButtons:[UIButton] = [self.navContainer.topButton3, self.navContainer.topButton2, self.navContainer.topButton1]
         guard buttonCount <= allButtons.count else {return}
         var buttons = [UIButton]()
         
@@ -29,16 +60,22 @@ class NavSubview: UIViewController, SelectorDelegate {
             for i in 1...buttonCount {
                 buttons.append(allButtons[buttonCount - i])
             }
-            self.container.selector.configure(buttons:buttons, highlightColor: color ?? UIColor().offWhitePrimary(alpha:0.4), delegate:self)
+            self.navContainer.selector.configure(buttons:buttons, highlightColor: color ?? UIColor().offWhitePrimary(alpha:0.4), delegate:self)
         }
         
-        self.container.topButtonLabel1.text = label1
-        self.container.topButtonLabel2.text = label2
-        self.container.topButtonLabel3.text = label3
+        self.navContainer.topButtonLabel1.text = label1
+        self.navContainer.topButtonLabel2.text = label2
+        self.navContainer.topButtonLabel3.text = label3
+        
+        self.navContainer.getSelectorSelection(forSubviewOfType: self.subViewType)
     }
     
     
-    func selectionDidChange(sender: Selector) {}
+    func selectionDidChange(sender: Selector) {
+        if sender == self.navContainer.selector {
+            self.navContainer.setSelectorSelection(forSubviewOfType: self.subViewType)
+        }
+    }
     
     func presentView(withIdentifier identifier:VCIdentifier) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

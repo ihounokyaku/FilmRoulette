@@ -20,16 +20,7 @@ extension Results where Element == Movie {
         return list
     }
     
-    func withReleaseDatesBetween(_ startYear:Int, and endYear:Int)-> Results<Movie> {
-        let movieList = List<Movie>()
-        for movie in self {
-            guard let year = Int(movie.releaseDate.year()) else {continue}
-            if year >= startYear && year <= endYear {
-                movieList.append(movie)
-            }
-        }
-        return movieList.filter("TRUEPREDICATE")
-    }
+    
 }
 
 extension Results {
@@ -270,6 +261,7 @@ extension JSON {
         movie.desc = self["overview"].string ?? "This film defies description"
         movie.imageUrl = self["poster_path"].string ?? ""
         movie.releaseDate = self["release_date"].string ?? "1980-09-10"
+        movie.releaseYear = Int(movie.releaseDate.year()) ?? 1980
         movie.imdbID = self["imdb_id"].string ?? ""
         
         let videos = self["videos"]["results"].arrayValue.first
