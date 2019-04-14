@@ -140,5 +140,9 @@ extension LibraryContainer : UISearchBarDelegate {
         
         self.subview.search(text: searchBar.text!)
     }
+    
+    func clearSearchbar() {
+        self.searchBar.text = ""
+    }
 }
 

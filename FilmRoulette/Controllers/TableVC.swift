@@ -37,6 +37,7 @@ class TableVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Swi
     //MARK: ===========SETUP==============
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.controller.libContainer.clearSearchbar()
         self.configureTable()
         
     }

@@ -384,7 +384,7 @@ class DataManager:NSObject, FilterDelegate {
     }
     
     func updatePoster(forMovie movie:Movie, posterData:Data?) {
-        print("going to set poster")
+//        print("going to set poster")
         do {
             try self.realm.write {
                 movie.setPoster(withData: posterData)

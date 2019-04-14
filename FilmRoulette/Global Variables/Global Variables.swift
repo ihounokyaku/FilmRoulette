@@ -30,15 +30,25 @@ let CatalogueFileName = "FilmLibrary.json"
 
 //MARK: - ==REALM CONFIG==
 
+var FilmRouletteRealm:URL {
+    get {
+        return DocumentsDirectory.appendingPathComponent("filmroulette.realm")
+    }
+}
 
+var FilmSwipeRealm:URL {
+    get {
+        return DocumentsDirectory.appendingPathComponent("filmswipe.realm")
+    }
+}
 
 var RealmConfig:Realm.Configuration {
-    return Conveniences().realmConfig(fileURL: DocumentsDirectory.appendingPathComponent("filmroulette.realm"))
+    return Conveniences().realmConfig(fileURL: FilmRouletteRealm)
 }
     
 
 var FilmswipeRealmConfig:Realm.Configuration {
-    return Conveniences().realmConfig(fileURL: DocumentsDirectory.appendingPathComponent("filmswipe.realm"))
+    return Conveniences().realmConfig(fileURL: FilmSwipeRealm)
 }
 
 

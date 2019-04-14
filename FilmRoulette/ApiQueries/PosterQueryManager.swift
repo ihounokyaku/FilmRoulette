@@ -21,9 +21,9 @@ class PosterQueryManager: NSObject, PosterQueryDelegate {
         if let e = error {print(e)}
         
         if let data = posterData, UIImage(data:data) != nil {
-            print("poster is OK")
+//            print("poster is OK")
             if let existingMovie = GlobalDataManager.movie(withId: movie.id) {
-                print("updating poster for \(existingMovie.title)")
+//                print("updating poster for \(existingMovie.title)")
                GlobalDataManager.updatePoster(forMovie:existingMovie, posterData: data)
             }
         }

@@ -265,9 +265,9 @@ extension JSON {
         movie.imdbID = self["imdb_id"].string ?? ""
         
         let videos = self["videos"]["results"].arrayValue.first
-        print("videos = \(videos)")
+       
         movie.trailerUrl = "https://www.youtube.com/embed/" + (videos?["key"].string ?? "")
-        print ("trailer url is \(movie.trailerUrl)")
+       
         
         let genres = self["genres"].arrayValue.map({$0["name"].string})
         

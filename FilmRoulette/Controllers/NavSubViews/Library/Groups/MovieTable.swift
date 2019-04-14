@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate {
+class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDelegate {
     
     //MARK: - =============== IBOUTLETS ===============
     @IBOutlet weak var displaySelector: Selector!
@@ -57,12 +57,18 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate {
         }
     }
     
+    //MARK: - === OBJECTS ===
+    
+    var posterGetter:PosterGetter!
+    
     //MARK: - === Other ===
     var removedMovie:Int?
     
     //MARK: - =============== SETUP ===============
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.posterGetter = PosterGetter(delegate: self)
+        self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,6 +84,14 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate {
     func configureSelector() {
         self.displaySelector.configure(buttons: [self.allButton, self.unwatchedButton, self.starredButton], highlightColor: UIColor().colorSecondaryLight(alpha: 0.4), delegate: self)
     }
+    
+    //MARK: - ==== QUERY ANY POSTERS ====
+    
+    
+    func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: self.dataSource) }
+    
+    func loadedPoster() { self.tableView.reloadData() }
+    
     
     //MARK: - =============== OTHER ===============
     
@@ -106,7 +120,8 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate {
         cell.delegate = self
         cell.indexPath = indexPath
         cell.buttonRightImage?.image = self.tableType == .library ? Images.AddToGroup : Images.RemoveFromGroup
-        cell.config(title: movie.title, releaseYear: movie.releaseYear, poster: movie.poster)
+        cell.configure(movie: movie, poster: movie.poster, loadingPosters: false)
+        
         return cell
     }
     

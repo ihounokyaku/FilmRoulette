@@ -38,12 +38,12 @@ class PosterQuery: NSObject {
                self.delegate.updateProgressBar(by: 0.4 / Float(movies.count))
                 
                 if response.result.isSuccess {
-                    print("poster result for \(movie.title) sucess \(response)")
+//                    print("poster result for \(movie.title) sucess \(response)")
                     self.delegate.addPoster(response.data, forMovie: movie, error:nil)
                     self.checkForCompletion(total: movies.count)
                     
                 } else {
-                    print("poster result  for \(movie.title)  failure \(response)")
+//                    print("poster result  for \(movie.title)  failure \(response)")
                     self.delegate.addPoster(nil, forMovie: movie, error: String(describing: response.result.error))
                     self.checkForCompletion(total: movies.count)
                 }

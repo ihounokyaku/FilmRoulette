@@ -129,7 +129,7 @@ extension SearchVC : UITableViewDataSource {
         
         cell.showButton = false
         cell.indexPath = indexPath
-        cell.config(title: movie.title, releaseYear: movie.releaseYear, poster: Conveniences().imageFromData(data: SessionData.Posters[movie.id]))
+        cell.configure(movie:movie, poster: Conveniences().imageFromData(data: SessionData.Posters[movie.id]), loadingPosters: false)
         
         return cell
     }
@@ -148,6 +148,8 @@ extension SearchVC : QueryDelegate {
     
     
     func refreshDisplay() {
+        let movie = Movie()
+        
         if self.moviesToDisplay.count == 0 {
             self.tableView.displayImage(ofType: .noResults)
         } else {

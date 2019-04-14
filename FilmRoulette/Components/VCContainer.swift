@@ -23,7 +23,8 @@ class VCContainer: UIView {
     var currentSubview:ContainerSubview?
    
     
-    func transition<sender>(toVCWithIdentifier identifier: VCIdentifier, animated:Bool = true, sender:sender) where sender:UIViewController, sender:VCContainerDelegate{
+    func transition(toVCWithIdentifier identifier: VCIdentifier, animated:Bool = true, sender:UIViewController) {
+        
         
         
         let con = Conveniences()
@@ -31,7 +32,11 @@ class VCContainer: UIView {
         //MARK: Get destination VC and assign container
         var destinationVC = con.getSubview(identifier.rawValue) as! ContainerSubview & UIViewController
         
-        destinationVC.container = sender
+        guard let vcdel = sender as? UIViewController & VCContainerDelegate  else { return }
+        destinationVC.container = vcdel
+     
+        
+        
         
         //MARK: Set alpha and position
         destinationVC.view.alpha = animated ? 0 : 1

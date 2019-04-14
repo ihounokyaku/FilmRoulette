@@ -21,6 +21,7 @@ enum VCIdentifier:String, CaseIterable {
     case groups = "Groups"
     case groupTable = "GroupTable"
     case movieTable = "MovieTable"
+    case settings = "Settings"
 }
 
 
@@ -117,7 +118,20 @@ class NavContainer: UIViewController, VCContainerDelegate {
     }
     
     
+    @IBAction func settingsPressed(_ sender: Any) {
+        self.presentView(withIdentifier: .settings, masterDelegate: self)
+    }
     
+    
+    func presentView(withIdentifier identifier:VCIdentifier, masterDelegate:UIViewController) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? ModalVC else {return}
+        
+        //MARK: Configure and Present VC
+        controller.masterDelegate = masterDelegate
+        controller.modalPresentationStyle = .popover
+        self.present(controller, animated:true, completion:nil)
+    }
 
     
     //MARK: - =========UI UPDATE===========

@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol SpinnerDelegate {
+    func selectedItem(atIndexPath indexPath:IndexPath)
+}
 
 
 class Spinner: NSObject {
@@ -17,12 +20,15 @@ class Spinner: NSObject {
     var selectedItemIndexPath:IndexPath?
     var totalCount = 0
     
+    var minimumCount = 100
     var decelerationSpeed1:CGFloat = 0.991
     var decelerationSpeed2:CGFloat = 0.97
     
     var minSpeed1:CGFloat = 10
     var minSpeed2:CGFloat = 1
     
+    
+    var delegate:SpinnerDelegate?
     
     init(collectionView:UICollectionView) {
         self.collectionView = collectionView
@@ -31,6 +37,11 @@ class Spinner: NSObject {
     func spin(toIndex index:Int, outOf total:Int) {
         guard self.collectionView.numberOfItems(inSection: 0) > 100000 else {return}
         self.selectedItemIndex = index
+        let firstItemRow = self.collectionView.indexPathsForVisibleItems[0].row
+        if firstItemRow < index - 400 {
+            let indexPath = IndexPath(row: index - 400, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+        }
         self.totalCount = total
         self.selectedItemIndexPath = nil
         self.nextRound()
@@ -50,11 +61,14 @@ class Spinner: NSObject {
             var minSpeed:CGFloat = self.minSpeed1
             let firstItemRow = self.collectionView.indexPathsForVisibleItems[0].row
             
-            if count == 200 {
+            if count == self.minimumCount {
                 
                 self.selectedItemIndexPath = IndexPath(row: self.nextInstanceOfSelected(forIndex: firstItemRow), section: 0)
-                
-            } else if count > 200 && firstItemRow >= self.selectedItemIndexPath!.row - 50 {
+                if self.selectedItemIndexPath!.row > self.collectionView.indexPathsForVisibleItems[0].row + 200 {
+                    let indexPath = IndexPath(row: self.selectedItemIndexPath!.row - 199, section: 0)
+                    self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+                }
+            } else if count > self.minimumCount && firstItemRow >=  self.selectedItemIndexPath!.row - 50 {
                 multiplier = self.decelerationSpeed1
                 
                 if firstItemRow >= self.selectedItemIndexPath!.row - 3 {
@@ -82,6 +96,7 @@ class Spinner: NSObject {
             self.collectionView.contentOffset = CGPoint(x: xOffset, y: 0)
         }) { _ in
             self.collectionView.scrollToItem(at: centerIndex, at: .centeredHorizontally, animated: true)
+            self.delegate?.selectedItem(atIndexPath: centerIndex)
         }
         
     }

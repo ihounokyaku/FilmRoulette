@@ -12,9 +12,8 @@ import Toast_Swift
 
 
 
-class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITableViewDelegate {
+class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITableViewDelegate, DropboxDelegate, PosterGetterDelegate {
 
-    
     
     //MARK: - =========IBOUTLETS==========
     @IBOutlet weak var movieTable: UITableView!
@@ -33,8 +32,9 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     
     //MARK: - === OBJECTS ===
-    let dropboxManager = DropboxManager()
-    
+    var dropboxManager: DropboxManager = DropboxManager()
+    var posterGetter:PosterGetter!
+   
     //MARK: - === DATASOURCES ===
     
     var dataSource:Results<Movie> {return self.filteredMovies ?? self.moviesOnDisplay}
@@ -57,8 +57,8 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
             return options[self.filterSelector.indexOfSelectedItem]
         }
     }
-
-    var posterQueryIndex = 0
+    
+   
     
     
    //MARK: - =============== SETUP ===============
@@ -72,7 +72,7 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
         self.configure(tableView: self.movieTable, withCellOftype: .movie)
         self.movieTable.dataSource = self
         self.movieTable.delegate = self
-        
+        self.posterGetter = PosterGetter(delegate: self)
         self.configureSelector()
     
         self.hideKeyboardWhenTapped()
@@ -109,28 +109,11 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
  
     //MARK: - ==== QUERY ANY POSTERS ====
     
-    func completeMissingPosters() {
-        for movie in self.moviesOnDisplay {
-            if !movie.imageExists && movie.imageUrl != "" {
-                print("going to get poster for \(movie.title)")
-                self.queryList.append(Movie(value:movie))
-            }
-        }
-        self.loadNextPoster()
-    }
     
-    func loadNextPoster(){
-        guard self.queryList.count > self.posterQueryIndex else {return}
-        let movie = self.queryList[self.posterQueryIndex]
-        PosterQueryManager().queryPoster(forMovie: movie, onCompletion: self.completeQueries)
-    }
+    func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: self.dataSource) }
     
+    func loadedPoster() { self.movieTable.reloadData() }
     
-    func completeQueries() {
-        self.movieTable.reloadData()
-        self.posterQueryIndex += 1
-        self.loadNextPoster()
-    }
     
     
     
@@ -165,6 +148,7 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     //MARK: - ======OTHER ACTIONS==========
     
+    
    
     
     //MARK: - == Add from FS ==
@@ -182,7 +166,7 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     
     @IBAction func bottomButtonPressed(_ sender: Any) {
-        switch self.libContainer.libraryType{
+        switch self.libContainer.libraryType {
         case .library:
             self.syncFromDropbox()
         case .filmSwipe:
@@ -192,6 +176,10 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
         }
     }
 
+    func dropboxSyncComleted() {
+        print("sync completed!!")
+        self.movieTable.reloadData()
+    }
     
 
 //MARK: - =============== TABLEVIEW ===============
@@ -265,7 +253,8 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
         
             let movie = self.dataSource[indexPath.row]
             cell.indexPath = indexPath
-            cell.config(title: movie.title, releaseYear: movie.releaseYear, poster: movie.poster)
+        cell.configure(movie:movie, poster:movie.poster, loadingPosters: self.posterGetter.loading)
+        
         return cell
     }
 
@@ -289,40 +278,7 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
 }
 
 //MARK: - =============== SYNC ===============
-extension MovieListVC : DropboxDelegate {
-    
-    
-    func syncFromDropbox(){
-        
-        if self.dropboxManager.client == nil {
-            print("going to authorize")
-            self.dropboxManager.authorize(sender: self)
-        } else {
-            print("going to import")
-            self.dropboxManager.importFile(sender: self)
-        }
-        
-    }
-    
-    func requestComplete(error: String?, data: Data?) {
-        if let realError = error {
-            self.view.makeToast(realError)
-        } else if let realData = data {
-            JSONHandler().sync(fromData: realData)
-            print("got the goods")
-        } else {
-            self.view.makeToast("No data found")
-        }
-    }
-    
-    func completedAuthorization(success: Bool, error: String?) {
-        if let realError = error {
-            self.view.makeToast(realError)
-        } else if success {
-            self.view.makeToast("successfully logged in to Dropbox")
-        }
-    }
-}
+
 
 
 

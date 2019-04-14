@@ -41,13 +41,7 @@ class Prefs: NSObject {
     }
     
         
-    
-    
-    
-    
-    
-    
-    
+
     
     //MARK: - =========QUERY PARAMS==========
     
@@ -85,38 +79,6 @@ class Prefs: NSObject {
     }
     
     
-    //MARK: - ==SORT TYPE ==
-    static var sortType:String {
-        get {
-            return UserDefaults.standard.value(forKey: "sortType") as? String ?? "Popularity"
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "sortType")
-        }
-    }
-    
-    static var sortOrder:String {
-        get {
-            return UserDefaults.standard.value(forKey: "sortOrder") as? String ?? ".desc"
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "sortOrder")
-        }
-    }
-    
-    
-    
-    
-    //MARK: - =========SWIPED MOVIES==========
-    
-    static var swipedMovies:[Int] {
-        get {
-            return UserDefaults.standard.value(forKey: "swipedMovies") as? [Int] ?? []
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "swipedMovies")
-        }
-    }
     
     
     
@@ -167,6 +129,35 @@ class Prefs: NSObject {
         }
     }
     
+    //MARK: - == MODES ==
+    static var kidsMode:Bool {
+        get {
+            return UserDefaults.standard.value(forKey: "kidsMode") as? Bool ?? false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "kidsMode")
+        }
+    }
+    
+    
+    
+    static var directorsCut:Bool {
+        get {
+            return UserDefaults.standard.value(forKey: "directorsCut") as? Bool ?? false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "directorsCut")
+        }
+    }
+    
+    func resetAll() {
+        for key in ["selectorPosition",  "spinPickerSelectorPosition", "spinSelectorPosition", "spinFilterType", "mostRecentFilterID", "selectedGenres", "startYear", "kidsMode", "endYear"] {
+            UserDefaults.standard.set(nil, forKey: key)
+        }
+        
+        
+    }
+
 
     
     

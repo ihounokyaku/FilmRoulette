@@ -17,7 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="82" id="KGk-i7-Jjw" customClass="MovieListCell" customModule="FilmSwipe" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="82" id="KGk-i7-Jjw" customClass="MovieListCell" customModule="FilmRoulette" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -36,7 +36,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8PQ-dO-Sw3" userLabel="TextView">
                                 <rect key="frame" x="60" y="14" width="184" height="42"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Solo: A Star Wars Story" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="KXq-9X-dbP" customClass="MarqueeLabel" customModule="FilmSwipe" customModuleProvider="target">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Solo: A Star Wars Story" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="KXq-9X-dbP" customClass="MarqueeLabel" customModule="FilmRoulette" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="184" height="20.5"/>
                                         <fontDescription key="fontDescription" name="Nunito-Bold" family="Nunito" pointSize="15"/>
                                         <nil key="textColor"/>
@@ -71,12 +71,16 @@
                                     <action selector="loveTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="vgY-q9-O7v"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="9Cq-1G-D8Y">
+                                <rect key="frame" x="20" y="25" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="gmO-lS-Lso" secondAttribute="trailing" id="1jr-hF-7kf"/>
                             <constraint firstItem="gmO-lS-Lso" firstAttribute="height" secondItem="1AI-ee-EL5" secondAttribute="height" id="3IW-W1-Fg0"/>
                             <constraint firstAttribute="trailing" secondItem="UTp-pA-bfp" secondAttribute="trailing" constant="15" id="4DO-67-vBF"/>
+                            <constraint firstItem="9Cq-1G-D8Y" firstAttribute="centerY" secondItem="xsC-ew-haK" secondAttribute="centerY" id="5au-Rq-Th2"/>
                             <constraint firstItem="UTp-pA-bfp" firstAttribute="centerY" secondItem="1AI-ee-EL5" secondAttribute="centerY" id="ABX-V4-BXP"/>
                             <constraint firstItem="gmO-lS-Lso" firstAttribute="leading" secondItem="UTp-pA-bfp" secondAttribute="leading" id="AnM-1G-SqR"/>
                             <constraint firstItem="UTp-pA-bfp" firstAttribute="leading" secondItem="8PQ-dO-Sw3" secondAttribute="trailing" constant="15" id="BdU-CW-D5z"/>
@@ -87,6 +91,7 @@
                             <constraint firstItem="xsC-ew-haK" firstAttribute="leading" secondItem="1AI-ee-EL5" secondAttribute="leading" constant="10" id="cEo-8o-eQl"/>
                             <constraint firstItem="UTp-pA-bfp" firstAttribute="width" secondItem="1AI-ee-EL5" secondAttribute="width" multiplier="0.086" id="fDz-h7-ERy"/>
                             <constraint firstItem="gmO-lS-Lso" firstAttribute="centerY" secondItem="1AI-ee-EL5" secondAttribute="centerY" id="mOh-mm-cOE"/>
+                            <constraint firstItem="9Cq-1G-D8Y" firstAttribute="centerX" secondItem="xsC-ew-haK" secondAttribute="centerX" id="qa1-UA-sgt"/>
                             <constraint firstItem="8PQ-dO-Sw3" firstAttribute="leading" secondItem="xsC-ew-haK" secondAttribute="trailing" constant="10" id="sYt-SS-2pZ"/>
                         </constraints>
                     </view>
@@ -143,6 +148,7 @@
             <connections>
                 <outlet property="buttonRight" destination="gmO-lS-Lso" id="8d8-Uh-GnY"/>
                 <outlet property="buttonRightImage" destination="UTp-pA-bfp" id="aUA-cK-RwJ"/>
+                <outlet property="hud" destination="9Cq-1G-D8Y" id="w5S-sd-BYY"/>
                 <outlet property="posterImage" destination="xsC-ew-haK" id="zMN-XE-eKF"/>
                 <outlet property="stripImageLeft" destination="yXo-XH-gal" id="fuM-Kh-AM3"/>
                 <outlet property="stripImageRight" destination="zH5-U1-GFd" id="PV3-Q9-jl3"/>

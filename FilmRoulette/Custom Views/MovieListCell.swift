@@ -12,21 +12,42 @@ protocol MovieCellDelegate {
 }
 
 
-class MovieListCell: UITableViewCell {
+class MovieListCell: UITableViewCell, HudDelegate{
+    
+    
+    var movie: Movie?
 
+    var activityIndicator: UIActivityIndicatorView {
+        get {
+            return self.hud
+        }
+    }
+    
+    
+    
+
+    //MARK: - =============== IBOUTLETS ===============
     @IBOutlet weak var buttonRightImage: UIImageView?
     @IBOutlet weak var buttonRight: UIButton?
+    
     @IBOutlet weak var posterImage: UIImageView!
+    
     @IBOutlet weak var stripImageRight: UIImageView!
     @IBOutlet weak var stripImageLeft: UIImageView!
     @IBOutlet weak var textUpper: UILabel!
     @IBOutlet weak var textLower: UILabel!
-
+    @IBOutlet weak var hud: UIActivityIndicatorView!
+    
     
 
-
+    //MARK: - =============== VARS ===============
+    
+    //MARK: - === STATUS VARS ===
     var showButton = true
     var indexPath:IndexPath!
+    var loadingPosters = false
+    
+    //MARK: - === OBJECTS ===
     var delegate:MovieCellDelegate?
     
     var rightButtonEnabled:Bool = false
@@ -37,22 +58,36 @@ class MovieListCell: UITableViewCell {
         self.selectionStyle = UITableViewCell.SelectionStyle.none
     }
     
-
-    
-    func config(title:String, releaseYear:String, poster:UIImage) {
-        let titleBuffer = title.count > 19 ? "     " : ""
+    func configure(movie:Movie, poster:UIImage, loadingPosters:Bool) {
+        self.loadingPosters = loadingPosters
+        self.movie = movie
+        let titleBuffer = movie.title.count > 19 ? "     " : ""
         let stripImage = indexPath.row % 2 == 0 ? UIImage(named: "stripDotsUpper") : UIImage(named: "stripDotsLower")
         self.textUpper.font = Fonts.MovieCellTitle
         self.textLower.font = Fonts.MovieCellDate
         self.posterImage.image = poster
-        self.textUpper.text = title + titleBuffer
-        self.textLower.text = "(\(releaseYear))"
+        self.textUpper.text = movie.title + titleBuffer
+        self.textLower.text = "(\(movie.releaseYear))"
         self.stripImageRight.image = stripImage
         self.stripImageLeft.image = stripImage
+        self.showHideHud()
         self.setColors()
-        
-        
     }
+
+    
+//    func config(title:String, releaseYear:String, poster:UIImage) {
+//        let titleBuffer = title.count > 19 ? "     " : ""
+//        let stripImage = indexPath.row % 2 == 0 ? UIImage(named: "stripDotsUpper") : UIImage(named: "stripDotsLower")
+//        self.textUpper.font = Fonts.MovieCellTitle
+//        self.textLower.font = Fonts.MovieCellDate
+//        self.posterImage.image = poster
+//        self.textUpper.text = title + titleBuffer
+//        self.textLower.text = "(\(releaseYear))"
+//        self.stripImageRight.image = stripImage
+//        self.stripImageLeft.image = stripImage
+//        self.setColors()
+//    }
+    
     
     private func setColors() {
        

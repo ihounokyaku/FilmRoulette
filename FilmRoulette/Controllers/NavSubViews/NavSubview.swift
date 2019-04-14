@@ -78,13 +78,7 @@ class NavSubview: UIViewController, ContainerSubview, SelectorDelegate {
     }
     
     func presentView(withIdentifier identifier:VCIdentifier) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let controller = storyboard.instantiateViewController(withIdentifier: identifier.rawValue) as? ModalVC else {return}
-        
-        //MARK: Configure and Present VC
-        controller.masterDelegate = self
-        controller.modalPresentationStyle = .popover
-        self.present(controller, animated:true, completion:nil)
+        self.navContainer.presentView(withIdentifier: identifier, masterDelegate: self)
     }
     
     func presentSingleMovieView<sender>(movie:Movie, imageData:Data?, filmSwipe:Bool, sender:sender) where sender:UIViewController, sender:SingleMovieDelegate {

@@ -15,7 +15,7 @@ enum LibraryType:CaseIterable {
     case filmSwipe
 }
 
-class SpinVC: NavSubview, SpinFiltersDelegate {
+class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDelegate, SingleMovieDelegate {
     
     
 
@@ -25,6 +25,10 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     //MARK: - ==PICKERS N TABLES==
     
     @IBOutlet weak var rouletteView:GeminiCollectionView!
+    
+    //MARK: - === VIEWS ===
+    @IBOutlet weak var backgroundViewGradient: UIImageView!
+    @IBOutlet weak var backgroundImageView: FadingImageView!
     
     
     //MARK: - ==Buttons==
@@ -81,22 +85,27 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     }
     
     
-    //MARK: SCROLLING
+   //MARK: - === OBJECTS ===
     var spinner:Spinner!
+    var posterGetter:PosterGetter!
     
     
 //MARK: - ========== SETUP ==========
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.posterGetter = PosterGetter(delegate: self)
         self.subViewType = .spinner
         self.rouletteView.decelerationRate = UIScrollViewDecelerationRateFast
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
+        
         self.rouletteView.showsHorizontalScrollIndicator = false
         //MARK: - == Appearance ==
         self.spinner = Spinner(collectionView: self.rouletteView)
+        self.spinner.delegate = self
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
-        self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
+    self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
+        
         
         //        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
         //MARK: - == SET FILTER ==
@@ -104,10 +113,15 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
         
         self.filterObject = SessionData.CurrentFilterObject
         
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         super.viewDidAppear(true)
+        if self.libraryType == .library {
+            self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed)
+        }
         self.loadRoulette()
     }
     
@@ -129,6 +143,12 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
         self.loadRoulette()
     }
 
+    //MARK: - ==== QUERY ANY POSTERS ====
+    
+    
+    func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed) }
+    
+    func loadedPoster() { self.reloadRoulette() }
     
     
     
@@ -217,6 +237,7 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     //MARK: - ==RELOAD==
     func reloadRoulette() {
        print("going to reload")
+        
         DispatchQueue.main.async {
             self.rouletteView.reloadData()
             if !self.noMovies {
@@ -230,7 +251,9 @@ class SpinVC: NavSubview, SpinFiltersDelegate {
     
     //MARK: - ==========SPIN==========
     @IBAction func spinPressed(_ sender: Any) {
+        
         if self.displayCount > 0 {
+            self.backgroundImageView.clearImage()
             self.spinner.spin(toIndex: RandomInt(upTo:self.displayCount - 1), outOf: self.displayCount)
         }
     }
@@ -267,8 +290,12 @@ extension SpinVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
+        if !self.noMovies {
+            cell.configure(movie: GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count], poster: GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster, loading: self.posterGetter.loading)
+        }
         
-        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster
+        
+//        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster
         
         self.rouletteView.animateCell(cell)
         
@@ -296,7 +323,60 @@ extension SpinVC : UICollectionViewDelegate {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+       
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("ended scrolling")
+        self.selectCenter()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.selectCenter()
+    }
+    
+    func selectCenter() {
+        guard let cell = rouletteView.centerCell as? PosterCell else {print("not poster cell"); return}
+        let indexPath = self.rouletteView.indexPath(for: cell)
+        self.rouletteView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: true)
+        self.backgroundImageView.setImage(cell.posterImageView.image)
+    }
+    
+    func selectedItem(atIndexPath indexPath:IndexPath) {
+        guard let cell = rouletteView.cellForItem(at: indexPath) as? PosterCell else {return}
+        self.backgroundImageView.setImage(cell.posterImageView.image)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = self.rouletteView.cellForItem(at: indexPath) as? PosterCell, let movie = cell.movie else {return}
+//        self.presentSingleMovieView(movie: movie, imageData: movie.poster, filmSwipe: false, sender: self)
+    }
+    
+    func backFromSingleMovie(changed: Bool) {
+        if changed { self.reloadRoulette() }
+    }
+    
+    
 }
+
+
+extension UICollectionView {
+    var centerCell:UICollectionViewCell? {
+        get {
+            let closestCell = self.visibleCells[0]
+            for cell in self.visibleCells as [UICollectionViewCell] {
+                let closestCellDelta = abs(closestCell.center.x - self.bounds.size.width/2.0 - self.contentOffset.x + 50)
+                let cellDelta = abs(cell.center.x - self.bounds.size.width/2.0 - self.contentOffset.x)
+                if (cellDelta < closestCellDelta){
+                    return cell
+                }
+            }
+            return nil
+        }
+    }
+}
+
 
 
 

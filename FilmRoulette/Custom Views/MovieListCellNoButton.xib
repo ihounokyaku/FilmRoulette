@@ -14,7 +14,11 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MovieListCell" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MovieListCell" customModuleProvider="target">
+            <connections>
+                <outlet property="hud" destination="iME-pw-ift" id="wwK-mf-1sx"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="82" id="KGk-i7-Jjw" customClass="MovieListCell" customModule="FilmSwipe" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
@@ -58,15 +62,20 @@
                                     <constraint firstItem="KXq-9X-dbP" firstAttribute="top" secondItem="8PQ-dO-Sw3" secondAttribute="top" id="ytC-iF-VU5"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="iME-pw-ift">
+                                <rect key="frame" x="20" y="25" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="iME-pw-ift" firstAttribute="centerX" secondItem="xsC-ew-haK" secondAttribute="centerX" id="0Lb-yj-xAh"/>
                             <constraint firstItem="8PQ-dO-Sw3" firstAttribute="height" secondItem="1AI-ee-EL5" secondAttribute="height" multiplier="0.6" id="IUY-jc-QRY"/>
                             <constraint firstItem="8PQ-dO-Sw3" firstAttribute="centerY" secondItem="1AI-ee-EL5" secondAttribute="centerY" id="QQU-Xm-bpl"/>
                             <constraint firstItem="xsC-ew-haK" firstAttribute="height" secondItem="1AI-ee-EL5" secondAttribute="height" multiplier="0.85" id="UQD-Dg-G40"/>
                             <constraint firstItem="xsC-ew-haK" firstAttribute="centerY" secondItem="1AI-ee-EL5" secondAttribute="centerY" id="ZlA-Qs-IAX"/>
                             <constraint firstItem="xsC-ew-haK" firstAttribute="leading" secondItem="1AI-ee-EL5" secondAttribute="leading" constant="10" id="cEo-8o-eQl"/>
                             <constraint firstAttribute="trailing" secondItem="8PQ-dO-Sw3" secondAttribute="trailing" constant="15" id="ioc-FM-am3"/>
+                            <constraint firstItem="iME-pw-ift" firstAttribute="centerY" secondItem="xsC-ew-haK" secondAttribute="centerY" id="jH0-Fk-C9B"/>
                             <constraint firstItem="8PQ-dO-Sw3" firstAttribute="leading" secondItem="xsC-ew-haK" secondAttribute="trailing" constant="10" id="sYt-SS-2pZ"/>
                         </constraints>
                     </view>

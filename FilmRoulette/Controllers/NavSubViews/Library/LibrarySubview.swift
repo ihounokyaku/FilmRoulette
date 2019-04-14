@@ -37,6 +37,7 @@ class LibrarySubview: UIViewController, ContainerSubview {
     //MARK: - =============== SETUP ===============
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.libContainer.clearSearchbar()
 
         // Do any additional setup after loading the view.
     }

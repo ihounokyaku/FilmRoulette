@@ -32,15 +32,4 @@ class MainQuery: NSObject {
         return json["results"].arrayValue.map({$0["id"].int})
     }
     
-    func idArrayRemovingDuplicates(from originalArray:[Int])-> [Int] {
-        var array =  [Int]()
-        for item in originalArray {
-            if !Prefs.swipedMovies.contains(item) && !self.idsAlreadyQueued.contains(item) && !idArray.contains(item) {
-                array.append(item)
-            }
-        }
-        
-        
-        return array
     }
-}

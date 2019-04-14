@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import SVProgressHUD
 
 class JSONHandler: NSObject {
     
@@ -20,7 +21,13 @@ class JSONHandler: NSObject {
         
         guard let json = try? JSON(data: data) else {return}
         
+        var index:Float = 1
         for (movie) in json {
+            DispatchQueue.main.async {
+                SVProgressHUD.showProgress(index / Float(json.count), status: "Checking movies \(index)/\(json.count)")
+                
+                index += 1
+            }
             
             guard let id = Int(movie.0) else {continue}
             
@@ -28,6 +35,10 @@ class JSONHandler: NSObject {
                 
                 guard let tags = movie.1["tags"].arrayObject as? [String] else {continue}
                 if !existingMovie.tagList.containsSameElements(as: tags) {
+                    DispatchQueue.main.async {
+                        SVProgressHUD.showProgress(index / Float(json.count), status: "Updating tags for \(existingMovie.title)")
+                        
+                    }
                     GlobalDataManager.updateTags(newTags: tags, forMovie: existingMovie)
                 }
                 
@@ -35,8 +46,17 @@ class JSONHandler: NSObject {
                 let tags:[String] = movie.1["tags"].arrayObject as? [String] ?? []
                 
                 guard let newMovie = movie.1["movieData"].toMovie() else {continue}
+                DispatchQueue.main.async {
+                    SVProgressHUD.showProgress(index / Float(json.count), status: "Adding \(newMovie.title)")
+    
+                }
                 GlobalDataManager.save(movie: newMovie, imageData: nil, love: false, watched: !tags.contains("to watch"), tags: tags)
             }
+        }
+        DispatchQueue.main.async {
+            
+            SVProgressHUD.showSuccess(withStatus: "Finished!")
+            SVProgressHUD.dismiss(withDelay: 0.5)
         }
     }
 }
