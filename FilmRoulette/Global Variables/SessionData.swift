@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 class SessionData: NSObject {
-    static var DataManager:DataManager?
     static var Posters = [Int:Data]()
-    static var CurrentFilterObject:Object?
+    static var CurrentFilterObject:FilterObject?
 }

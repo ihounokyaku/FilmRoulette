@@ -22,6 +22,9 @@ class JSONHandler: NSObject {
         guard let json = try? JSON(data: data) else {return}
         
         var index:Float = 1
+       
+        
+        
         for (movie) in json {
             DispatchQueue.main.async {
                 SVProgressHUD.showProgress(index / Float(json.count), status: "Checking movies \(index)/\(json.count)")
@@ -30,27 +33,48 @@ class JSONHandler: NSObject {
             }
             
             guard let id = Int(movie.0) else {continue}
-            
-            if let existingMovie = GlobalDataManager.movie(withId: id) {
+           
+            if let existingMovie = SQLDataManager.FetchMovie(withID: id) {
                 
-                guard let tags = movie.1["tags"].arrayObject as? [String] else {continue}
-                if !existingMovie.tagList.containsSameElements(as: tags) {
-                    DispatchQueue.main.async {
-                        SVProgressHUD.showProgress(index / Float(json.count), status: "Updating tags for \(existingMovie.title)")
+                
+                let existingTags = existingMovie.tags.map({$0.name})
+                
+                if let tags = movie.1["tags"].arrayObject as? [String], existingTags.containsSameElements(as: tags){
                         
+                            DispatchQueue.main.async {
+                                
+                                let tagsToAdd = tags.filter({!existingTags.contains($0)})
+                                let tagsToRemove = existingTags.filter({!tags.contains($0)})
+                                
+                                for tag in tagsToAdd { existingMovie.addTag(named: tag) }
+                                
+                                for tag in tagsToRemove { existingMovie.removeTag(named: tag) }
+                                
+                        }
                     }
-                    GlobalDataManager.updateTags(newTags: tags, forMovie: existingMovie)
-                }
                 
             } else {
+                
                 let tags:[String] = movie.1["tags"].arrayObject as? [String] ?? []
                 
-                guard let newMovie = movie.1["movieData"].toMovie() else {continue}
+                    if let newMovie = movie.1["movieData"].toMovie() {
                 DispatchQueue.main.async {
-                    SVProgressHUD.showProgress(index / Float(json.count), status: "Adding \(newMovie.title)")
-    
+                    
+                    
+                    SQLDataManager.Insert(movie: newMovie, imageData: nil)
+                    if !tags.contains("to watch") {
+                       
+                        newMovie.watched = true
+                    }
+                    
+                    for tag in tags {
+                       
+                        newMovie.addTag(named: tag)
+                    }
+//                    SVProgressHUD.showProgress(index / Float(json.count), status: "Adding \(newMovie.title)")
+                    
+                    }
                 }
-                GlobalDataManager.save(movie: newMovie, imageData: nil, love: false, watched: !tags.contains("to watch"), tags: tags)
             }
         }
         DispatchQueue.main.async {
@@ -58,5 +82,7 @@ class JSONHandler: NSObject {
             SVProgressHUD.showSuccess(withStatus: "Finished!")
             SVProgressHUD.dismiss(withDelay: 0.5)
         }
-    }
+        }
+    
+        
 }

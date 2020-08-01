@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 import SwipeCellKit
 import Toast_Swift
 

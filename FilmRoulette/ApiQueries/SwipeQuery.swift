@@ -12,7 +12,6 @@ import Alamofire
 
 protocol MainQueryDelegate {
     var page:Int {get set}
-    var apiKey:String {get}
     func initialQueryComplete(results:[Int]?, error:String?)
     func updateProgressBar(by progress:Float)
 }

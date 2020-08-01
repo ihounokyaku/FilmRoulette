@@ -28,6 +28,14 @@ class SearchBar: UISearchBar {
         }
     }
     
+    private var adaptiveSearchField:UITextField {
+        if #available(iOS 13.0, *) {
+            return self.searchTextField
+        } else {
+            return value(forKey: "_searchField") as! UITextField
+        }
+    }
+    
    var barHeight:CGFloat {
         set {
             if newValue <= 1.0 {
@@ -80,7 +88,7 @@ class SearchBar: UISearchBar {
     override func willMove(toSuperview newSuperview: UIView?) {
         
         super.willMove(toSuperview: newSuperview)
-        let textField = value(forKey: "_searchField") as! UITextField
+        let textField = self.adaptiveSearchField
         textField.backgroundColor = UIColor().offWhitePrimary()
         textField.borderStyle = .none
         textField.clipsToBounds = true
@@ -88,17 +96,19 @@ class SearchBar: UISearchBar {
         textField.layer.borderWidth = 1.0
         textField.tintColor = UIColor().colorSecondaryDark()
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor().whitePrimary(alpha: 0.4).cgColor  
+        self.layer.borderColor = UIColor().whitePrimary(alpha: 0.4).cgColor
     }
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        let textField = value(forKey: "_searchField") as! UITextField
+        let textField = self.adaptiveSearchField
         self.font = Fonts.SearchBarFont
         if let font = self.font {
             textField.font = font
         }
-        textField.leftView = self.searchIcon()
+        
+        
+       
         textField.textColor = self.textColor ?? UIColor().textDarkPrimary(alpha: 1)
         
         let textFieldWidth:CGFloat = self.frame.width * barWidth
@@ -106,15 +116,21 @@ class SearchBar: UISearchBar {
         
         textField.frame = CGRect(x: self.frame.width / 2 - textFieldWidth / 2 , y: self.frame.height / 2 - textFieldHeight / 2 , width: textFieldWidth, height: textFieldHeight)
         textField.layer.cornerRadius = textFieldHeight / 2
+        textField.leftView = self.searchIcon()
+        
     }
     
-    func searchIcon()->UIImageView {
+    func searchIcon()->UIView {
         let searchIcon = UIImageView(image: UIImage(named: "searchIcon"))
-        let imageHeight = (self.frame.height * self.barHeight) * 0.45
-        
+        let imageHeight:CGFloat = (self.frame.height * self.barHeight) * 0.45
+        let outerView = UIView(frame: CGRect(x:0, y:0, width:imageHeight + 10, height:imageHeight))
+//        let imageHeight =
+       
         searchIcon.frame = CGRect(x:0, y:0, width:imageHeight + 10, height:imageHeight)
         searchIcon.contentMode = .scaleAspectFit
-        return searchIcon
+        outerView.addSubview(searchIcon)
+       
+        return outerView
     }
    
 }

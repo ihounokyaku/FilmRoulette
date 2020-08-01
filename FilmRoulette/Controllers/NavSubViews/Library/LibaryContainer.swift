@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 enum LibraryDisplayType:String, CaseIterable {
     case library = "My Library"
@@ -16,6 +16,8 @@ enum LibraryDisplayType:String, CaseIterable {
 }
 
 class LibraryContainer: NavSubview, VCContainerDelegate, SingleMovieDelegate, SpinFiltersDelegate {
+    
+    
     
     
     //MARK: - =============== IBOUTLETS ===============
@@ -40,7 +42,7 @@ class LibraryContainer: NavSubview, VCContainerDelegate, SingleMovieDelegate, Sp
         return LibraryDisplayType.allCases[self.navContainer.selector.indexOfSelectedItem]
     }
     
-    var filterObject: Object? {
+    var filterObject: FilterObject? {
         didSet {
             if let groupVC = self.containerView.currentSubview as? GroupListVC {
                 groupVC.filterObject = self.filterObject

@@ -31,7 +31,7 @@ class QueryManager: NSObject, PosterQueryDelegate, MainQueryDelegate, Individual
     //MARK: - ======================VARS===============================
     
     //MARK: ==API VARIABLES==
-    let apiKey = "7f8097fbd3d28753af1c79372d180dd4"
+    
 
     //MARK: ==STATE VARIABLES==
     var page = 0

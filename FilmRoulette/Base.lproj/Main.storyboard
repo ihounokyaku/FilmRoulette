@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Rqf-bG-RhG">
-    <device id="retina4_0" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Rqf-bG-RhG">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -31,12 +29,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="XEV-Mb-oeG" customClass="SearchBar" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="-1" y="66" width="322" height="46"/>
+                                <rect key="frame" x="-1" y="46" width="322" height="46"/>
                                 <color key="barTintColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="q23-H4-95W" customClass="CustomTableView" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="114" width="320" height="404"/>
+                                <rect key="frame" x="0.0" y="94" width="320" height="424"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="14e-Qs-DJ0">
@@ -50,14 +48,14 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FM0-PN-O6N" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="FM0-PN-O6N" secondAttribute="height" multiplier="1080:155" id="ZhP-up-lzK"/>
                                 </constraints>
                             </view>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QEG-rR-3CL">
-                                <rect key="frame" x="0.0" y="112" width="320" height="2"/>
+                                <rect key="frame" x="0.0" y="92" width="320" height="2"/>
                                 <color key="backgroundColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.75686274509999996" green="0.33333333329999998" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -116,7 +114,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" placeholder="Filter" translatesAutoresizingMaskIntoConstraints="NO" id="hEv-ar-xi6" customClass="SearchBar" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="-1" y="66" width="322" height="46"/>
+                                <rect key="frame" x="-1" y="46" width="322" height="46"/>
                                 <color key="barTintColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <userDefinedRuntimeAttributes>
@@ -129,14 +127,14 @@
                                 </userDefinedRuntimeAttributes>
                             </searchBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gsc-5B-jJA" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="gsc-5B-jJA" secondAttribute="height" multiplier="1080:155" id="Ccw-9A-JTM"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CWp-Hx-yhM" customClass="CustomTableView" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="112" width="320" height="406"/>
+                                <rect key="frame" x="0.0" y="92" width="320" height="426"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="yyC-12-Sf0" customClass="MovieListCell" customModule="FilmRoulette" customModuleProvider="target">
@@ -201,7 +199,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HBm-Le-g1a" userLabel="StatusBarbkg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Zhs-gD-Ovg">
@@ -251,7 +249,7 @@
                                 <viewLayoutGuide key="safeArea" id="EFe-je-P9W"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rsG-o3-zz5" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lki-hF-w5C" userLabel="Right Margin">
                                         <rect key="frame" x="310" y="0.0" width="10" height="46"/>
@@ -433,17 +431,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BVN-1G-CGe">
-                                <rect key="frame" x="0.0" y="80" width="320" height="438"/>
+                                <rect key="frame" x="0.0" y="60" width="320" height="458"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mRw-8R-ok4">
-                                <rect key="frame" x="0.0" y="80" width="320" height="438"/>
+                                <rect key="frame" x="0.0" y="60" width="320" height="458"/>
                                 <connections>
                                     <segue destination="aXQ-oY-L7u" kind="embed" identifier="EmbedSegue" id="Dyp-oj-ENU"/>
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2sd-F9-ku9">
-                                <rect key="frame" x="0.0" y="20" width="320" height="60"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfV-9r-YNl">
                                         <rect key="frame" x="111.5" y="13" width="97" height="34"/>
@@ -452,7 +450,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sGB-zf-nuB">
-                                        <rect key="frame" x="278" y="19" width="22" height="22"/>
+                                        <rect key="frame" x="275" y="18" width="25" height="24"/>
                                         <color key="tintColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <connections>
                                             <action selector="addPressed:" destination="cfH-3N-ARc" eventType="touchUpInside" id="Rge-RD-nyc"/>
@@ -522,7 +520,7 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="HbO-fk-OaG" customClass="SwipeTableViewCell" customModule="SwipeCellKit">
-                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="320" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HbO-fk-OaG" id="nc5-t9-BUN">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -549,47 +547,44 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bkg-gradient-center-small" translatesAutoresizingMaskIntoConstraints="NO" id="Cs3-03-aJs">
-                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zux-qd-wYU" customClass="FadingImageView" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="54" width="320" height="480"/>
+                                <rect key="frame" x="0.0" y="46" width="320" height="502"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="zux-qd-wYU" secondAttribute="height" multiplier="2:3" id="abh-Of-JTa"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vXV-Ja-956" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="vXV-Ja-956" secondAttribute="height" multiplier="1080:155" id="srQ-kb-xS5"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGR-dD-9hQ">
-                                <rect key="frame" x="0.0" y="101.5" width="320" height="366.5"/>
+                                <rect key="frame" x="0.0" y="81.5" width="320" height="386.5"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4lA-Sd-EGc" customClass="GeminiCollectionView" customModule="Gemini">
-                                        <rect key="frame" x="16" y="55" width="288" height="256.5"/>
+                                        <rect key="frame" x="0.0" y="29" width="320" height="328.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GWy-BJ-fnS">
-                                            <size key="itemSize" width="150" height="225"/>
+                                            <size key="itemSize" width="180" height="270"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PosterCell" id="rpV-fu-VOS" customClass="PosterCell" customModule="FilmRoulette" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="16" width="150" height="225"/>
+                                                <rect key="frame" x="0.0" y="29.5" width="180" height="270"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                    <rect key="frame" x="0.0" y="0.0" width="150" height="225"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="180" height="270"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="7D4-52-ihW">
-                                                            <rect key="frame" x="65" y="102.5" width="20" height="20"/>
+                                                            <rect key="frame" x="80" y="125" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iLW-GS-iJd">
-                                                            <rect key="frame" x="0.0" y="0.0" width="150" height="225"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="180" height="270"/>
                                                         </imageView>
                                                     </subviews>
                                                 </view>
@@ -611,8 +606,8 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="4lA-Sd-EGc" firstAttribute="width" secondItem="bGR-dD-9hQ" secondAttribute="width" multiplier="0.9" id="AVH-Hy-lps"/>
-                                    <constraint firstItem="4lA-Sd-EGc" firstAttribute="height" secondItem="bGR-dD-9hQ" secondAttribute="height" multiplier="0.7" id="X4Z-cC-rCU"/>
+                                    <constraint firstItem="4lA-Sd-EGc" firstAttribute="width" secondItem="bGR-dD-9hQ" secondAttribute="width" id="AVH-Hy-lps"/>
+                                    <constraint firstItem="4lA-Sd-EGc" firstAttribute="height" secondItem="bGR-dD-9hQ" secondAttribute="height" multiplier="0.85" id="X4Z-cC-rCU"/>
                                     <constraint firstItem="4lA-Sd-EGc" firstAttribute="centerX" secondItem="bGR-dD-9hQ" secondAttribute="centerX" id="fsF-wq-LWb"/>
                                     <constraint firstItem="4lA-Sd-EGc" firstAttribute="centerY" secondItem="bGR-dD-9hQ" secondAttribute="centerY" id="ya4-DD-XkK"/>
                                 </constraints>
@@ -627,7 +622,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ksb-bF-Ih0" customClass="Selector" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="66" width="320" height="28"/>
+                                <rect key="frame" x="0.0" y="46" width="320" height="28"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hyL-HG-8rs">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
@@ -666,7 +661,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="mTx-js-FBK">
-                                <rect key="frame" x="0.0" y="104" width="320" height="28"/>
+                                <rect key="frame" x="0.0" y="84" width="320" height="28"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TdR-hB-4Go">
                                         <rect key="frame" x="0.0" y="0.0" width="160" height="28"/>
@@ -693,8 +688,9 @@
                         <constraints>
                             <constraint firstItem="Cs3-03-aJs" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="0Vl-yi-AtU"/>
                             <constraint firstItem="mTx-js-FBK" firstAttribute="centerX" secondItem="Ksb-bF-Ih0" secondAttribute="centerX" id="2yG-Nk-MmD"/>
+                            <constraint firstItem="zux-qd-wYU" firstAttribute="top" secondItem="vXV-Ja-956" secondAttribute="bottom" id="7Vi-9d-f4L"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="zux-qd-wYU" secondAttribute="bottom" constant="20" id="ALq-Pc-NJ7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ksb-bF-Ih0" secondAttribute="trailing" id="Ah0-eq-9nP"/>
-                            <constraint firstItem="zux-qd-wYU" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="BxH-Ny-7Tf"/>
                             <constraint firstItem="mTx-js-FBK" firstAttribute="width" secondItem="Ksb-bF-Ih0" secondAttribute="width" id="DgP-VR-c0E"/>
                             <constraint firstItem="vXV-Ja-956" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Fub-ov-spI"/>
                             <constraint firstItem="Ksb-bF-Ih0" firstAttribute="width" secondItem="Ksb-bF-Ih0" secondAttribute="height" multiplier="125:11" id="JZ1-9D-U3M"/>
@@ -1083,7 +1079,7 @@
                                                 </constraints>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="CandidateCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CandidateCell" id="aoD-qS-uPH" customClass="FilterCandidateCell" customModule="FilmRoulette" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="28" width="288" height="44"/>
+                                                        <rect key="frame" x="0.0" y="28" width="288" height="43.5"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aoD-qS-uPH" id="XUm-c9-Hus">
                                                             <rect key="frame" x="0.0" y="0.0" width="288" height="43.5"/>
@@ -1097,7 +1093,6 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="p67-5s-RGd"/>
                                                 </constraints>
-                                                <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -1193,15 +1188,15 @@
             <objects>
                 <viewController id="aXQ-oY-L7u" customClass="TableVC" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dQ1-tD-FLE">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="438"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="458"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0yE-aK-157">
-                                <rect key="frame" x="0.0" y="56" width="320" height="382"/>
+                                <rect key="frame" x="0.0" y="56" width="320" height="402"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="E9H-6u-TfL" customClass="SwipeTableViewCell" customModule="SwipeCellKit">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="320" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="E9H-6u-TfL" id="xi2-h9-ere">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -1250,11 +1245,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IAS-Gd-vFv">
-                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Io5-DK-g3g" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="KMa-aR-uxC">
                                         <rect key="frame" x="118.5" y="5.5" width="83" height="34.5"/>
@@ -1302,7 +1297,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O2a-1o-N6J">
-                                <rect key="frame" x="0.0" y="294" width="320" height="56.5"/>
+                                <rect key="frame" x="0.0" y="274" width="320" height="56.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="L07-zU-3lB">
                                         <rect key="frame" x="57.5" y="12.5" width="205" height="31.5"/>
@@ -1348,21 +1343,21 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yuV-fw-who" userLabel="LeftBuffer">
-                                <rect key="frame" x="0.0" y="66" width="19" height="502"/>
+                                <rect key="frame" x="0.0" y="46" width="19" height="522"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7w3-Vq-m3P" userLabel="RightBuffer">
-                                <rect key="frame" x="301" y="66" width="19" height="502"/>
+                                <rect key="frame" x="301" y="46" width="19" height="522"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noImage" translatesAutoresizingMaskIntoConstraints="NO" id="yzM-QG-vRD" userLabel="Poster" customClass="LoadableImageView" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="19" y="85" width="132.5" height="199"/>
+                                <rect key="frame" x="19" y="65" width="132.5" height="199"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="yzM-QG-vRD" secondAttribute="height" multiplier="60:90" id="uP8-W7-Hzd"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFv-tI-1Dk" userLabel="TopBuffer">
-                                <rect key="frame" x="0.0" y="66" width="320" height="19"/>
+                                <rect key="frame" x="0.0" y="46" width="320" height="19"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cHR-9s-3ae">
@@ -1377,10 +1372,10 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" spacingType="standard" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9uB-S2-qnB">
-                                <rect key="frame" x="171" y="104" width="130" height="175"/>
+                                <rect key="frame" x="171" y="84" width="130" height="175"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6AL-BN-SsD">
-                                        <rect key="frame" x="0.0" y="0.0" width="117" height="98.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="119.5" height="84"/>
                                         <string key="text">Avengers: 
 Infinity War
 (2018) </string>
@@ -1389,7 +1384,7 @@ Infinity War
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ve2-z2-Opu">
-                                        <rect key="frame" x="0.0" y="116" width="100" height="18.5"/>
+                                        <rect key="frame" x="0.0" y="86.5" width="104" height="49"/>
                                         <string key="text">Adventure, 
 Science Fiction, 
 Action</string>
@@ -1410,11 +1405,11 @@ Action</string>
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uHD-RT-haP" userLabel="LeftBuffer">
-                                <rect key="frame" x="151.5" y="85" width="19.5" height="199"/>
+                                <rect key="frame" x="151.5" y="65" width="19.5" height="199"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6j2-q6-Dg5">
-                                <rect key="frame" x="19" y="360.5" width="282" height="160.5"/>
+                                <rect key="frame" x="19" y="340.5" width="282" height="180.5"/>
                                 <string key="text">As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.</string>
                                 <color key="textColor" red="0.13725490200000001" green="0.1215686275" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1813,7 +1808,7 @@ Action</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bBt-r1-sBj" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="bBt-r1-sBj" secondAttribute="height" multiplier="1080:155" id="W4J-Vz-6lg"/>
@@ -1827,11 +1822,11 @@ Action</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9sa-Jm-akT" userLabel="SubviewContiner" customClass="VCContainer" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="112" width="320" height="398"/>
+                                <rect key="frame" x="0.0" y="92" width="320" height="418"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <searchBar contentMode="redraw" placeholder="Filter" translatesAutoresizingMaskIntoConstraints="NO" id="jzG-7z-zgh" customClass="SearchBar" customModule="FilmRoulette" customModuleProvider="target">
-                                <rect key="frame" x="-2" y="66" width="324" height="46"/>
+                                <rect key="frame" x="-2" y="46" width="324" height="46"/>
                                 <color key="barTintColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <userDefinedRuntimeAttributes>
@@ -1895,7 +1890,7 @@ Action</string>
             <objects>
                 <tableViewController id="C5W-ve-Dfb" customClass="SettingsTable" customModule="FilmRoulette" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="static" style="grouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="1" id="6ya-RH-fIj">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="465"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="485"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" red="0.1450980392" green="0.1647058824" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -1904,20 +1899,20 @@ Action</string>
                             <tableViewSection id="nk1-eU-ScQ">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="LaA-i8-A7k" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="35" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="18" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LaA-i8-A7k" id="VBf-5J-aWE">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wheel Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQc-uh-m1e">
-                                                    <rect key="frame" x="15" y="10" width="91.5" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="91.5" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q25-fu-1BU">
-                                                    <rect key="frame" x="145" y="0.0" width="160" height="43.5"/>
+                                                    <rect key="frame" x="145" y="0.0" width="160" height="44"/>
                                                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </pickerView>
                                             </subviews>
@@ -1933,14 +1928,14 @@ Action</string>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="Fuq-Av-uHW" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="79" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="62" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fuq-Av-uHW" id="VsM-7C-Frv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kids' Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIX-j0-vMG">
-                                                    <rect key="frame" x="15" y="10" width="83.5" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="83.5" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1966,10 +1961,10 @@ Action</string>
                             <tableViewSection id="Sdf-9T-PTC">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="Aca-Sl-zLZ" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="142" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="125" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Aca-Sl-zLZ" id="2ZW-Za-Kor">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Link to dropbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F2i-sd-4RH">
@@ -1991,14 +1986,14 @@ Action</string>
                                         </userDefinedRuntimeAttributes>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="JOM-vJ-gxi" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="186" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="169" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JOM-vJ-gxi" id="Zd8-RK-ucH">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQr-p1-m2H">
-                                                    <rect key="frame" x="15" y="10" width="51" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="51" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -2016,14 +2011,14 @@ Action</string>
                                         </userDefinedRuntimeAttributes>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="bFT-oV-zvq" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="230" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="213" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bFT-oV-zvq" id="EIS-0f-Oa3">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EAE-k6-MEb">
-                                                    <rect key="frame" x="15" y="10" width="74" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="74" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -2045,14 +2040,14 @@ Action</string>
                             <tableViewSection id="Gyd-M2-QmR">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="OIT-Ab-7KT" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="293" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="276" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OIT-Ab-7KT" id="oov-8Y-lmN">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upgrade / Learn more..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Olh-ke-88t">
-                                                    <rect key="frame" x="15" y="10" width="177.5" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="177.5" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -2070,14 +2065,14 @@ Action</string>
                                         </userDefinedRuntimeAttributes>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="9I3-NG-b1f" customClass="CustomTableViewCell" customModule="FilmRoulette" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="337" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="320" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9I3-NG-b1f" id="pUv-Sh-TL0">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restore Purchases" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yec-wJ-f0D">
-                                                    <rect key="frame" x="15" y="10" width="141.5" height="23.5"/>
+                                                    <rect key="frame" x="15" y="10.5" width="141.5" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Nunito-Regular" family="Nunito" pointSize="17"/>
                                                     <color key="textColor" red="0.93333333330000001" green="0.94901960780000005" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -2127,7 +2122,7 @@ Action</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8n7-SP-vFZ" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="46"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bhn-R7-qLm" userLabel="Right Margin">
                                         <rect key="frame" x="310" y="0.0" width="10" height="46"/>
@@ -2201,7 +2196,7 @@ Action</string>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eOT-i2-yyy">
-                                <rect key="frame" x="0.0" y="66" width="320" height="465"/>
+                                <rect key="frame" x="0.0" y="46" width="320" height="485"/>
                                 <connections>
                                     <segue destination="C5W-ve-Dfb" kind="embed" identifier="SettingsTableSegue" id="ltC-Ph-OZP"/>
                                 </connections>

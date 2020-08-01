@@ -11,7 +11,7 @@ import SwiftyJSON
 import Alamofire
 
 protocol IndividualQueryDelegate {
-    var apiKey:String {get}
+    
     func individualQueryComplete(results:[Movie]?, error:String?)
     func updateProgressBar(by progress:Float)
 }
@@ -28,13 +28,13 @@ class IndividualMovieQuery: NSObject {
     
     
     func execute(movieIDs:[Int]) {
-//        print("querying individual \(movieIDs.count) movies")
+        print("querying individual \(movieIDs.count) movies")
         var index = 0
         self.delegate.updateProgressBar(by:0.1)
         for id in movieIDs {
             
             
-            Alamofire.request(self.querySingleURL + "\(id)", method:.get, parameters:["api_key":self.delegate.apiKey,"append_to_response":"videos"]).responseJSON { (response) in
+            Alamofire.request(self.querySingleURL + "\(id)", method:.get, parameters:["api_key":kAPIKey,"append_to_response":"videos"]).responseJSON { (response) in
                 index += 1
 //                print("querying \(index) of individual \(movieIDs.count) movies")
                 self.delegate.updateProgressBar(by: (0.9 / Float(movieIDs.count)))
@@ -53,6 +53,8 @@ class IndividualMovieQuery: NSObject {
                         
                     } else {
                         //MARK: IF FAILED MARK AS SUCH
+                        
+                        
                         self.failedMovies += 1
                         self.checkForCompletion(totalNumber: movieIDs.count)
                     }
@@ -77,7 +79,7 @@ class IndividualMovieQuery: NSObject {
     
     func singleMovieParams()->[String:String] {
         var params = [String:String]()
-        params["api_key"] = self.delegate.apiKey
+        params["api_key"] = kAPIKey
         params["append_to_response"] = "videos"
         
         return params

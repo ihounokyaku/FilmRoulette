@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 enum TableType:String {
     case group
@@ -24,7 +24,7 @@ enum TransitionDirection {
 
 class GroupListVC: LibrarySubview {
     
-    var filterObject: Object? {
+    var filterObject: FilterObject? {
         didSet {
             self.currentTableVC.tableView.reloadData()
         }
@@ -123,14 +123,11 @@ class GroupListVC: LibrarySubview {
         }
         
         alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (action) in
-            if newField.text! != "" && GlobalDataManager.folder(withName: newField.text!) == nil{
-                let folder = Group()
-                folder.name = newField.text!
-                if let error = GlobalDataManager.save(object: folder) {
-                    self.view.makeToast(error)
-                } else {
-                    self.currentTableVC.tableView.reloadData()
-                }
+            if newField.text! != "" && Group.Named(newField.text!) == nil{
+                let group = Group(name: newField.text!)
+                SQLDataManager.Insert(object: group)
+                self.currentTableVC.tableView.reloadData()
+                
             } else {
                 self.view.makeToast("Please choose a unique group name")
             }
@@ -159,10 +156,10 @@ class GroupListVC: LibrarySubview {
         self.currentTableVC.tableType = type
         self.currentTableVC.group = group
         
-        self.addChildViewController(self.currentTableVC)
+        self.addChild(self.currentTableVC)
         self.currentTableVC.view.frame = CGRect(x: xValue, y: yValue, width: self.containerView.frame.size.width, height:self.containerView.frame.size.height)
         self.containerView.addSubview(self.currentTableVC.view)
-        self.currentTableVC.didMove(toParentViewController: self)
+        self.currentTableVC.didMove(toParent: self)
         
         //MARK: Animate Transition
         if direction != nil {
@@ -207,10 +204,10 @@ class GroupListVC: LibrarySubview {
         }, completion: {(finished: Bool) in
             let index = self.containerView.subviews.count - 1
             self.containerView.subviews[index].removeFromSuperview()
-            if self.childViewControllers.count > 1 {
-                self.childViewControllers.last!.removeFromParentViewController()
+            if self.children.count > 1 {
+                self.children.last!.removeFromParent()
             }
-            self.currentTableVC = (self.childViewControllers.last as! TableVC)
+            self.currentTableVC = (self.children.last as! TableVC)
             self.currentTableVC.tableView.reloadData()
             self.toggleDisplay()
         })

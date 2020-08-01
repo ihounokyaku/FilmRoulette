@@ -33,7 +33,7 @@ class Selector: UIView {
     
     public var animationDuration = 0.2
     
-    public var animationOptions:AnimationOptions = .curveEaseIn
+    public var animationOptions:UIView.AnimationOptions = .curveEaseIn
     
     public var selectedTextColor:UIColor? {
         didSet {
@@ -114,7 +114,7 @@ class Selector: UIView {
         guard self.buttons.count > self.indexOfSelectedItem else {return}
         self.setHighlightViewPosition()
         self.addSubview(self.highlightView)
-        self.sendSubview(toBack: self.highlightView)
+        self.sendSubviewToBack(self.highlightView)
         
     }
     

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 import SwiftyDropbox
 
 @UIApplicationMain
@@ -16,21 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var dropboxDelegate:DropboxDelegate?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    
-        
-        
-        
-        
-        
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+        SQLDataManager.CreateTables()
         // Override point for customization after application launch.
-        do {
-            _ = try Realm(configuration: RealmConfig)
-            _ = try Realm(configuration: FilmswipeRealmConfig)
-            
-        } catch {
-            print("eroror with relam \(error)")
-        }
         
         DropboxClientsManager.setupWithAppKey("xp31qhwlj6q3q78")
         return true

@@ -7,12 +7,13 @@
 //
 
 import UIKit
-import RealmSwift
 import Toast_Swift
 
 
 
 class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITableViewDelegate, DropboxDelegate, PosterGetterDelegate {
+
+    
 
     
     //MARK: - =========IBOUTLETS==========
@@ -37,13 +38,32 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
    
     //MARK: - === DATASOURCES ===
     
-    var dataSource:Results<Movie> {return self.filteredMovies ?? self.moviesOnDisplay}
+    var searchText:String?
     
-    var filteredMovies:Results<Movie>?
+    var dataSource:[Movie]{
+        
+        if searchText == nil || searchText == "" {
+            return self.moviesOnDisplay
+        } else {
+            return self.moviesOnDisplay.filteredBy(text: searchText!)
+        }
+        
+//        return self.filteredMovies ?? self.moviesOnDisplay
+        
+        
+    }
     
-    var moviesOnDisplay:Results<Movie> {
-        let baseResults = self.libContainer.libraryType == .library ? GlobalDataManager.realm.objects(Movie.self) : GlobalDataManager.fsRealm.objects(Movie.self)
-        return GlobalDataManager.movies(baseResults, filteredBy: self.displayOption)
+   
+    
+    var moviesOnDisplay:[Movie] {
+        
+        let baseResults = self.libContainer.libraryType == .library ? SQLDataManager.AllMovies : SQLDataManager.FSMovies
+        if let option = self.displayOption {
+            return baseResults.filteredBy(option: option)
+        }
+        
+        return baseResults
+        
     }
     
     var queryList = [Movie]()
@@ -112,7 +132,14 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: self.dataSource) }
     
-    func loadedPoster() { self.movieTable.reloadData() }
+    func loadedPoster(_ toRequery:[Movie]) {
+        
+        self.movieTable.reloadData()
+        
+        self.posterGetter.completeErrorPosters(forMovies: toRequery)
+        
+        
+    }
     
     
     
@@ -131,7 +158,7 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
         let action = UIAlertAction(title: "DO IT!!!", style: .default) { (action) in
             //TODO: DELETE
            
-            GlobalDataManager.deleteObject(object: movie)
+            SQLDataManager.Delete(object: movie)
             self.animateCellChange(atIndexPath: indexPath)
         }
        
@@ -153,13 +180,11 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     //MARK: - == Add from FS ==
     func addAll() {
+        
         for movie in self.dataSource {
-           
-                if  let error = GlobalDataManager.importMovie(movie: movie) {
-                    self.view.makeToast(error, duration:3.0, position: .center)
-                } else {
-                   self.view.makeToast("Movie added to library", duration:3.0, position: .center)
-            }
+            
+            SQLDataManager.Import(movie: movie)
+            self.view.makeToast("Movie added to library", duration:3.0, position: .center)
             
         }
     }
@@ -191,28 +216,29 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
         var button:UITableViewRowAction!
         
         if self.libContainer.libraryType == .library {
-        button = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
-            
-            self.delete(movie: self.dataSource[indexPath.row], indexPath:indexPath)
+            button = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
+                
+                self.delete(movie: self.dataSource[indexPath.row], indexPath:indexPath)
             }
             button.backgroundColor = UIColor(hexString: "#A5484A").withAlphaComponent(0.8)
         } else {
             button = UITableViewRowAction(style: .normal, title: "Add") { (action, indexPath) in
                 
                 let movie = self.dataSource[indexPath.row]
-                if !GlobalDataManager.databaseContains(movieWithId: movie.id) {
-                   let error = GlobalDataManager.importMovie(movie: movie)
-                    self.view.makeToast(error ?? "Saved to library", duration:3.0, position: .center)
-                } else {
-                    self.view.makeToast("Already in library.", duration:3.0, position: .center)
-                }
+                
+                SQLDataManager.Import(movie: movie)
+                
+                self.view.makeToast("Saved to library", duration:3.0, position: .center)
+                
+                button.backgroundColor = UIColor(hexString: "#34A853").withAlphaComponent(0.8)
+                
             }
-            button.backgroundColor = UIColor(hexString: "#34A853").withAlphaComponent(0.8)
+            
+            
         }
-        
         return [button]
     }
-    
+        
     func animateCellChange(atIndexPath indexPath: IndexPath, remove:Bool = true) {
         CATransaction.begin()
         self.movieTable.beginUpdates()
@@ -262,13 +288,14 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     //MARK: - =============== SEARCH BAR ===============
     
     override func search(text: String) {
-        let predicate = GlobalDataManager.predicate(forType: .movie, text: text)
-        self.filteredMovies = self.moviesOnDisplay.filter(predicate)
+       
+        self.searchText = text
+        
         self.movieTable.reloadData()
     }
     
     override func clearSearch() {
-        self.filteredMovies = nil
+        self.searchText = nil
         self.toggleDisplay()
         self.movieTable.reloadData()
     }
@@ -276,6 +303,8 @@ class MovieListVC: LibrarySubview, SelectorDelegate, UITableViewDataSource, UITa
     
     
 }
+
+
 
 //MARK: - =============== SYNC ===============
 

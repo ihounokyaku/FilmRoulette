@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -34,7 +34,7 @@
 		C4595A6F20F3AF0A00446C4B /* NavSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4595A6E20F3AF0A00446C4B /* NavSubview.swift */; };
 		C4772E122263289F00B9B3BF /* HudDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4772E112263289F00B9B3BF /* HudDelegate.swift */; };
 		C482938A20FE256E00E7BECF /* MovieListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C482938920FE256E00E7BECF /* MovieListVC.swift */; };
-		C4971D7920F3B42600F30BAF /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7820F3B41700F30BAF /* Movie.swift */; };
+		C4971D7920F3B42600F30BAF /* RealmMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7820F3B41700F30BAF /* RealmMovie.swift */; };
 		C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7720F3B41700F30BAF /* DataManager.swift */; };
 		C4971D8020F3B4A800F30BAF /* Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7F20F3B48700F30BAF /* Prefs.swift */; };
 		C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4971D7C20F3B48700F30BAF /* Enums.swift */; };
@@ -44,7 +44,6 @@
 		C4990AF122392CDD00950165 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4990AEF22392CDD00950165 /* SearchVC.swift */; };
 		C49ABF0622561F8900DAC268 /* MovieTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49ABF0522561F8900DAC268 /* MovieTable.swift */; };
 		C49D56AB2102257A00CAADF2 /* BasicSF.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49D56AA2102257A00CAADF2 /* BasicSF.swift */; };
-		C4AC67F520F7AE6500F91621 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AC67F420F7AE6400F91621 /* Genre.swift */; };
 		C4BC7F38223E972300971570 /* SpinFilterContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F37223E972300971570 /* SpinFilterContainer.swift */; };
 		C4BC7F3A223E974D00971570 /* SpinFilterSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F39223E974D00971570 /* SpinFilterSubview.swift */; };
 		C4BC7F3D223E97E900971570 /* AdvancedSF.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BC7F3C223E97E900971570 /* AdvancedSF.swift */; };
@@ -82,6 +81,16 @@
 		C4F17A00223A992800BBE53D /* Nunito-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4F179FD223A991D00BBE53D /* Nunito-Regular.ttf */; };
 		C4F17A01223A992800BBE53D /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4F179FA223A991C00BBE53D /* Nunito-SemiBold.ttf */; };
 		C4F17A04223A9CCF00BBE53D /* MovieListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4F162C92239809E002C7D93 /* MovieListCell.xib */; };
+		FC0A18B224CDD887000ECD2F /* GenreTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0A18B124CDD887000ECD2F /* GenreTag.swift */; };
+		FC0A18B424CDDA1D000ECD2F /* GenreTag copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0A18B324CDDA1D000ECD2F /* GenreTag copy.swift */; };
+		FC259CE024D4151800B9F8AF /* CustomTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC259CDF24D4151800B9F8AF /* CustomTag.swift */; };
+		FC95F73E24CB569300729D0C /* SQLiteObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC95F73D24CB569300729D0C /* SQLiteObject.swift */; };
+		FC95F74124CB56AD00729D0C /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC95F74024CB56AD00729D0C /* Movie.swift */; };
+		FC95F74224CB56AD00729D0C /* SQLDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC95F73F24CB56AD00729D0C /* SQLDataManager.swift */; };
+		FCA9F37224CC0A0D00CD9577 /* RealmTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA9F37124CC0A0D00CD9577 /* RealmTag.swift */; };
+		FCA9F37424CC2B0000CD9577 /* Group copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA9F37324CC2B0000CD9577 /* Group copy.swift */; };
+		FCA9F37824CC328C00CD9577 /* Filter copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA9F37724CC328C00CD9577 /* Filter copy.swift */; };
+		FCE0726D24CEF9DE00D243DE /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCE0726C24CEF9DE00D243DE /* Genre.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,14 +119,14 @@
 		C446CE9B2260C30B00BD2FFB /* DataSharingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSharingManager.swift; sourceTree = "<group>"; };
 		C44C34902223229000E654AC /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		C450C9D2210473E900FDE9EB /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
-		C450C9D821047F8600FDE9EB /* TableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TableVC.swift; path = "/Users/aird/Dropbox/Xcode Projects/FilmRoulette/FilmRoulette/Controllers/TableVC.swift"; sourceTree = "<absolute>"; };
+		C450C9D821047F8600FDE9EB /* TableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TableVC.swift; path = "/Users/Dylan/Dropbox/Developer/Xcode Projects/FilmRoulette/FilmRoulette/Controllers/TableVC.swift"; sourceTree = "<absolute>"; };
 		C4595A6C20F3AF0500446C4B /* NavContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavContainer.swift; sourceTree = "<group>"; };
 		C4595A6E20F3AF0A00446C4B /* NavSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSubview.swift; sourceTree = "<group>"; };
 		C4772E112263289F00B9B3BF /* HudDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudDelegate.swift; sourceTree = "<group>"; };
 		C47ADFDA20F62A97008F79C5 /* FilmRoulette.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FilmRoulette.entitlements; sourceTree = "<group>"; };
 		C482938920FE256E00E7BECF /* MovieListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListVC.swift; sourceTree = "<group>"; };
 		C4971D7720F3B41700F30BAF /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		C4971D7820F3B41700F30BAF /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		C4971D7820F3B41700F30BAF /* RealmMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmMovie.swift; sourceTree = "<group>"; };
 		C4971D7C20F3B48700F30BAF /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		C4971D7D20F3B48700F30BAF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C4971D7E20F3B48700F30BAF /* Global Variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Variables.swift"; sourceTree = "<group>"; };
@@ -126,7 +135,6 @@
 		C4990AEF22392CDD00950165 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		C49ABF0522561F8900DAC268 /* MovieTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTable.swift; sourceTree = "<group>"; };
 		C49D56AA2102257A00CAADF2 /* BasicSF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicSF.swift; sourceTree = "<group>"; };
-		C4AC67F420F7AE6400F91621 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		C4BC7F37223E972300971570 /* SpinFilterContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinFilterContainer.swift; sourceTree = "<group>"; };
 		C4BC7F39223E974D00971570 /* SpinFilterSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinFilterSubview.swift; sourceTree = "<group>"; };
 		C4BC7F3C223E97E900971570 /* AdvancedSF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSF.swift; sourceTree = "<group>"; };
@@ -166,6 +174,16 @@
 		C4F179FC223A991D00BBE53D /* Nunito-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Bold.ttf"; sourceTree = "<group>"; };
 		C4F179FD223A991D00BBE53D /* Nunito-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Regular.ttf"; sourceTree = "<group>"; };
 		E62BB917ACEE54FB74B7B1DC /* Pods-FilmRoulette.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FilmRoulette.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette.debug.xcconfig"; sourceTree = "<group>"; };
+		FC0A18B124CDD887000ECD2F /* GenreTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTag.swift; sourceTree = "<group>"; };
+		FC0A18B324CDDA1D000ECD2F /* GenreTag copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenreTag copy.swift"; sourceTree = "<group>"; };
+		FC259CDF24D4151800B9F8AF /* CustomTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTag.swift; sourceTree = "<group>"; };
+		FC95F73D24CB569300729D0C /* SQLiteObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteObject.swift; sourceTree = "<group>"; };
+		FC95F73F24CB56AD00729D0C /* SQLDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLDataManager.swift; sourceTree = "<group>"; };
+		FC95F74024CB56AD00729D0C /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		FCA9F37124CC0A0D00CD9577 /* RealmTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTag.swift; sourceTree = "<group>"; };
+		FCA9F37324CC2B0000CD9577 /* Group copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group copy.swift"; sourceTree = "<group>"; };
+		FCA9F37724CC328C00CD9577 /* Filter copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Filter copy.swift"; sourceTree = "<group>"; };
+		FCE0726C24CEF9DE00D243DE /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,13 +304,19 @@
 		C4971D7620F3B41700F30BAF /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				C446CE9B2260C30B00BD2FFB /* DataSharingManager.swift */,
-				C4971D7720F3B41700F30BAF /* DataManager.swift */,
-				C4971D7820F3B41700F30BAF /* Movie.swift */,
-				C4BC7F3E223FAF6B00971570 /* Filter.swift */,
+				FC95F73D24CB569300729D0C /* SQLiteObject.swift */,
+				FCE0726C24CEF9DE00D243DE /* Genre.swift */,
+				FC95F73F24CB56AD00729D0C /* SQLDataManager.swift */,
+				FC95F74024CB56AD00729D0C /* Movie.swift */,
 				C4DB46E820F4E9D0009EC359 /* Tag.swift */,
 				C450C9D2210473E900FDE9EB /* Group.swift */,
-				C4AC67F420F7AE6400F91621 /* Genre.swift */,
+				C4BC7F3E223FAF6B00971570 /* Filter.swift */,
+				C446CE9B2260C30B00BD2FFB /* DataSharingManager.swift */,
+				C4971D7720F3B41700F30BAF /* DataManager.swift */,
+				FCA9F37124CC0A0D00CD9577 /* RealmTag.swift */,
+				C4971D7820F3B41700F30BAF /* RealmMovie.swift */,
+				FCA9F37724CC328C00CD9577 /* Filter copy.swift */,
+				FCA9F37324CC2B0000CD9577 /* Group copy.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -370,6 +394,9 @@
 				C4F162D122398482002C7D93 /* LoadableImageView.swift */,
 				C412B047223BFE4000E363E3 /* SelectorIcons.swift */,
 				C4E777B022536C9F002E859D /* VCContainer.swift */,
+				FC0A18B324CDDA1D000ECD2F /* GenreTag copy.swift */,
+				FC259CDF24D4151800B9F8AF /* CustomTag.swift */,
+				FC0A18B124CDD887000ECD2F /* GenreTag.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -438,6 +465,7 @@
 				TargetAttributes = {
 					C407DF7B20F39C7600213A37 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -508,31 +536,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Gemini/Gemini.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox/SwiftyDropbox.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TagListView/TagListView.framework",
-				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gemini.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TagListView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FilmRoulette/Pods-FilmRoulette-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -550,19 +559,23 @@
 				C4BC7F38223E972300971570 /* SpinFilterContainer.swift in Sources */,
 				C4971D8220F3B4AC00F30BAF /* Extensions.swift in Sources */,
 				C4F162A722394C2E002C7D93 /* SessionData.swift in Sources */,
-				C4AC67F520F7AE6500F91621 /* Genre.swift in Sources */,
 				C4F162CC2239809E002C7D93 /* MovieListCell.swift in Sources */,
 				C41AB8C02253B34200C0B81F /* GroupListVC.swift in Sources */,
 				C4F162A1223948FC002C7D93 /* PosterQueryManager.swift in Sources */,
 				C407DF8220F39C7700213A37 /* SpinVC.swift in Sources */,
 				C41AB8C22253D74500C0B81F /* GroupTable.swift in Sources */,
 				C4C05EED22489A4800DAEA5E /* DropboxManager.swift in Sources */,
+				FC0A18B424CDDA1D000ECD2F /* GenreTag copy.swift in Sources */,
+				FC0A18B224CDD887000ECD2F /* GenreTag.swift in Sources */,
+				FC95F74124CB56AD00729D0C /* Movie.swift in Sources */,
 				C4971D7A20F3B42900F30BAF /* DataManager.swift in Sources */,
 				C446CE932260A64E00BD2FFB /* SettingsContainer.swift in Sources */,
 				C4F162D42239850A002C7D93 /* TrailerView.swift in Sources */,
+				FCA9F37424CC2B0000CD9577 /* Group copy.swift in Sources */,
 				C4E438C220FB6482007C5D68 /* PosterCell.swift in Sources */,
 				C4990AF122392CDD00950165 /* SearchVC.swift in Sources */,
 				C4F1629F223948FC002C7D93 /* SearchQuery.swift in Sources */,
+				FCE0726D24CEF9DE00D243DE /* Genre.swift in Sources */,
 				C4E777B122536C9F002E859D /* VCContainer.swift in Sources */,
 				C4F162B622397E7D002C7D93 /* Selector.swift in Sources */,
 				C4595A6F20F3AF0A00446C4B /* NavSubview.swift in Sources */,
@@ -574,6 +587,7 @@
 				C482938A20FE256E00E7BECF /* MovieListVC.swift in Sources */,
 				C4E777A922535F62002E859D /* LibaryContainer.swift in Sources */,
 				C4772E122263289F00B9B3BF /* HudDelegate.swift in Sources */,
+				FCA9F37224CC0A0D00CD9577 /* RealmTag.swift in Sources */,
 				C446CE972260A97A00BD2FFB /* SettingsHeader.swift in Sources */,
 				C4F1629E223948FC002C7D93 /* PosterQuery.swift in Sources */,
 				C412B048223BFE4000E363E3 /* SelectorIcons.swift in Sources */,
@@ -598,16 +612,20 @@
 				C412B04A223C044400E363E3 /* Images.swift in Sources */,
 				C4F162C72239801D002C7D93 /* ConvenienceFunctions.swift in Sources */,
 				C4971D8320F3B4AC00F30BAF /* Global Variables.swift in Sources */,
+				FC259CE024D4151800B9F8AF /* CustomTag.swift in Sources */,
 				C4971D8120F3B4AC00F30BAF /* Enums.swift in Sources */,
 				C446CE942260A64E00BD2FFB /* SettingsTable.swift in Sources */,
+				FC95F73E24CB569300729D0C /* SQLiteObject.swift in Sources */,
 				C417A63D2263433200180A31 /* PosterGetter.swift in Sources */,
 				C4C05EF02248C18D00DAEA5E /* JSONHandler.swift in Sources */,
 				C450C9D921047F8600FDE9EB /* TableVC.swift in Sources */,
 				C4F162A522394AC9002C7D93 /* IndividualMovieQuery.swift in Sources */,
+				FC95F74224CB56AD00729D0C /* SQLDataManager.swift in Sources */,
 				C4F162D222398483002C7D93 /* LoadableImageView.swift in Sources */,
 				C41FF91722477CE300EE1A3C /* ModalVC.swift in Sources */,
+				FCA9F37824CC328C00CD9577 /* Filter copy.swift in Sources */,
 				C4F162C522397FD4002C7D93 /* CustomTableViewCell.swift in Sources */,
-				C4971D7920F3B42600F30BAF /* Movie.swift in Sources */,
+				C4971D7920F3B42600F30BAF /* RealmMovie.swift in Sources */,
 				C49D56AB2102257A00CAADF2 /* BasicSF.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -764,7 +782,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.brokenkeyboard.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ENABLE_BATCH_MODE = NO;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -785,7 +803,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.brokenkeyboard.MovieRoulette;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ENABLE_BATCH_MODE = NO;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

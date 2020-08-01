@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDelegate {
     
@@ -23,30 +22,42 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
     //MARK: - =============== VARS ===============
     
     //MARK: - === DATASOURCES ===
-    var dataSource:Results<Movie> {
+    var dataSource:[Movie] {
         let movies = self.filteredMovies ?? self.moviesOnDisplay
-        return movies.sorted(byKeyPath: "title", ascending: true)
+        return movies.sorted(by: {$0.title < $1.title})
     }
     
-    var filteredMovies:Results<Movie>?
+    var filteredMovies:[Movie]?
     
-    var moviesOnDisplay:Results<Movie> {
+    var moviesOnDisplay:[Movie] {
         
-        let baseResults = self.tableType == .library ? GlobalDataManager.movies(self.moviesNotInGroup, filteredBy: self.controller.filterObject, libraryType: .library,  allInCategory: false) : self.group!.movies.filter("TRUEPREDICATE")
+        var baseResults:[Movie]!
         
-       return GlobalDataManager.movies(baseResults, filteredBy: self.displayOption)
+        if self.tableType == .library {
+            let ids = self.group!.movieIDs
+            baseResults = SQLDataManager.AllMovies.filter({!ids.contains($0.id)})
+        } else {
+            baseResults = self.group!.movies
+        }
+        
+        if let option = self.displayOption {
+            return baseResults.filteredBy(option: option)
+            
+        }
+        
+        return baseResults
+        
         
     }
     
-    var moviesNotInGroup:Results<Movie> {
+    var moviesNotInGroup:[Movie] {
         
         get {
-            var movies = GlobalDataManager.realm.objects(Movie.self)
-            for movie in self.group!.movies {
-                movies = movies.filter("id != %i", movie.id)
-            }
+            
+            let movies = SQLDataManager.AllMovies
+            guard let group = self.group else { return movies}
         
-            return movies
+            return movies.filter({!group.movieIDs.contains($0.id)})
         }
     }
     
@@ -68,7 +79,7 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
     override func viewDidLoad() {
         super.viewDidLoad()
         self.posterGetter = PosterGetter(delegate: self)
-        self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed)
+        self.posterGetter.completeMissingPosters(forMovies: self.moviesOnDisplay)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,23 +101,29 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
     
     func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: self.dataSource) }
     
-    func loadedPoster() { self.tableView.reloadData() }
+    func loadedPoster(_ toRequery:[Movie]) {
+        
+        self.posterGetter.completeErrorPosters(forMovies: toRequery)
+        
+        self.tableView.reloadData()
+        
+    }
     
     
     //MARK: - =============== OTHER ===============
     
     //MARK: - === UNDO ===
     override func undo() {
-        guard self.tableType == .groupContents, let id = self.removedMovie, let movie = GlobalDataManager.movie(withId: id) else {return}
-        do {
-            try GlobalDataManager.realm.write {
-                if !self.group!.movies.contains(movie){self.group!.movies.append(movie)}
-                self.removedMovie = nil
-                self.tableView.reloadData()
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+        
+        guard self.tableType == .groupContents, let id = self.removedMovie, let movie = SQLDataManager.FetchMovie(withID: id) else {return}
+      
+            
+            self.group?.add(movieWithID: movie.id)
+            
+            self.removedMovie = nil
+        
+        self.tableView.reloadData(with:.automatic)
+            
     }
     
     //MARK: - =============== TABLEVIEW ===============
@@ -119,6 +136,7 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
         let movie = self.dataSource[indexPath.row]
         cell.delegate = self
         cell.indexPath = indexPath
+        print("table type is \(self.tableType.rawValue)")
         cell.buttonRightImage?.image = self.tableType == .library ? Images.AddToGroup : Images.RemoveFromGroup
         cell.configure(movie: movie, poster: movie.poster, loadingPosters: false)
         
@@ -136,21 +154,22 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
     
     func buttonTapped(at index: IndexPath) {
         let movie = self.dataSource[index.row]
-        do {
-            try GlobalDataManager.realm.write {
-                if !self.group!.movies.contains(movie) {
-                    if self.tableType == .library {
-                        self.group!.movies.append(movie)
-                        
-                    } else {
-                        self.group!.movies.remove(at:self.group!.movies.index(of: movie)!)
-                        self.removedMovie = movie.id
-                        self.view.makeToast("Movie Removed (shake to undo)")
-                    }
-                    self.tableView.reloadData()
-                } else {print("\(movie.title) not in group!")}
+        
+            if self.tableType == .library {
+                self.group!.add(movieWithID: movie.id)
+                
+            } else {
+                self.group!.remove(movieWithID: movie.id)
+                self.removedMovie = movie.id
+                self.view.makeToast("Movie Removed (shake to undo)")
+                
             }
-        } catch {print(error.localizedDescription)}
+            
+            if self.tableType == .library {
+                self.group!.add(movieWithID: movie.id)
+            }
+        
+        self.tableView.reloadData(with: .automatic)
     }
     
     
@@ -158,7 +177,9 @@ class MovieTable: TableVC, SelectorDelegate, MovieCellDelegate, PosterGetterDele
     //MARK: - ==========SEARCH BAR==========
     
     override func search(text:String) {
-        self.filteredMovies = self.moviesOnDisplay.filter(GlobalDataManager.predicate(forType: .movie, text: text))
+        
+        self.filteredMovies = self.moviesOnDisplay.filteredBy(text: text)
+        
         self.tableView.reloadData()
     }
     override func clearSearch(){

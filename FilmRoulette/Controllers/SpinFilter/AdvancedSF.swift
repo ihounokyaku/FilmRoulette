@@ -8,7 +8,7 @@
 
 import UIKit
 import TagListView
-import RealmSwift
+
 
 
 
@@ -39,17 +39,17 @@ class AdvancedFilterVC: SpinFilterSubview, YearRangePickerDelegate{
     
     //MARK: - ==========VARS============
     //MARK: - ==ARRAYS==
-    var genrePredictions:Results<Genre>?
-    var tagPredictions:Results<Tag>?
+    var genrePredictions:[Genre]?
+    var tagPredictions:[Tag]?
     
-    var predictions:[Object] {
+    var predictions:[Any] {
         get {
-            var array = [Object]()
+            var array = [Any]()
             if let gp = self.genrePredictions {
-                array += gp.toArray(type: Object.self)
+                array += gp
             }
             if let tp = self.tagPredictions {
-                array += tp.toArray(type: Object.self)
+                array += tp
             }
             
             return array
@@ -95,7 +95,7 @@ class AdvancedFilterVC: SpinFilterSubview, YearRangePickerDelegate{
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.selectorSetup()
-        self.refreshTagView()
+        self.refreshChipView()
     }
     
     func selectorSetup() {
@@ -121,62 +121,86 @@ class AdvancedFilterVC: SpinFilterSubview, YearRangePickerDelegate{
     
     func getMostRecentFilter() {
         
-        if let savedFilter = GlobalDataManager.filter(withID: Prefs.MostRecentFilterID) {
+        
+        
+        if let savedFilter = SQLDataManager.FetchObject(ofType: .filter, withID: Prefs.MostRecentFilterID) as? Filter {
+            print("getting saved")
             self.container.filterObject = savedFilter
         } else {
-            let id = "\(NSDate().timeIntervalSince1970)"
-            self.container.filterObject = Filter()
-            self.container.filterObject?.setValue(id, forKey: "id")
-            self.container.filterObject?.setValue(id, forKey: "name")
-           if let error = GlobalDataManager.save(object: self.container.filterObject!)
-           {print(error)}
-            Prefs.MostRecentFilterID = id
+            let name = "newFilter"
+            print("saving new filter")
+            let filter = Filter(name: name, startYear: 0, endYear: 0)
+            self.container.filterObject = filter
+            
+            SQLDataManager.Insert(object: filter)
+        
+            Prefs.MostRecentFilterID = filter.id
         }
     }
     
-    func refreshTagView() {
+    func nameOf(genreOrTag object:Any)->String? {
+        
+        if let genre = object as? Genre {
+            
+            return genre.name
+            
+        } else if let tag = object as? Tag {
+            
+            return tag.name
+            
+        }
+        
+        return nil
+        
+    }
+    
+    func refreshChipView() {
         
         guard let filter =  self.container.filterObject as? Filter else {return}
         self.tagView.removeAllTags()
         
-        self.displayTagArray(names: Array(filter.genresMustInclude), params: .and, objectType:.genre)
+        self.displayChipArray(objects: filter.genresMustInclude.toGenres, params: .and)
         
-        self.displayTagArray(names: Array(filter.tagsMustInclude), params: .and, objectType:.tag)
+        self.displayChipArray(objects: SQLDataManager.Tags(withIDs: filter.tagsMustInclude), params: .and)
         
-        self.displayTagArray(names: Array(filter.genresMayInclude), params: .and, objectType: .genre)
+        self.displayChipArray(objects: filter.genresMayInclude.toGenres, params: .or)
         
-        self.displayTagArray(names: Array(filter.tagsMayInclude) + Array(filter.genresMayInclude), params: .or, objectType: .tag)
+        self.displayChipArray(objects: SQLDataManager.Tags(withIDs: filter.tagsMayInclude), params: .or)
         
-        self.displayTagArray(names:Array(filter.genresMustExclude), params: .not, objectType: .genre)
+        self.displayChipArray(objects:filter.genresMustExclude.toGenres, params: .not)
         
-         self.displayTagArray(names: Array(filter.tagsMustExclude), params: .not, objectType: .tag)
+         self.displayChipArray(objects: SQLDataManager.Tags(withIDs: filter.tagsMustExclude), params: .not)
+        
     }
     
-    func displayTagArray(names:[String], params:FilterCondition, objectType:FilterObjectType) {
-        for filter in names {
-            self.displayTag(named: filter, withParams: params, objectType: objectType)
+    func displayChipArray(objects:[FilterObject], params:FilterCondition) {
+        for filter in objects {
+             print("displaying \(filter)")
+            self.displayTag(withObject: filter, withParams: params)
+           
         }
     }
     
     //MARK: - ==ADD TAG TO VIEW==
-    func displayTag(named tagName:String, withParams ip:FilterCondition, objectType:FilterObjectType) {
-        self.tagView.removeTag(tagName)
+    func displayTag(withObject object:FilterObject, withParams ip:FilterCondition) {
+        self.tagView.removeTag(object.name)
         
-        for tag in self.tagView.tagViews {
-            if tag.titleLabel?.text == tagName && tag.objectType == objectType {
-                self.tagView.removeTagView(tag)
-            }
-        }
+//        for tag in self.tagView.tagViews {
+//            if tag.titleLabel?.text == tagName && tag.objectType == objectType {
+//                self.tagView.removeTagView(tag)
+//            }
+//        }
         
-        self.tagView.addTag(tagName)
-        self.tagView.tagViews.last!.objectType = objectType
-        self.tagView.tagViews.last!.backgroundColor = self.tagColors[objectType]![ip]!
+        if let tag = object as? Tag { self.tagView.addTagView(TagTag(tag: tag, table: self.tagView)) }
+        else if let genre = object as? Genre { self.tagView.addTagView(GenreTag(genre:genre, table: self.tagView)) }
+    
+        self.tagView.tagViews.last!.backgroundColor = self.tagColors[object.filterType]![ip]!
     }
     
    //MARK: - =============== Year Stuff ===============
     
     func yearPickerDidChange(yearPicker: YearRangePicker) {
-        guard let filter = self.container.filterObject as? Filter else {print("not an object! \(self.container.filterObject)"); return}
+        guard let filter = self.container.filterObject as? Filter else {return}
         filter.setDates(start: yearPicker.startYear, end: yearPicker.endYear)
     }
 
@@ -185,9 +209,25 @@ class AdvancedFilterVC: SpinFilterSubview, YearRangePickerDelegate{
 //MARK: - ========== TAGLIST STUFF =======================
 extension AdvancedFilterVC : TagListViewDelegate {
     func tagRemoveButtonPressed(_ title: String, tagView: TagView, sender: TagListView) {
+        
         guard let filter = self.container.filterObject as? Filter else {return}
-        filter.addFilter(title: title, type: tagView.objectType, condition: .none)
-        self.refreshTagView()
+        
+        
+        if let genreTag = tagView as? GenreTag {
+            
+            filter.addOrRemoveFilter(type: .genre, objectID: genreTag.genre.id, condition: .none)
+            
+        } else if let tagTag = tagView as? TagTag {
+            
+            filter.addOrRemoveFilter(type: .tag, objectID: tagTag.tagObject.id, condition: .none)
+            
+        } else {
+            
+        }
+        
+        
+    
+        self.refreshChipView()
     }
 }
 
@@ -199,28 +239,40 @@ extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CandidateCell") as! FilterCandidateCell
-        let object = self.predictions[indexPath.row]
-        guard let name = object.value(forKey: "name") as? String else {return cell}
         
-        cell.textLabel?.text = name
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CandidateCell") as! FilterCandidateCell
+        
+        let object = self.predictions[indexPath.row]
+
+        guard let realName = self.nameOf(genreOrTag: object) else {return cell}
+        
+        cell.textLabel?.text = realName
+        
         cell.backgroundColor? = ((object as? Genre) != nil) ? UIColor().colorSecondaryLight(): UIColor().offWhitePrimary()
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("row selected")
-        let condition = FilterCondition(rawValue: self.includeSetter.indexOfSelectedItem)!
-        let selectedObject = self.predictions[indexPath.row]
-        let tagName = selectedObject.value(forKey: "name") as! String
-        let type:FilterObjectType = ((selectedObject as? Genre) != nil) ? .genre : .tag
+       
+        guard let filter = self.container.filterObject as? Filter else { return }
         
-        guard let object = self.container.filterObject as? Filter else {print("not an object! \(self.container.filterObject)"); return}
-        object.addFilter(title: tagName, type: type, condition: condition)
+        let condition = FilterCondition.allCases[self.includeSetter.indexOfSelectedItem]
         
+        let object = self.predictions[indexPath.row]
+        
+        if let genre = object as? Genre {
+          
+            filter.addOrRemoveFilter(type: .genre, objectID: genre.id, condition: condition)
+            
+        } else if let tag = object as? Tag {
+            
+            filter.addOrRemoveFilter(type: .tag, objectID: tag.id, condition: condition)
+        }
+        
+    
         self.includeTagsField.text = ""
-        self.refreshTagView()
+        self.refreshChipView()
         self.showHideAutofillTable()
     }
     
@@ -230,13 +282,11 @@ extension AdvancedFilterVC : UITableViewDelegate, UITableViewDataSource {
         
         //-- Filter predictions
         
-        var predicates = [NSPredicate]()
+        let text = self.includeTagsField.text!
         
-        predicates.append(NSPredicate(format: "name CONTAINS[cd] %@", self.includeTagsField.text!))
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        self.genrePredictions = Genre.All.filter({$0.name.lowercased().contains(text.lowercased())})
+        self.tagPredictions = SQLDataManager.AllTags.filter({$0.name.lowercased().contains(text.lowercased())})
         
-        self.genrePredictions = GlobalDataManager.allGenres.filter(compoundPredicate)
-        self.tagPredictions = GlobalDataManager.allTags.filter(compoundPredicate)
         self.autofillTable.reloadData()
         //-- If predictions exist display table
         if self.predictions.count > 0 {

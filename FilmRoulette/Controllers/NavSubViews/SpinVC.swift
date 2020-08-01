@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 import Gemini
 
 enum LibraryType:CaseIterable {
@@ -15,8 +14,14 @@ enum LibraryType:CaseIterable {
     case filmSwipe
 }
 
+protocol FilterObject {
+    func filter(movies:[Movie])->[Movie]
+    var name:String {get}
+    var filterType:FilterObjectType{get}
+}
+
 class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDelegate, SingleMovieDelegate {
-    
+   
     
 
 //MARK: - ===========IBOUTLETS============
@@ -45,24 +50,18 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
     
 //MARK: - ===========VARIABLES============
     
-    //MARK: - ==State Vars==
-    var noMovies:Bool {
-        get {
-            return self.displayCount == 0
-        }
-    }
+    var moviesDisplayed = [Movie]()
     
-    var displayCount:Int {
-        get {
-            return GlobalDataManager.moviesDisplayed.count
-        }
-    }
+    //MARK: - ==State Vars==
+    var noMovies:Bool { return self.displayCount == 0 }
+    
+    var displayCount:Int { return self.moviesDisplayed.count }
     
     var displayOption:MovieOption? {
-        get {
+      
             let options:[Int:MovieOption] = [1:.unwatched, 2:.loved]
             return options[self.spinSelector.indexOfSelectedItem]
-        }
+        
     }
     
     var filterType:FilterType {
@@ -72,9 +71,11 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
         }
     }
     
-    var filterObject:Object? {
+    var filterObject:FilterObject? {
         didSet {
+            
             SessionData.CurrentFilterObject = self.filterObject
+           
             self.loadRoulette()
         }
     }
@@ -95,16 +96,20 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
         super.viewDidLoad()
         self.posterGetter = PosterGetter(delegate: self)
         self.subViewType = .spinner
-        self.rouletteView.decelerationRate = UIScrollViewDecelerationRateFast
+        self.rouletteView.decelerationRate = UIScrollView.DecelerationRate.fast
         self.rouletteView.delegate = self
         self.rouletteView.dataSource = self
-        
+        self.rouletteView.allowsSelection = true
+        self.rouletteView.allowsMultipleSelection = true
         self.rouletteView.showsHorizontalScrollIndicator = false
         //MARK: - == Appearance ==
         self.spinner = Spinner(collectionView: self.rouletteView)
         self.spinner.delegate = self
+        
+        
+        
         //MARK: - ==SETUP ANIMATION AND LOAD DATASOURCE==
-    self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine)
+    self.rouletteView.gemini.circleRotationAnimation().radius(1000).rotateDirection(.anticlockwise).itemRotationEnabled(true).scale(0.8).scaleEffect(.scaleUp).ease(GeminiEasing.easeOutSine).shadowEffect(.fadeIn)
         
         
         //        self.displayTypeController.selectedSegmentIndex = Prefs.selectorPosition
@@ -120,7 +125,7 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
         
         super.viewDidAppear(true)
         if self.libraryType == .library {
-            self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed)
+            self.posterGetter.completeMissingPosters(forMovies: self.moviesDisplayed)
         }
         self.loadRoulette()
     }
@@ -146,19 +151,28 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
     //MARK: - ==== QUERY ANY POSTERS ====
     
     
-    func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: GlobalDataManager.moviesDisplayed) }
+    func completeMissingPosters() { self.posterGetter.completeMissingPosters(forMovies: self.moviesDisplayed) }
     
-    func loadedPoster() { self.reloadRoulette() }
+    func loadedPoster(_ toRequery:[Movie]) {
+        
+        self.reloadRoulette()
+      
+        self.posterGetter.completeErrorPosters(forMovies: toRequery)
+        
+    }
     
     
     
 //MARK: - =============== SET ROULETTE ===============
     
     //MARK: - == GET FILTERS ==
-    func filterResults(withObject object: Object?) {
+    func filterResults(withObject object: FilterObject?) {
+        
         self.filterObject = object
+        
         //TODO: - simple or complex
         Prefs.SpinFilterType = FilterType.allCases.firstIndex(of: .simple)!
+        
         self.loadRoulette()
     }
     
@@ -167,76 +181,52 @@ class SpinVC: NavSubview, SpinFiltersDelegate, PosterGetterDelegate, SpinnerDele
     func loadRoulette() {
         
         if self.libraryType == .library {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
+            print("it is all \(SQLDataManager.AllMovies.count)")
+            self.moviesDisplayed = SQLDataManager.AllMovies
+            
         } else {
-            GlobalDataManager.moviesDisplayed = GlobalDataManager.fsMovies
+            
+            self.moviesDisplayed = SQLDataManager.FSMovies
+            
         }
         
-        GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.filterObject, libraryType: self.libraryType)
+        if let displayOption = self.displayOption {
+            
+            self.moviesDisplayed = self.moviesDisplayed.filteredBy(option: displayOption)
+            
+        }
         
-        
-        GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(GlobalDataManager.moviesDisplayed, filteredBy: self.displayOption)
-        
+        if let filter = self.filterObject {
+            
+            
+            self.moviesDisplayed = filter.filter(movies: self.moviesDisplayed)
+            print("going to filter 2 with\(filter.name) \(filter.filterType)")
+        }
+       
         self.reloadRoulette()
     }
     
-//    func applyFilters() {
-//        guard self.filterObject != nil else {return}
-//        if self.filterType == .simple {
-//            if let genre = self.filterObject as? Genre {
-//                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withGenre: genre)
-//            } else if let group = self.filterObject as? Group {
-//                GlobalDataManager.moviesDisplayed = group.movies.filter("TRUEPREDICATE")
-//            } else if let tag = self.filterObject as? Tag {
-//                GlobalDataManager.moviesDisplayed = GlobalDataManager.movies(withTag: tag)
-//            }
-//        } else if let filter = self.filterObject as? Filter, self.libraryType == .library {
-//            GlobalDataManager.moviesDisplayed = filter.apply(to: GlobalDataManager.moviesDisplayed, delegate: GlobalDataManager)
-//        }
-//    }
 
     
-    
-    //MARK: - ==CUSTOM ARRAY==
-//    func loadFromSettings() {
-//        GlobalDataManager.moviesDisplayed = GlobalDataManager.allMovies
+//    func compoundTagPredicate(and:Bool, tags:[String])-> NSCompoundPredicate {
+//        var predicates = [NSPredicate]()
 //
-//        if Prefs.mustBeIncluded.count > 0 {
-//            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: true, tags: Prefs.mustBeIncluded))
-//        }
-//        if Prefs.canBeIncluded.count > 0 {
-//            GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter(self.compoundTagPredicate(and: false, tags: Prefs.canBeIncluded))
-//        }
-//        for tag in Prefs.excluded  {
+//        for tag in tags {
 //            if let genre = GlobalDataManager.genre(named: tag) {
-//                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN genreList)", genre)
+//                predicates.append(NSPredicate(format: "%@ IN genreList", genre))
 //            } else if let tag = GlobalDataManager.tag(named: tag) {
-//                GlobalDataManager.moviesDisplayed = GlobalDataManager.moviesDisplayed.filter("NOT (%@ IN tags)", tag)
+//                predicates.append(NSPredicate(format: "%@ IN tags", tag))
 //            }
 //        }
-//        print("going to reload func")
-//        self.reloadRoulette()
+//        if and {
+//            return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+//        }
+//        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
 //    }
-    
-    func compoundTagPredicate(and:Bool, tags:[String])-> NSCompoundPredicate {
-        var predicates = [NSPredicate]()
-        
-        for tag in tags {
-            if let genre = GlobalDataManager.genre(named: tag) {
-                predicates.append(NSPredicate(format: "%@ IN genreList", genre))
-            } else if let tag = GlobalDataManager.tag(named: tag) {
-                predicates.append(NSPredicate(format: "%@ IN tags", tag))
-            }
-        }
-        if and {
-            return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        }
-        return NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
-    }
     
     //MARK: - ==RELOAD==
     func reloadRoulette() {
-       print("going to reload")
+       
         
         DispatchQueue.main.async {
             self.rouletteView.reloadData()
@@ -281,7 +271,7 @@ extension SpinVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        
         if self.noMovies {
-            return 1
+            return 0
         }
         return 1000000
     }
@@ -291,10 +281,13 @@ extension SpinVC : UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
         if !self.noMovies {
-            cell.configure(movie: GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count], poster: GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster, loading: self.posterGetter.loading)
+            cell.configure(movie: self.moviesDisplayed[indexPath.row % self.moviesDisplayed.count],
+                           poster: self.moviesDisplayed[indexPath.row % self.moviesDisplayed.count].poster,
+                           loading: self.posterGetter.loading)
+            self.setShadowRadius(forCell: cell)
         }
         
-        
+    
 //        cell.posterImageView.image = self.noMovies ? #imageLiteral(resourceName: "blank") : GlobalDataManager.moviesDisplayed[indexPath.row % GlobalDataManager.moviesDisplayed.count].poster
         
         self.rouletteView.animateCell(cell)
@@ -313,34 +306,64 @@ extension SpinVC : UICollectionViewDelegate {
     //MARK: - ==ANIMATE WHEN SCROLLING==
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.rouletteView.animateVisibleCells()
+        if let roulette = scrollView as? GeminiCollectionView, let cells = roulette.visibleCells as? [PosterCell] {
+            for cell in cells {
+            
+                self.setShadowRadius(forCell: cell)
+                
+                
+            }
+        }
+    }
+    
+    func setShadowRadius(forCell cell:PosterCell) {
+//        let distanceFromCenter = Int(abs(cell.center.x - self.rouletteView.bounds.size.width/2.0 - self.rouletteView.contentOffset.x) / 16)
+//
+//
+//        let shadowSize = distanceFromCenter == 0 ? 10 : CGFloat(20 / distanceFromCenter) / 2
+//        print("\(cell.movie?.title) distance \(distanceFromCenter) shadow \(shadowSize)")
+//        if cell.shadowRadius != shadowSize {
+//            cell.shadowRadius = shadowSize
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? GeminiCell {
             
             self.rouletteView.animateCell(cell)
+            if let pCell = cell as? PosterCell {
+                self.setShadowRadius(forCell: pCell)
+            }
             
         }
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-       
+        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        guard let cell = self.rouletteView.cellForItem(at: indexPath) as? PosterCell, let movie = cell.movie else {return}
+        
+        self.presentSingleMovieView(movie: movie, imageData: nil, filmSwipe:false, sender: self)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         print("ended scrolling")
-        self.selectCenter()
+        guard let ip = self.selectCenter() else {return}
+        
+        self.rouletteView.scrollToItem(at: ip, at: .centeredHorizontally, animated: true)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.selectCenter()
+       _ = self.selectCenter()
     }
     
-    func selectCenter() {
-        guard let cell = rouletteView.centerCell as? PosterCell else {print("not poster cell"); return}
-        let indexPath = self.rouletteView.indexPath(for: cell)
-        self.rouletteView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: true)
+    func selectCenter()->IndexPath? {
+        
+        guard let indexPath = rouletteView.centerCellIndexPath, let cell = self.rouletteView.cellForItem(at: indexPath) as? PosterCell else {print("not centered"); return nil}
+    
         self.backgroundImageView.setImage(cell.posterImageView.image)
+        return indexPath
     }
     
     func selectedItem(atIndexPath indexPath:IndexPath) {
@@ -348,10 +371,8 @@ extension SpinVC : UICollectionViewDelegate {
         self.backgroundImageView.setImage(cell.posterImageView.image)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let cell = self.rouletteView.cellForItem(at: indexPath) as? PosterCell, let movie = cell.movie else {return}
-//        self.presentSingleMovieView(movie: movie, imageData: movie.poster, filmSwipe: false, sender: self)
-    }
+  
+   
     
     func backFromSingleMovie(changed: Bool) {
         if changed { self.reloadRoulette() }
@@ -360,13 +381,22 @@ extension SpinVC : UICollectionViewDelegate {
     
 }
 
+extension SpinVC : UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width:200, height:300)
+//    }
+    
+}
+
+
+
 
 extension UICollectionView {
     var centerCell:UICollectionViewCell? {
         get {
             let closestCell = self.visibleCells[0]
             for cell in self.visibleCells as [UICollectionViewCell] {
-                let closestCellDelta = abs(closestCell.center.x - self.bounds.size.width/2.0 - self.contentOffset.x + 50)
+                let closestCellDelta = abs(closestCell.center.x - self.bounds.size.width/2.0 - self.contentOffset.x)
                 let cellDelta = abs(cell.center.x - self.bounds.size.width/2.0 - self.contentOffset.x)
                 if (cellDelta < closestCellDelta){
                     return cell

@@ -6,8 +6,8 @@
 //  Copyright © 2018 Dylan Southard. All rights reserved.
 //
 
-import Foundation
-import RealmSwift
+
+import UIKit
 
 //MARK: - =========DIRECTORIES==========
 
@@ -26,86 +26,29 @@ var ImageDirectory:URL {
     return directory
 }
 
+var TestDirectory:URL {
+    let directory = DocumentsDirectory.appendingPathComponent("Tests")
+    if !FileManager.default.fileExists(atPath: directory.path) {
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        } catch {
+            print(error)
+        }
+    }
+    return directory
+}
+
 let CatalogueFileName = "FilmLibrary.json"
 
-//MARK: - ==REALM CONFIG==
-
-var FilmRouletteRealm:URL {
-    get {
-        return DocumentsDirectory.appendingPathComponent("filmroulette.realm")
-    }
-}
-
-var FilmSwipeRealm:URL {
-    get {
-        return DocumentsDirectory.appendingPathComponent("filmswipe.realm")
-    }
-}
-
-var RealmConfig:Realm.Configuration {
-    return Conveniences().realmConfig(fileURL: FilmRouletteRealm)
-}
-    
-
-var FilmswipeRealmConfig:Realm.Configuration {
-    return Conveniences().realmConfig(fileURL: FilmSwipeRealm)
-}
 
 
-//MARK: - ==GLOBALCLASSES ==
 
-var GlobalDataManager:DataManager {
-    get  {
-        if SessionData.DataManager == nil {
-            SessionData.DataManager = DataManager()
-        }
-        return SessionData.DataManager!
-    }
-}
 
 
 
 
 //MARK: - =========GENRES=========
-let GenreIDs = ["Action":"28",
-                "Adventure":"12",
-                "Animation":"16",
-                "Comedy":"35",
-                "Crime":"80",
-                "Documentary":"99",
-                "Drama":"18",
-                "Family":"10751",
-                "Fantasy":"14",
-                "History":"36",
-                "Horror":"27",
-                "Music":"10402",
-                "Mystery":"9648",
-                "Romance":"10749",
-                "Science Fiction":"878",
-                "TV Movie":"10770",
-                "Thriller":"53",
-                "War":"10752",
-                "Western":"37"]
 
-let Genres = ["Action",
-              "Adventure",
-              "Animation",
-              "Comedy",
-              "Crime",
-              "Documentary",
-              "Drama",
-              "Family",
-              "Fantasy",
-              "History",
-              "Horror",
-              "Music",
-              "Mystery",
-              "Romance",
-              "Science Fiction",
-              "TV Movie",
-              "Thriller",
-              "War",
-              "Western"]
 
 //MARK: - =========REGIONS=========
 
@@ -145,7 +88,7 @@ let SortTypeKeys = [
     "Average User Rating"
 ]
 
-
+let kAPIKey = "7f8097fbd3d28753af1c79372d180dd4"
 
 
 

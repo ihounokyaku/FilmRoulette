@@ -70,7 +70,7 @@ class SingleMovieVC: ModalVC {
         self.posterView.movie = self.movie
         
         //MARK: - UPDATE UI
-        self.trailerButton.isEnabled = URL(string:self.movie.trailerUrl) != nil
+        self.trailerButton.isEnabled = URL(string:self.movie.trailerURL) != nil
         self.selectorView.layer.borderColor = UIColor().blackBackgroundPrimary().cgColor
         self.selectorView.layer.borderWidth = 1
     
@@ -85,7 +85,7 @@ class SingleMovieVC: ModalVC {
     }
     
     func replaceFilmswipeMovie() {
-        guard let movie = GlobalDataManager.movie(withId: self.movie.id) else {return}
+        guard let movie = SQLDataManager.FetchMovie(withID: self.movie.id) else {return}
         self.movie = movie
         self.filmSwipe = false
     }
@@ -116,7 +116,7 @@ class SingleMovieVC: ModalVC {
         self.posterView.image = poster()
         self.titleLabel.text = self.movie.title + "\n(" + self.movie.releaseDate.year() + ")"
         let genres = Array(self.movie.genres).prefix(3)
-        self.genreLabel.text = Array(genres).asString()
+        self.genreLabel.text = Array(genres.map({$0.name})).asString()
         self.descTextView.text = self.movie.desc
         self.updateSelectorStates()
        
@@ -143,7 +143,7 @@ class SingleMovieVC: ModalVC {
             }
         }
         //MARK: Set Images
-        if let savedMovie = GlobalDataManager.movie(withId: self.movie.id) {
+        if let savedMovie = SQLDataManager.FetchMovie(withID: self.movie.id) {
             inLibrary = true
             //Mark liked or watched
             if savedMovie.watched {
@@ -151,7 +151,7 @@ class SingleMovieVC: ModalVC {
                 self.watchedButton.isEnabled = false
             } else if savedMovie.love {
                 loved = true
-                self.loveButton.isEnabled = false
+//                self.loveButton.isEnabled = false
             }
         }
         self.watchedButton.setImage(SelectorIcon().image(for: .watched, deselected: !watched), for: .normal)
@@ -179,14 +179,18 @@ class SingleMovieVC: ModalVC {
     
     @IBAction func likeButtonPressed(_ sender: Any) {
         if self.filmSwipe {
-            if GlobalDataManager.importMovie(movie: self.movie) == nil {
-                self.replaceFilmswipeMovie()
-            }
             
-        } else if let savedMovie = GlobalDataManager.movie(withId: movie.id) {
-            let movie = Movie(value:self.movie)
-            self.movie = movie
-            GlobalDataManager.deleteObject(object: savedMovie)
+            SQLDataManager.Import(movie: self.movie)
+            
+        } else if let savedMovie = SQLDataManager.FetchMovie(withID: movie.id) {
+            
+            Conveniences().presentConfirmationAlert(inVC: self, title: "Delete?", message: "Remove movie from library?", forAction: {
+                let movie = Movie(value:self.movie)
+                self.movie = movie
+                SQLDataManager.Delete(object: savedMovie)
+            })
+            
+            
         } else {
             self.addMovie()
         }
@@ -201,6 +205,8 @@ class SingleMovieVC: ModalVC {
     
     
     @IBAction func loveButtonPressed(_ sender: Any) {
+        print("lovepressed changin from \(movie.love) to \(!movie.love)")
+//        movie.love = !movie.love
         let loved = !self.movie.love
         let watched = loved == true ? false : self.movie.watched
         self.updateLoveWatched(loved: loved, watched: watched)
@@ -208,18 +214,29 @@ class SingleMovieVC: ModalVC {
     
     func updateLoveWatched(loved:Bool, watched:Bool){
         
-        if GlobalDataManager.movie(withId: self.movie.id) != nil {
-            GlobalDataManager.updateMovie(movie: self.movie, updatedValues: ["watched":watched, "love":loved])
+        if SQLDataManager.FetchMovie(withID: self.movie.id) != nil {
+            movie.love = loved
+            movie.watched = watched
+           
         } else {
+            
+            self.addMovie()
+            
+            
+             print("checking")
+            print(SQLDataManager.FetchMovie(withID: self.movie.id)?.love)
             self.movie.watched = watched
             self.movie.love = loved
-            self.addMovie()
+            print("checking again")
+            print(SQLDataManager.FetchMovie(withID: self.movie.id)?.love)
         }
         self.selectorChanged()
     }
     
     func addMovie(){
-        GlobalDataManager.save(movie: self.movie, imageData: self.posterData, love: self.movie.love, watched: self.movie.watched)
+        
+        SQLDataManager.Insert(movie: self.movie, imageData: self.posterData)
+       
     }
    
     
@@ -231,7 +248,7 @@ class SingleMovieVC: ModalVC {
     
  
     @IBAction func playTrailerPressed(_ sender: Any) {
-        guard let url = URL(string: self.movie.trailerUrl) else {return }
+        guard let url = URL(string: self.movie.trailerURL) else {return }
         self.trailerButton.isEnabled = false
         let view = TrailerView()
         let webView = WKWebView()

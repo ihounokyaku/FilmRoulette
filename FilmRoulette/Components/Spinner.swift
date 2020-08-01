@@ -21,10 +21,10 @@ class Spinner: NSObject {
     var totalCount = 0
     
     var minimumCount = 100
-    var decelerationSpeed1:CGFloat = 0.991
-    var decelerationSpeed2:CGFloat = 0.97
+    var decelerationSpeed1:CGFloat = 0.995
+    var decelerationSpeed2:CGFloat = 0.99
     
-    var minSpeed1:CGFloat = 10
+    var minSpeed1:CGFloat = 12
     var minSpeed2:CGFloat = 1
     
     

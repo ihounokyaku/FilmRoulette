@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 import SwipeCellKit
 
 
@@ -16,8 +16,11 @@ class GroupTable: TableVC {
     //MARK: - =============== VARS ===============
     
     //MARK: - === DATASOURCE ===
-    var dataSource:Results<Group> { return self.filteredGroups ?? GlobalDataManager.allGroups }
-    var filteredGroups:Results<Group>?
+    var dataSource:[Group] {
+        print("going to retrun groups")
+        print("going to retrun groups \(SQLDataManager.AllGroups.count)")
+        return self.filteredGroups ?? SQLDataManager.AllGroups }
+    var filteredGroups:[Group]?
 
     
     //MARK: - === UNDO ===
@@ -42,10 +45,7 @@ class GroupTable: TableVC {
     override func undo(){
         
         guard let group = self.deletedGroup else {return}
-        if let error = GlobalDataManager.save(object: group) {
-            print(error)
-            return
-        }
+        group.resuurect()
         self.view.makeToast("Undo")
         self.deletedGroup = nil
         self.tableView.reloadData()
@@ -63,7 +63,7 @@ class GroupTable: TableVC {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.cellType.rawValue) as! GroupCell
         
         let group = self.dataSource[indexPath.row]
-        print("group \(group.name) has \(group.movies.count) movies")
+        
         cell.setImages(fromMovies: Array(group.movies))
         cell.cellLabel?.text = group.name
         cell.delegate = self
@@ -80,7 +80,7 @@ class GroupTable: TableVC {
             actions.append(SwipeAction(style: .destructive, title: "delete") { (action, indexPath) in
                 let group = self.dataSource[indexPath.row]
                 self.deletedGroup =  Group(value:group)
-                GlobalDataManager.deleteObject(object: group)
+                SQLDataManager.Delete(object: group)
                 self.view.makeToast("Group Deleted (shake to undo)")
             })
         
@@ -118,7 +118,9 @@ class GroupTable: TableVC {
     //MARK: - ==========SEARCH BAR==========
     
     override func search(text:String) {
-        self.filteredGroups = GlobalDataManager.allGroups.filter(GlobalDataManager.predicate(forType: .group, text: text))
+        
+        self.filteredGroups = SQLDataManager.AllGroups.filteredBy(text: text)
+        
         self.tableView.reloadData()
     }
     override func clearSearch(){

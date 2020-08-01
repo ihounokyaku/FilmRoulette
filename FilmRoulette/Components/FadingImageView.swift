@@ -16,7 +16,7 @@ class FadingImageView: UIView {
     
     var imageAlpha:CGFloat = 0.3
     var filterColor = UIColor().offWhitePrimary()
-    var filterAlpha:CGFloat = 0.4
+    var filterAlpha:CGFloat = 0.2
     var transitionTime = 0.5
     
 
@@ -47,12 +47,13 @@ class FadingImageView: UIView {
     
     func setImage(_ image:UIImage?){
         guard let image = image else {return}
-        let imageView = UIImageView(frame: self.frame)
+        self.filterView.frame = self.bounds
+        let imageView = UIImageView(frame: self.bounds)
         imageView.contentMode = .scaleAspectFill
         imageView.image = image
         imageView.alpha = 0
         self.addSubview(imageView)
-        self.bringSubview(toFront: self.filterView)
+        self.bringSubviewToFront(self.filterView)
         UIView.animate(withDuration: self.transitionTime, animations: {
             self.filterView.alpha = self.filterAlpha
             imageView.alpha = self.imageAlpha

@@ -148,7 +148,7 @@ extension SearchVC : QueryDelegate {
     
     
     func refreshDisplay() {
-        let movie = Movie()
+       
         
         if self.moviesToDisplay.count == 0 {
             self.tableView.displayImage(ofType: .noResults)

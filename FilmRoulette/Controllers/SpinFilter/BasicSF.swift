@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 enum PickerViewDisplayFilter:String, CaseIterable {
     case genre = "Genre"
@@ -83,15 +83,15 @@ extension BasicFilterVC : UIPickerViewDataSource {
         }
     }
 
-    var pickerDataSource:[Object] {
+    var pickerDataSource:[FilterObject] {
         get {
             switch self.pickerDisplayFilter {
             case .group:
-                return Array(GlobalDataManager.groups)
+                return SQLDataManager.AllGroups
             case .genre:
-                return Array(GlobalDataManager.genres)
+                return Genre.All
             case .tag:
-                return Array(GlobalDataManager.tags)
+                return SQLDataManager.AllTags
             }
         }
     }
@@ -108,7 +108,7 @@ extension BasicFilterVC : UIPickerViewDataSource {
     //MARK: - ==TITLE FOR ROW==
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
-        return self.pickerDataSource[row].value(forKey: "name") as? String ?? ""
+        return self.pickerDataSource[row].name
     }
 }
 

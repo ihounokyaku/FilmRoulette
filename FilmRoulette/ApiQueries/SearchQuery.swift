@@ -18,7 +18,7 @@ class SearchQuery: MainQuery {
     func execute(searchTerm:String) {
 //        self.delegate.setProgressBar(to: 0)
         
-        Alamofire.request(self.searchQueryURL, method:.get, parameters:["api_key":self.delegate.apiKey,"query":searchTerm]).responseJSON { (response) in
+        Alamofire.request(self.searchQueryURL, method:.get, parameters:["api_key":kAPIKey,"query":searchTerm]).responseJSON { (response) in
             if response.result.isSuccess {
                 
                 let json:JSON =  JSON(response.result.value!)

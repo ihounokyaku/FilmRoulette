@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 protocol SpinFiltersDelegate {
-    var filterObject:Object? {get set}
+    var filterObject:FilterObject? {get set}
 }
 
 enum FilterType:CaseIterable {
@@ -41,7 +41,7 @@ class SpinFilterContainer: ModalVC,SelectorDelegate {
         }
     }
     
-    var filterObject:Object?
+    var filterObject:FilterObject?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,7 +102,9 @@ class SpinFilterContainer: ModalVC,SelectorDelegate {
     }
     
     @IBAction func donePressed(_ sender: Any) {
+        print("donepressed")
         self.delegate.filterObject = self.filterObject
+        print("made delegate filter object")
         self.dismiss(animated: true, completion: nil)
     }
     

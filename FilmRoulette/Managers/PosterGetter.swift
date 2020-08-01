@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import RealmSwift
 
 protocol PosterGetterDelegate {
-    func loadedPoster()
+    func loadedPoster(_ toRequery:[Movie])
 }
 
 
@@ -34,29 +33,50 @@ class PosterGetter: NSObject {
         self.queryIndex = 0
     }
     
-    func completeMissingPosters(forMovies movieList:Results<Movie>) {
+    func completeMissingPosters(forMovies movieList:[Movie]) {
+        if movieList.count < 1 { return }
         self.reset()
+        self.getPosters(forMovies: movieList)
+        
+    }
+    
+    func completeErrorPosters(forMovies movieList:[Movie]) {
+        if movieList.count < 1 { return }
+        
+        self.getPosters(forMovies: movieList)
+        
+       
+    }
+    
+    private func getPosters(forMovies movieList:[Movie]) {
         
         for movie in movieList {
-            if !movie.imageExists && movie.imageUrl != "" {
-                //                print("going to get poster for \(movie.title)")
-                self.queryList.append(Movie(value:movie))
+            if !movie.imageExists && movie.imageURL != "" {
+                
+                print("going to get poster for \(movie.title)")
+                self.queryList.append(movie)
             }
         }
+         self.loadNextPoster()
         
-        self.loadNextPoster()
     }
     
     func loadNextPoster(){
-        guard self.loading == true else {return}
+        print("loading")
+        guard self.loading == true else {
+            print("loading is \(self.loading)")
+            return}
         let movie = self.queryList[self.queryIndex]
+        print("loading for \(movie.title)")
         PosterQueryManager().queryPoster(forMovie: movie, onCompletion: self.completeQueries)
+
     }
     
     
-    func completeQueries() {
+    func completeQueries(_ toRequery:[Movie]) {
+        
         self.queryIndex += 1
-        self.delegate.loadedPoster()
+        self.delegate.loadedPoster(toRequery)
         self.loadNextPoster()
     }
 }

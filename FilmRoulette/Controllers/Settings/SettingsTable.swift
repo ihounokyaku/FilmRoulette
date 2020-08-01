@@ -268,14 +268,15 @@ class SettingsTable: UITableViewController, DropboxDelegate {
     }
     
     func exportData(ofType type:ExportDataType) {
+        //TODO -- Export
         
-        let possibleController = type == .csv ? DataSharingManager(sender:self).exportWindowCSV : DataSharingManager(sender:self).exportWindow
-        guard let controller = possibleController else {
-            Conveniences().presentErrorAlert(withTitle: "Error", message: "Could not export data", sender: self); return
-        }
-    
-        
-        self.present(controller, animated: true, completion: nil)
+//        let possibleController = type == .csv ? DataSharingManager(sender:self).exportWindowCSV : DataSharingManager(sender:self).exportWindow
+//        guard let controller = possibleController else {
+//            Conveniences().presentErrorAlert(withTitle: "Error", message: "Could not export data", sender: self); return
+//        }
+//
+//
+//        self.present(controller, animated: true, completion: nil)
         
         
     }
@@ -283,18 +284,19 @@ class SettingsTable: UITableViewController, DropboxDelegate {
     
     
     func completeAnnihilation() {
-        let annihilate = {
-            let dataManager = DataManager()
-            for movie in GlobalDataManager.allMovies {
-                dataManager.deleteObject(object: movie)
-            }
-            
-            Prefs().resetAll()
-            self.container.annihilated = true
-            self.container.settingsChanged = true
-        }
-        
-        Conveniences().presentConfirmationAlert(inVC: self.container, title: "Delete Everything??", message: "Are you sure you're making the right decision? I think we should stop.", forAction: annihilate)
+       // TODO: - 
+//        let annihilate = {
+//            let dataManager = DataManager()
+//            for movie in GlobalDataManager.allMovies {
+//                dataManager.deleteObject(object: movie)
+//            }
+//
+//            Prefs().resetAll()
+//            self.container.annihilated = true
+//            self.container.settingsChanged = true
+//        }
+//
+//        Conveniences().presentConfirmationAlert(inVC: self.container, title: "Delete Everything??", message: "Are you sure you're making the right decision? I think we should stop.", forAction: annihilate)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

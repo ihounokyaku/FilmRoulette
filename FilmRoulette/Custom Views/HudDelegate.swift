@@ -21,7 +21,7 @@ protocol HudDelegate {
 extension HudDelegate {
     func showHideHud(){
         guard let movie = self.movie else {return}
-        if !movie.imageExists && movie.imageUrl != "" && self.loadingPosters {
+        if !movie.imageExists && movie.imageURL != "" && self.loadingPosters {
             self.showHUD()
         } else {
             self.hideHUD()

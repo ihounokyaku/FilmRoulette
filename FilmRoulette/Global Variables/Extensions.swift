@@ -7,47 +7,10 @@
 //
 
 import Foundation
-import RealmSwift
 import SwiftyJSON
+import SQLite
 
 
-//MARK: - ========REALM  EXTENSIONS ===========
-
-extension Results where Element == Movie {
-    func asList()->List<Movie> {
-        let list = List<Movie>()
-        list.append(objectsIn: self)
-        return list
-    }
-    
-    
-}
-
-extension Results {
-    func toArray<T>(type: T.Type) -> [T] {
-        return compactMap { $0 as? T }
-    }
-}
-
-extension List where Element == String {
-    
-    func removing(_ string:String)-> List<String> {
-        let array = self
-        if array.contains(string) {
-            array.remove(at: array.index(of: string)!)
-        }
-        return array
-    }
-    
-    func appending(_ string:String)-> List<String> {
-        let array = self
-        if !array.contains(string) {
-            array.append(string)
-        }
-        return array
-    }
-    
-}
 
 //MARK: - ========ARRAY  EXTENSIONS ===========
 //MARK: - ==String Array==
@@ -59,13 +22,6 @@ extension Array where Element: Comparable {
 
 extension Array where Element == String {
     
-    func asList()->List<String> {
-        let list = List<String>()
-        for str in self {
-            list.append(str)
-        }
-        return list
-    }
         
     func asString()->String {
         var string = ""
@@ -98,11 +54,104 @@ extension Array where Element == String {
         
 }
 
+extension Array where Element : Tag {
+    var names:[String] {
+        return self.map{$0.name}
+    }
+}
 
-
-extension Array where Element == Movie {
+extension Array where Element : SQLiteObject {
     
-    func removeMovie(movie:Movie)->[Movie] {
+    func appending(_ object:Element)-> [Element] {
+        var array = self
+        if self.filter({$0.id == object.id}).count == 0 {
+            array.append(object)
+        }
+        
+        return array
+    }
+    
+    func removing(_ object:Element)-> [Element] {
+        var array = self
+        if let index = self.firstIndex(where: {$0.id == object.id}) {
+            array.remove(at: index)
+        }
+        
+        return array
+    }
+    
+
+}
+
+
+
+extension Array where Element == Genre {
+    func appending(_ object:Genre)-> [Genre] {
+        var array = self
+        if self.contains(object) {
+            array.append(object)
+        }
+        
+        return array
+    }
+    
+    func removing(_ object:Genre)-> [Genre] {
+        var array = self
+        if let index = self.firstIndex(of: object) {
+            array.remove(at: index)
+        }
+        
+        return array
+    }
+    
+    var names:[String] {
+        return self.map{$0.name}
+    }
+}
+
+
+
+extension Array where Element == Int {
+    
+    var toGenres:[Genre] {
+        
+        var _genres = [Genre]()
+        
+        for int in self {
+            if let genre = Genre.WithID(int) {
+                _genres.append(genre)
+            }
+        }
+        
+        return _genres
+    }
+}
+
+extension Array where Element : FilterObject {
+    
+    func filteredBy(text:String)->[Element] {
+        return self.filter({$0.name.lowercased().contains(text.lowercased())})
+        
+    }
+    
+}
+
+extension Array where Element : Movie {
+    
+    func filteredBy(option:MovieOption)->[Element] {
+        
+        switch option {
+        case .loved:
+            return self.filter({$0.love})
+        case.watched:
+            return self.filter({$0.watched})
+        case .unwatched:
+            return self.filter({!$0.watched})
+        }
+        
+    }
+    
+    func removeMovie(movie:Element)->[Element] {
         
         if self.contains(movie) {
             var array = self
@@ -111,6 +160,21 @@ extension Array where Element == Movie {
         }
         return self
     }
+    
+    func filteredBy(text:String)->[Element] {
+        return self.filter({$0.title.lowercased().contains(text.lowercased())})
+        
+    }
+    
+    
+}
+
+extension Row {
+    
+    var id:Int? {
+        return try? self.get(DataProperties.Id)
+    }
+    
 }
 
 //MARK: - ==Shuffle Array==
@@ -201,7 +265,7 @@ extension UIImage {
     }
     
     func saveAsPng(named name:String) {
-        if let data = UIImagePNGRepresentation(self) {
+        if let data = self.pngData() {
             let filename = DocumentsDirectory.appendingPathComponent(name)
             try? data.write(to: filename)
         }
@@ -247,35 +311,21 @@ extension String {
 //MARK: - ========JSON  EXTENSIONS ===========
 extension JSON {
     func toMovie()-> Movie? {
-        let movie = Movie()
-        
         //MARK: check for title and return nil if nil
-        if let title = self["title"].string {
-            movie.title = title
-        } else {
-            //MARK: RETURN IF NO TITLE
-            print("BAAAAAAAD DAAAATA")
-            return nil
-        }
-        movie.id = self["id"].int ?? 550
-        movie.desc = self["overview"].string ?? "This film defies description"
-        movie.imageUrl = self["poster_path"].string ?? ""
-        movie.releaseDate = self["release_date"].string ?? "1980-09-10"
-        movie.releaseYear = Int(movie.releaseDate.year()) ?? 1980
-        movie.imdbID = self["imdb_id"].string ?? ""
         
+        guard let title = self["title"].string else {
+            print("no title in \(self)")
+            return nil}
         let videos = self["videos"]["results"].arrayValue.first
-       
-        movie.trailerUrl = "https://www.youtube.com/embed/" + (videos?["key"].string ?? "")
-       
+        let movie = Movie(id: self["id"].intValue,
+                        title: title,
+                        desc: self["overview"].stringValue,
+                        releaseDate: self["release_date"].string ?? "1980-09-10",
+                        trailerURL: "https://www.youtube.com/embed/" + (videos?["key"].string ?? ""),
+                        imageURL: self["poster_path"].string ?? "",
+                        imdbID: self["imdb_id"].string)
         
-        let genres = self["genres"].arrayValue.map({$0["name"].string})
-        
-        for genre in genres {
-            if let realGenre = genre {
-                movie.genres.append(realGenre)
-            }
-        }
+        movie.tempGenreIDs = self["genres"].arrayValue.map({$0["id"].intValue})
         
         return movie
     }
@@ -340,16 +390,14 @@ extension UIDevice {
     public class var isiPadPro: Bool {
         return isiPad && (isiPadPro97 || isiPadPro129)
     }
-    
-    
-    
-    
+
 }
 
-
-
-
-
+extension UITableView {
+    func reloadData(with animation: UITableView.RowAnimation) {
+        reloadSections(IndexSet(integersIn: 0..<numberOfSections), with: animation)
+    }
+}
 
 
 

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 class Prefs: NSObject {
     
@@ -48,9 +48,9 @@ class Prefs: NSObject {
     
     //MARK: - ==GENRES==
     
-    static var selectedGenres:[String] {
+    static var selectedGenres:[Int] {
         get {
-            return UserDefaults.standard.value(forKey: "selectedGenres") as? [String] ?? Genres
+            return UserDefaults.standard.value(forKey: "selectedGenres") as? [Int] ?? GenreType.allCases.map({$0.rawValue})
         }
         set {
             UserDefaults.standard.set(newValue, forKey: "selectedGenres")
@@ -120,9 +120,9 @@ class Prefs: NSObject {
         }
     }
     
-    static var MostRecentFilterID:String {
+    static var MostRecentFilterID:Int {
         get {
-            return UserDefaults.standard.value(forKey: "mostRecentFilterID") as? String ?? "\(NSDate().timeIntervalSince1970)"
+            return UserDefaults.standard.value(forKey: "mostRecentFilterID") as? Int ?? 0
         }
         set {
             UserDefaults.standard.set(newValue, forKey: "mostRecentFilterID")

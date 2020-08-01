@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
-import RealmSwift
+
 
 enum ViewControllerPresentationDirection {
     case left
@@ -17,21 +17,6 @@ enum ViewControllerPresentationDirection {
 }
 
 struct Conveniences {
-    
-    func realmConfig(fileURL:URL)-> Realm.Configuration{
-        return Realm.Configuration(
-            fileURL:fileURL,
-            schemaVersion: 1,
-            migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 1 {
-                    // Apply any necessary migration logic here.
-                    migration.enumerateObjects(ofType: Movie.className()) { (_, newMovie) in
-                        guard let releaseDate = newMovie?["releaseDate"] as? String else {return}
-                        newMovie?["releaseYear"] = Int(releaseDate.year()) ?? 1981
-                    }
-                }
-        })
-    }
     
     
     func valueFromRatio(ratioWidth:Float, ratioHeight:Float, width:Float? = nil, height:Float? = nil)->Float {
@@ -62,18 +47,18 @@ struct Conveniences {
     }
     //MARK: - ==CALL THAT VC UP==
     func addAndPosition(viewController:UIViewController, toParent parent:UIViewController, inContainer container:UIView) {
-        parent.addChildViewController(viewController)
+        parent.addChild(viewController)
         container.addSubview(viewController.view)
-        viewController.didMove(toParentViewController: parent)
+        viewController.didMove(toParent: parent)
         viewController.view.frame = CGRect(x: 0, y: 0, width: container.frame.size.width, height:container.frame.size.height)
     }
     
     func presentVCAnimated(viewController:UIViewController, toParent parent:UIViewController, inContainer container:UIView, direction:ViewControllerPresentationDirection, previousVC:UIViewController) {
         let x:CGFloat = direction == .left ? container.frame.size.width : 0 - container.frame.size.width
         viewController.view.frame = CGRect(x: x, y: 0, width: container.frame.size.width, height:container.frame.size.height)
-        parent.addChildViewController(viewController)
+        parent.addChild(viewController)
         container.addSubview(viewController.view)
-        viewController.didMove(toParentViewController: parent)
+        viewController.didMove(toParent: parent)
         
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {

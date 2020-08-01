@@ -24,10 +24,13 @@ class NavSubview: UIViewController, ContainerSubview, SelectorDelegate {
 //        self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         self.becomeFirstResponder()
+        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         self.configureSelector()
         
     }

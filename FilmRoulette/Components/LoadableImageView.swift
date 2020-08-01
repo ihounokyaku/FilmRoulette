@@ -22,11 +22,13 @@ class LoadableImageView: UIImageView {
     }
     
     func loadImageIfNecessary(){
-        guard self.movie.imageExists && self.movie.imageUrl != "" else {return}
+        guard self.movie.imageExists && self.movie.imageURL != "" else {return}
         PosterQueryManager().queryPoster(forMovie: self.movie, onCompletion: self.reloadPoster)
     }
     
-    func reloadPoster() {
+    func reloadPoster(_ errors:[Movie]) {
+        
+        
         self.image = self.movie.poster
     }
     
